@@ -67,6 +67,11 @@ int Library::readBooks(string booksFile)
 // PROBLEM 2
 int Library::readRatings(string ratingsFile)
 {
+    if (numUsers == 200)
+    {
+        return numUsers;
+    }
+    
     ifstream in;
     in.open(ratingsFile);
     if (in.fail()){
@@ -75,15 +80,11 @@ int Library::readRatings(string ratingsFile)
     string line = "";
     string store[2]; // array to store what split() finds 1st time
     string rate[200];  // array to store what split() finds 2nd time
-    while (getline(in, line))
+    
+    while (numUsers < 200 && getline(in, line))
     {
         if (line != "")
         {
-            
-            // if (numUsers >= sizeUser)
-            // {
-            //     return sizeUser; //only write enough books to the capacity of array
-            // }
             split(line, ',', store); // split() separates first time at the ','
             users[numUsers].setUsername(store[0]); // setUsername assigns username to value of input string
             cout << users[numUsers].getUsername() << "..." << endl; //getUsername return username
@@ -93,12 +94,10 @@ int Library::readRatings(string ratingsFile)
                 users[numUsers].setRatingAt(j, stoi(rate[j])); 
             }
             numUsers++;
-            // cout << numCount << endl;
-            // cout << numUsers << endl;
         }
     }
-    return numUsers;
     in.close();
+    return numUsers;
 }
 
 // PROBLEM 3
@@ -136,32 +135,29 @@ void Library::printAllBooks()
 ////////////////////////////////////////////////////////////////////////////////    
 int Library::getCountReadBooks(string username)
 {   
+    if (numBooks == 0 || numUsers == 0)
+    {
+        cout << "Database has not been fully initialized" << endl;
+        return -1;
+    }
+
     int booksRead = 0;
     int userindex = HelperUserArraySearch(username);
     
-    if (numBooks >= 0 && numUsers >= 0)
-    {
-        if (userindex >= 0)
-        {
-            for (int ratingindex = 0; ratingindex < numBooks; ratingindex++) // ratingindex = column
-            {
-                if (users[userindex].getRatingAt(ratingindex) > 0) 
-                {
-                    booksRead++;
-                }
-            }
-        }
-        else if (userindex == -1)
-        {
-            cout << "Database has not been fully initialized" << endl;
-            return -1; // may or may not need this
-        }
-    }
-    else
+    if (userindex == -1)
     {
         cout << username << " does not exist in the database" << endl;
         booksRead = -2;
     }
+    
+    for (int ratingindex = 0; ratingindex < numBooks; ratingindex++) // ratingindex = column
+    {
+        if (users[userindex].getRatingAt(ratingindex) > 0) 
+        {
+            booksRead++;
+        }
+    }
+    
     return booksRead;
 }
 
@@ -177,44 +173,42 @@ int Library::getCountReadBooks(string username)
                 return i; // index of the book title
             }
         }
-        cout << bookTitle << " does not exist in our database" << endl;
         return -1;
     }
 ////////////////////////////////////////////////////////////////////////////////    
 double Library::calcAvgRating(string bookTitle)
 {
+    if (numBooks == 0 || numUsers == 0)
+    {
+        cout << "Database has not been fully initialized" << endl;
+        return -1;
+    }
+    
     double titleindex_value = 0.0;
-    double avg = 0.0;
     double count = 0.0;
     
     int titleindex = HelperTitleArraySearch(bookTitle);
-    if (numBooks >= 0 && numUsers >= 0)
-    {
-        if (titleindex >= 0)
-        {
-            for (int userindex = 0; userindex < numUsers; userindex++)  // userindex = row
-            {
-                double score = stod(books[titleindex].getTitle()); // converts string of getTitle() to double 
-                if (score > 0) 
-                {
-                    titleindex_value += score;
-                    count++;
-                }
-            }
-            avg = titleindex_value/count;
-        }
-        else if (titleindex == -1)
-        {
-            cout << "Database has not been fully initialized" << endl;
-            return -1; // may or may not need this
-        }
-    }    
-    else
+    
+    if (titleindex == -1)
     {
         cout << bookTitle << " does not exist in the database" << endl;
-        avg = -2;
-    } 
-    return avg;
+        return -2;
+    }
+   
+    for (int userindex = 0; userindex < numUsers; userindex++)  // userindex = row
+    {
+        int score = users[userindex].getRatingAt(titleindex);
+        if (score > 0) 
+        {
+            titleindex_value += score;
+            count++;
+        }
+    }
+    if (count == 0)
+    {
+        return 0;
+    }
+    return titleindex_value/count;
 }
 
 // PROBLEM 6
