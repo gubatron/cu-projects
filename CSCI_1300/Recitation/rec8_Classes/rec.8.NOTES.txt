@@ -1,0 +1,7 @@
+
+
+
+
+* difference between get__() and set__()
+get 
+set 

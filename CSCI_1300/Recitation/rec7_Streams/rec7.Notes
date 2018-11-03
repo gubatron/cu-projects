@@ -1,0 +1,105 @@
+Rec7 Notes - Streams
+
+void twoDmensionalFunction(int matrix[][columns], int rows)
+{
+}
+
+When opening a stream, you say
+
+ofstream myfile; //create an output file stream
+myfile.open(“file1.txt”); //open the file file1.txt with the file stream
+open(filename, mode);
+                ^
+                ^
+                class default mode parameter
+                ofstream ios::out  -- output operations
+                ifstream ios::in   -- input operations 
+                fstream ios::in | ios::out  -- both input and output operations
+                
+                
+Reading 
+* Using sream insertion >>
+////////////////////////////////////////////////////////////////////////////////
+#include <iostream>
+#include <fstream>
+using namespace std;
+int main()
+{
+    ifstream myfilestream;
+    myfilestream.open("myfile.txt");
+    if (myfilestream.is_open())
+    {
+        string line = "";
+        myfilestream >> line; //Reads from file into variable line
+        cout << line << endl;
+    }
+    else
+    {
+        cout << "file open failed" << endl;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+* Using getline
+#include <iostream>
+#include <fstream>
+using namespace std;
+int main()
+{
+    ifstream myfilestream;
+    myfilestream.open("myfile.txt");
+    if (myfilestream.is_open())
+    {
+        string line = "";
+        getline(myfilestream, line) //Reads the entire line into variable line
+        cout << line << endl;
+    }
+    else
+    {
+        cout << "file open failed" << endl;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+
+Writing
+* Using stream insertion <<
+#include <iostream>
+#include <fstream>
+using namespace std;
+int main()
+{
+    ofstream myfilestream;
+    myfilestream.open("myfile.txt");
+    if (myfilestream.is_open())
+    {
+        myfilestream << “Writing this line to a file". << endl;
+        myfilestream << “Writing this second line to a file". <<endl;
+    }
+    else
+    {
+        cout << "file open failed" << endl;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+* Using getline
+#include <iostream>
+#include <fstream>
+using namespace std;
+int main()
+{
+    ifstream myfilestream;
+    myfilestream.open("myfile.txt");
+    if (myfilestream.is_open())
+    {
+        string line = "";
+        int lineidx = 0;
+        while (getline(myfilestream, line))
+        {
+            cout << lineidx << ": " << line << endl;
+            lineidx++;
+        }
+    }
+    else
+    {
+        cout << "file open failed" << endl;
+    }
+}

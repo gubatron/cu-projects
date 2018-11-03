@@ -1,0 +1,77 @@
+get and set
+
+stoi == string to integer
+stof == string to float
+stod == string to double
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+HOMEWORK 7 NOTES
+
+/**-- name classes
+1) for every class do a get and a set on all of the function
+2)
+3) don't change too much, create abook object, fill in author and title data members, and put object into array
+4) 
+5) go to actual book i object, get author, get...
+6) main stays 
+
+compiling a.out 
+
+h file and cpp file
+demo.cpp
+demo.h
+copying all contents of cpp file and pasting them into h file
+
+every function with the :: will have a matching file in cpp
+when size doesn't change, you just get. Don't ened a set for every get
+
+*/
+
+IN DEMO.H FILE
+libraries:
+#pragma once // makes stuff in header included once in .h file
+
+#include <iostram>
+#include <math.h>
+#include <fstream>
+using namespace std;
+
+class CashRegister{
+    public:
+        CashRegister();
+        float getDrawerAmount();
+        void setDrawerAmount(float f);
+        
+    private: 
+        float amountInDrawer;
+};
+
+IN DEMO.CPP FILE
+#include "demo.h"
+
+CashREgister::CashREgister(){
+    amountInDrawer = 0;
+}
+float CashREgister::getDrawerAmount(){
+    return amountInDrawer;
+}
+void CashRegister::setDrawerAmount(float f){
+    amountInDrawer = f;
+}
+
+
+IN MAIN.CPP
+#pragma once // makes stuff in header included once in .h file
+
+#include <iostram>
+#include <math.h>
+#include <fstram>
+#include "demo.h"
+using namespace std;
+
+int main(){
+    
+}

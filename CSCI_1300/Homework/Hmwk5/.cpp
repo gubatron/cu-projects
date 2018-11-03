@@ -1,0 +1,7 @@
+/**
+ * Functions implemented:
+ * 
+ * hammingDistance to 
+ *
+ */
+ 

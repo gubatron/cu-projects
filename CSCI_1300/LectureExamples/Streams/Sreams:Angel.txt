@@ -1,0 +1,89 @@
+Re: Streams.
+In short: Streams are an abstraction that allow you to send/receive an unknown amount of bytes (as opposed to arrays, which could also be used, but they require a fixed amount of memory to be allocated and known in advanced)
+streams are eventually connected to endpoints, the one sending, and the one receiving, so be very open minded in terms of what those endpoints can be and you have yourself a very powerful tool.
+streams as you've seen with "cout" and "cin" are more than just pipes to send unlimited data, they have some clever functionality
+they can automatically detect the type of data you're sending, they convert it to bytes on one end, and then on the other end convert it back to the intended data type.
+outStream << 1123 << "This is a string" << thisIsMyFancyComplexObject;
+and the other end will be able to read:
+int anInteger;
+string aString;
+MyFancyComplexObject anObject;
+
+in >> anInteger >> aString >> anObject;
+
+
+the "<<" and ">>" stream operators show you in which direction the data is flowing into.
+std::cout is the stream for the Terminal screen, aka stdout
+std::cout << sendThisDataToTheLeft;
+std::cin >> receiveMyDataFROMTheLeft;
+If one stream is connected to a file, or to a network interface, those operators make it very convenient to use.
+We call the process of sending and receiving your objects and data through a stream, serialization and deserialization.  "serial" because the data cose in series, one after the other, and it must be received in the same order on the other end.
+Some useful streams are File Streams:
+ifstream -> Input File Stream (to read from a file)
+ofstream -> Output File Stream (to write to a file)
+
+
+Other cool ones are String Streams, so you can grow a string as you need to, useful for string manipulation.
+and the binary ones, istream, ostream.
+Streams can be bidirectional to, so you use a single one.
+
+Input/Output Stream -> iostream
+myIOStream >> someData; // read from it
+myIOStream << someOtherData; // write to it
+For now you've only interacted with streams using the << and >> operators.
+
+But they're objects in C++, and you can interact with them like this:
+myIOstream.read(putDataHere, sizeOfData);
+
+
+clearly it's much better to use the operators
+You can see all their capabilities here:
+http://www.cplusplus.com/reference/istream/iostream/
+At some point, you will create your own Classes/Objects, and you might want your objects to be sent or received via streams.
+For streams to be compatible and know how to serialize/deserialize your data, you will have to implement the >>, << operators for your class 
+
+And that's how they are like legos.
+Let's say you had a class called Date
+which has 3 member properties:
+class Date {
+int year;
+int month;
+int day;
+
+Date(int y, int m, int d) {
+year = y;
+month = m;
+day = d;
+}
+}
+
+
+and you have one Date object called today with today's date:
+Date today(2018, 10, 16);
+
+
+and you wanted to write that to a file, or elsewhere
+it'd be cool to be able to do this
+fileStream << today;
+for that you need to add the operator "<<" to the class described above
+
+class Date { 
+int year; int month; int day; 
+Date(int y, int m, int d) { year = y; month = m; day = d; } 
+
+friend ostream& operator<<(ostream& os, const Date& dt);
+};
+
+// and implement the operator
+ostream& operator<<(ostream& os, const Date& dateObj) {
+os << dateObj.year << dateObj.month << dateObj.day;
+return os;
+}
+
+
+Notice how I decided what gets sent through the stream, and in what order.
+
+when the other operator is implemented, you gotta make sure you read the data from the stream in the same order
+but explaining the "read" is a bit more complex and you need to understand the basics of objects, which is why C++ is called C++ and not "C". (C with objects = C++)
+hope this helps, might want to print this introductory explanation and read it when you have some undistracted time.
+
