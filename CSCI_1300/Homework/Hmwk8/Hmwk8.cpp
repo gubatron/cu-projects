@@ -6,9 +6,9 @@
 
 #include <iostream>
 #include <iomanip>
-#include "Book.cpp"
-#include "User.cpp"
-#include "Library.cpp"
+#include "Book.h"
+#include "User.h"
+#include "Library.h"
 using namespace std;
 
 /* displayMenu:
