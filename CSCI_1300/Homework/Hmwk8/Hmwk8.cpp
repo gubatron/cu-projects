@@ -7,11 +7,12 @@
 #include <iostream>
 #include <iomanip>
 
-#ifdef __APPLE__ // Mac build
-
+#ifdef __APPLE__// Include .h's for apple and linux, moodle likes .cpps for some reason
 #include "User.h"
 #include "Library.h"
-
+#elif __linux__
+#include "User.h"
+#include "Library.h"
 #else // Moodle
 #include "Book.cpp"
 #include "User.cpp"
