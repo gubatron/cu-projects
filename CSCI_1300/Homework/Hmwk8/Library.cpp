@@ -35,6 +35,11 @@ Library::Library()
 //////////////////////////////////////////////////////////////////////////////// 
 int Library::readBooks(string booksFile)
 {
+    if (numBooks == 200)
+    {
+        return numBooks;
+    }
+    
     ifstream in;
     in.open(booksFile);
     if (in.fail()){
@@ -43,23 +48,20 @@ int Library::readBooks(string booksFile)
     string line = "";
     string store[2]; // array to store what split() finds; same size as booksData[]
     
-    if (numBooks <= 200)
+    while (numBooks < 200 && getline(in, line))
     {
-        while (getline(in, line))
+        if (line != "")
         {
-            if(line != "")
-            {
-                // use split() to separate each component at the ',' ; returns 2.
-                split(line, ',', store); // says how many pieces it created (2)
-                books[numBooks].setTitle(store[1]);
-                books[numBooks].setAuthor(store[0]);
-                numBooks++;
-            }
+            // use split() to separate each component at the ',' ; returns 2.
+            split(line, ',', store); // says how many pieces it created (2)
+            books[numBooks].setTitle(store[1]);
+            books[numBooks].setAuthor(store[0]);
+            numBooks++;
         }
     }
-    cout << numBooks << endl;
-    return numBooks;
+    
     in.close(); 
+    return numBooks;
 }
 
 // PROBLEM 2
