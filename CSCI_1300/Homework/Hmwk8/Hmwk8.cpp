@@ -162,6 +162,7 @@ int main(int argc, char const *argv[])
     //                 //////////////////////////////////////////////////////////////////////////
                     
     //                 cout << endl;
+    //                 continue;
     //                 break;
                 
     //             case 7:
@@ -174,6 +175,7 @@ int main(int argc, char const *argv[])
     //                 //////////////////////////////////////////////////////////////////////////
                     
     //                 cout << endl;
+    //                 continue;
     //                 break;
                     
     //             case 8:
@@ -183,6 +185,7 @@ int main(int argc, char const *argv[])
     //                 //////////////////////////////////////////////////////////////////////////
                     
     //                 cout << endl;
+    //                 continue;
     //                 break;
                     
     //             case 9:
@@ -192,6 +195,7 @@ int main(int argc, char const *argv[])
     //                 //////////////////////////////////////////////////////////////////////////
                     
     //                 cout << endl;
+    //                 continue;
     //                 break;
                     
     //             case 10:
