@@ -1,8 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <stdio.h> // tolower()
-#include <ctype.h> // tolower()
+#include <algorithm> // for transform function (6)
 
 #include "Book.h"
 #include "User.h"
@@ -19,6 +18,8 @@ public:
     int readBooks(string booksFile);            // populates books[] with string (name of file to be read); returns total num books in books[] as int
     int readRatings(string ratingsFile);        // popluates users[] with string (name of file to be read); returns total number of users in users[] as int
     void printAllBooks();  // prints all books stored in books[]; void
+    string lowercase(string s); // HELPER
+    void getFreshRatings(int ratings[]); // HELPER
     int HelperUserArraySearch(string username);  // HELPER
     int getCountReadBooks(string username);     // takes string (username); returns number of books read by that user as an integer
     int HelperTitleArraySearch(string bookTitle); // HELPER

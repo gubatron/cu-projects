@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
     double count1 = 0; // (5)
     
     string filename = ""; // (1)(2)
-    string username = ""; // (4)
+    string username = ""; // (4)(6)
     string title = ""; // (5)
     
     // Book booksData[200]; //
@@ -153,17 +153,18 @@ int main(int argc, char const *argv[])
                     continue;
                     break;
                     
-    //             case 6:
-    //                 // make a new account 
-    //                 cout << "Enter a username:" << endl;
-    //                 //////////////////////////////////////////////////////////////////////////
-    //                 // CODE HERE
+                case 6:
+                    // make a new account 
+                    cout << "Enter a username:" << endl;
+                    //////////////////////////////////////////////////////////////////////////
+                    // CODE HERE
+                    cin >> username;
+                    call.addUser(username);
+                    //////////////////////////////////////////////////////////////////////////
                     
-    //                 //////////////////////////////////////////////////////////////////////////
-                    
-    //                 cout << endl;
-    //                 continue;
-    //                 break;
+                    cout << endl;
+                    continue;
+                    break;
                 
     //             case 7:
     //                 // check out book

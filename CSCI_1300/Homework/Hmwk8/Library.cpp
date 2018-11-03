@@ -10,28 +10,28 @@ Library::Library()
 // PROBLEM 1
 ////////////////////////////////////////////////////////////////////////////////
 // SPLIT
- int split (string str, char c, string array[])
- {
-    if (str.length() == 0) {
-         return 0;
-     }
-    string word = "";
-    int count = 0;
-    str = str + c;
-    for (int i = 0; i < str.length(); i++)
-    {
-        if (str[i] == c)
-        {
-            if (word.length() == 0)
-                continue;
-            array[count++] = word;
-            word = "";
-        } else {
-            word = word + str[i];
-        }
-    }
-    return count ;
+int split (string str, char c, string array[])
+{
+if (str.length() == 0) {
+     return 0;
  }
+string word = "";
+int count = 0;
+str = str + c;
+for (int i = 0; i < str.length(); i++)
+{
+    if (str[i] == c)
+    {
+        if (word.length() == 0)
+            continue;
+        array[count++] = word;
+        word = "";
+    } else {
+        word = word + str[i];
+    }
+}
+return count ;
+}
 //////////////////////////////////////////////////////////////////////////////// 
 int Library::readBooks(string booksFile)
 {
@@ -121,17 +121,32 @@ void Library::printAllBooks()
 // PROBLEM 4
 ////////////////////////////////////////////////////////////////////////////////    
 //HELPER FUNCTION
-    int Library::HelperUserArraySearch(string username)
+string Library::lowercase(string s)
+{
+    transform(s.begin(), s.end(), s.begin(), ::tolower); // help problem 6; found online
+    return s;
+}
+
+void Library::getFreshRatings(int ratings[])
+{
+    for (int i = 0; i < 200; i++)
     {
-        for (int i = 0; i < numUsers; i++)
-        {   
-            if (users[i].getUsername() == username)
-            {
-                return i; // index of the username
-            }
-        }
-        return -1;
+        ratings[i] = -1;
     }
+}
+
+int Library::HelperUserArraySearch(string username)
+{
+    string lUname = lowercase(username);
+    for (int i = 0; i < numUsers; i++)
+    {   
+        if (lowercase(users[i].getUsername()) == lUname)
+        {
+            return i; // index of the username
+        }
+    }
+    return -1;
+}
 ////////////////////////////////////////////////////////////////////////////////    
 int Library::getCountReadBooks(string username)
 {   
@@ -164,17 +179,17 @@ int Library::getCountReadBooks(string username)
 // PROBLEM 5
 ////////////////////////////////////////////////////////////////////////////////    
 // HELPER FUNCTION
-    int Library::HelperTitleArraySearch(string bookTitle)
-    {
-        for (int i = 0; i < numBooks; i++)
-        {   
-            if (books[i].getTitle() == bookTitle)
-            {
-                return i; // index of the book title
-            }
+int Library::HelperTitleArraySearch(string bookTitle)
+{
+    for (int i = 0; i < numBooks; i++)
+    {   
+        if (books[i].getTitle() == bookTitle)
+        {
+            return i; // index of the book title
         }
-        return -1;
     }
+    return -1;
+}
 ////////////////////////////////////////////////////////////////////////////////    
 double Library::calcAvgRating(string bookTitle)
 {
@@ -229,52 +244,23 @@ bool Library::addUser(string username)
             // make string temp and use for loop to go through each characters and convert the 
             // current character to a lowercase letter - use function tolower */
             
-    // if (numUsers > 200) //number of users is greater than 200
-    // {
-    //     cout << "Database full" << endl;
-    //     return false; 
-    // }
-    // else // if there is still room in the database...
-    // {
-    //     // check if username is already in the database by making all letters lowercase
-    //     // if letters are already lowercase, just compare
-    //     // if some or all letters are capitalized, make tolower and compare
-    //     int usercount = numUsers;
-    //     for (int i = 0; i < numUsers; i++) //check through letters of the username
-    //     {
-    //         if (users[i].setUsername() == true) // sets username
-    //         {
-    //             // check the username
-    //             // conver caps to lower case
-    //             if (username.length() > 0)
-    //             {
-    //                 for (int j = 0; j < username.length(); j++)
-    //                 {
-    //                     string ch = username.substr(j, 1); //starting at j and include 1 character
-    //                     string temp = "";
-    //                     if (ch >= 65 && ch <= 90)
-    //                     {
-    //                         ch += 32; // add 32 to the character to make it lowercase
-    //                         temp += ch// put that character in a temp string
-    //                     }
-    //                 }
-    //                 if (temp != /*other names in database*/)
-    //                 {
-    //                     return true;
-    //                 }
-    //             } 
-    //             else // if lenght is different
-    //             {
-    //                 return false;
-    //             }
-    //         } 
-    //         else // false
-    //         {
-    //             cout << username << " already exists in the database" << endl;
-    //             return false;
-    //         }
-    //     }
-    // }
+    if (numUsers == 200) //number of users is greater than 200
+    {
+        cout << "Database full" << endl;
+        return false; 
+    }
+    
+    if (HelperUserArraySearch(username) != -1)
+    {
+        cout << username << " already exists in the database" << endl;
+        return false;
+    }
+    
+    int ratings[200]; 
+    getFreshRatings(ratings);
+    User user(lowercase(username), ratings, sizeof(ratings));
+    users[numUsers++] = user;
+    return true;
 } 
 
 // PROBLEM 7
