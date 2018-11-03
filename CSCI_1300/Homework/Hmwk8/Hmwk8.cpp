@@ -148,7 +148,7 @@ int main(int argc, char const *argv[]) {
                 cout << "Enter a username:" << endl;
                 //////////////////////////////////////////////////////////////////////////
                 // CODE HERE
-                cin >> username;
+                getline(cin,username);
                 library.addUser(username);
                 //////////////////////////////////////////////////////////////////////////
 
