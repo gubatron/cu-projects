@@ -147,6 +147,7 @@ int Library::HelperUserArraySearch(string username)
     }
     return -1;
 }
+
 ////////////////////////////////////////////////////////////////////////////////    
 int Library::getCountReadBooks(string username)
 {   
@@ -181,9 +182,10 @@ int Library::getCountReadBooks(string username)
 // HELPER FUNCTION
 int Library::HelperTitleArraySearch(string bookTitle)
 {
+    string lTitle = lowercase(bookTitle);
     for (int i = 0; i < numBooks; i++)
     {   
-        if (books[i].getTitle() == bookTitle)
+        if (lowercase(books[i].getTitle()) == lTitle)
         {
             return i; // index of the book title
         }
@@ -219,7 +221,7 @@ double Library::calcAvgRating(string bookTitle)
             count++;
         }
     }
-    if (count == 0)
+    if (titleindex_value == 0 || count == 0)
     {
         return 0;
     }
@@ -258,14 +260,15 @@ bool Library::addUser(string username)
     
     int ratings[200]; 
     getFreshRatings(ratings);
-    User user(lowercase(username), ratings, sizeof(ratings));
-    users[numUsers++] = user;
+    User user(username, ratings, sizeof(ratings));
+    users[numUsers++] = user; // increase numUsers after line is executed
     return true;
 } 
 
 // PROBLEM 7
 bool Library::checkOutBook(string username, string bookTitle, int newRating)
 {
+    bool errored = false; // reverse logic
     /**
      * value for rating between 0 and 5
      * check if has been fully initialized
@@ -273,6 +276,39 @@ bool Library::checkOutBook(string username, string bookTitle, int newRating)
      *      1. user not found; 2. title not found; 3. rating value not valid (must be 0-5)
      *      can print one, two or three at once (use if statements. no elses)
     */
+    if (numBooks == 0 || numUsers == 0)
+    {
+        cout << "Database has not been fully initialized" << endl;
+        return false;
+    }
+    
+    int userindex = HelperUserArraySearch(username);
+    if (userindex == -1)
+    {
+        cout << username << " does not exist in the database" << endl;
+        errored = true;
+    }
+    
+    int titleindex = HelperTitleArraySearch(bookTitle);
+    if (titleindex == -1)
+    {
+        cout << bookTitle << " does not exist in the database" << endl;
+        errored = true;
+    }
+    
+    if (newRating < 0 || newRating > 5)
+    {
+        cout << newRating << " is not valid" << endl;
+        errored = true;
+    }
+    
+    // if nothing goes wrong, update rating
+    if (!errored)
+    {
+        User user = users[userindex];
+        user.setRatingAt(titleindex, newRating);
+    }
+    return !errored;
 }
 
 // PROBLEM 8

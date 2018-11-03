@@ -6,9 +6,12 @@
 
 #include <iostream>
 #include <iomanip>
-#include "Book.h"
-#include "User.h"
-#include "Library.h"
+// #include "Book.h"
+// #include "User.h"
+// #include "Library.h"
+#include "Book.cpp"
+#include "User.cpp"
+#include "Library.cpp"
 using namespace std;
 
 /* displayMenu:
@@ -36,7 +39,7 @@ int main(int argc, char const *argv[])
 	//////////////////////////////////////////////////////////////////////////
 	// Your code here. Call the appropriate function(s).
 	
-	Library call;
+	Library library;
 	
 	string choice;
     int nb = 0; // number of books (1) 
@@ -46,7 +49,8 @@ int main(int argc, char const *argv[])
     
     string filename = ""; // (1)(2)
     string username = ""; // (4)(6)
-    string title = ""; // (5)
+    string title = ""; // (5)(7)
+    int rating = 0; // (7)
     
     // Book booksData[200]; //
     // User userData[200]; // 
@@ -69,7 +73,7 @@ int main(int argc, char const *argv[])
                     //////////////////////////////////////////////////////////////////////////
                     getline(cin, filename); //read from file
                     //"books.txt"
-                    nb = call.readBooks(filename);
+                    nb = library.readBooks(filename);
                     
                     if (nb != -1)
                     {
@@ -83,7 +87,6 @@ int main(int argc, char const *argv[])
                     
                     
                     cout << endl;
-                    continue;
                     break;
 
                 case 2: 
@@ -93,7 +96,7 @@ int main(int argc, char const *argv[])
                     //////////////////////////////////////////////////////////////////////////
                     getline(cin, filename);
                     //"ratings.txt"
-                    nu = call.readRatings(filename);
+                    nu = library.readRatings(filename);
                     if (nu != -1)
                     {
                         cout << "Total users in the database: " << nu << endl;
@@ -105,17 +108,14 @@ int main(int argc, char const *argv[])
                     //////////////////////////////////////////////////////////////////////////
                     
                     cout << endl;
-                    continue;
                     break;
 
                 case 3: 
                     // print the list of the books
                     
                     //////////////////////////////////////////////////////////////////////////
-                    call.printAllBooks();
+                    library.printAllBooks();
                     //////////////////////////////////////////////////////////////////////////
-                    
-                    continue;
                     break;
 
                 case 4:
@@ -124,7 +124,7 @@ int main(int argc, char const *argv[])
                     
                     //////////////////////////////////////////////////////////////////////////
                     getline(cin, username);
-                    count = call.getCountReadBooks(username);
+                    count = library.getCountReadBooks(username);
                     if (count != -1)
                     {
                         cout << username << " rated " << count << " books" << endl;
@@ -132,7 +132,6 @@ int main(int argc, char const *argv[])
                     //////////////////////////////////////////////////////////////////////////
                     
                     cout << endl;
-                    continue;
                     break;
 
                 case 5:
@@ -141,7 +140,7 @@ int main(int argc, char const *argv[])
 
                     //////////////////////////////////////////////////////////////////////////
                     getline(cin, title);
-                    count1 = call.calcAvgRating(title);
+                    count1 = library.calcAvgRating(title);
                     if (count1 != -1)
                     {
                         cout << "The average rating for " << title << " is ";
@@ -150,7 +149,6 @@ int main(int argc, char const *argv[])
                     //////////////////////////////////////////////////////////////////////////
                     
                     cout << endl;
-                    continue;
                     break;
                     
                 case 6:
@@ -159,25 +157,33 @@ int main(int argc, char const *argv[])
                     //////////////////////////////////////////////////////////////////////////
                     // CODE HERE
                     cin >> username;
-                    call.addUser(username);
+                    library.addUser(username);
                     //////////////////////////////////////////////////////////////////////////
                     
                     cout << endl;
-                    continue;
                     break;
                 
-    //             case 7:
-    //                 // check out book
-    //                 cout << "Enter a username: " << endl;
-    //                 cout << "Enter a username: " << endl;
-    //                 cout << "Enter a username: " << endl;
-    //                 //////////////////////////////////////////////////////////////////////////
-    //                 // CODE HERE
-    //                 //////////////////////////////////////////////////////////////////////////
+                case 7:
+                    // check out book
+                    //////////////////////////////////////////////////////////////////////////
+                    // CODE HERE
+                    library.readBooks("books.txt");
+                    library.readRatings("ratings.txt");
+                    cout << "Enter a username: " << endl;
+                    getline(cin, username);
+                    cout << "[username -> " << username << "]" << endl;
+                    cout << "Enter a book title: " << endl;
+                    getline(cin, title);
+                    cout << "[title -> " << title << "]" << endl;
+                    cout << "Enter a rating for the book: " << endl;
+                    cin >> rating;
                     
-    //                 cout << endl;
-    //                 continue;
-    //                 break;
+                    library.checkOutBook(username, title, rating);
+                    
+                    //////////////////////////////////////////////////////////////////////////
+                    
+                    cout << endl;
+                    break;
                     
     //             case 8:
     //                 // view ratings 
@@ -192,27 +198,15 @@ int main(int argc, char const *argv[])
     //             case 9:
     //                 // get recommendations
     //                 cout << "Enter a username: " << endl;
-    //                 //////////////////////////////////////////////////////////////////////////
-    //                 //////////////////////////////////////////////////////////////////////////
-                    
-    //                 cout << endl;
-    //                 continue;
-    //                 break;
-                    
-    //             case 10:
-    //                 // quit
-    //                 cout << "good bye!" << endl;
-    //                 break;
-
-    //             default:
+    //                 ////o
     //                 cout << "invalid input" << endl << endl;
     //         }
     // }
 	//////////////////////////////////////////////////////////////////////////
 
-            }
-            return 0;
-    }
+            } //switch
+    } // while
+    return 0;
 }
 
 
