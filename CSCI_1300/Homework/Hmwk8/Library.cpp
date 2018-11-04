@@ -201,7 +201,7 @@ double Library::calcAvgRating(string bookTitle)
         return -1;
     }
     
-    double titleindex_value = 0.0;
+    double titleScore = 0.0;
     double count = 0.0;
     
     int titleindex = HelperTitleArraySearch(bookTitle);
@@ -211,21 +211,23 @@ double Library::calcAvgRating(string bookTitle)
         cout << bookTitle << " does not exist in the database" << endl;
         return -2;
     }
-   
+    
     for (int userindex = 0; userindex < numUsers; userindex++)  // userindex = row
     {
-        int score = users[userindex].getRatingAt(titleindex);
+        // for a userindex, gets rating of a book at the index from the helper
+        int score = users[userindex].getRatingAt(titleindex); 
         if (score > 0 && score <= 5) 
         {
-            titleindex_value += score;
+            titleScore += score;
             count++;
         }
     }
-    if (titleindex_value == 0 || count == 0)
+
+    if (titleScore == 0 || count == 0)
     {
         return 0;
     }
-    return titleindex_value/count;
+    return titleScore/count;
 }
 
 // PROBLEM 6
@@ -305,8 +307,16 @@ bool Library::checkOutBook(string username, string bookTitle, int newRating)
     // if nothing goes wrong, update rating
     if (!errored)
     {
-        User user = users[userindex];
-        user.setRatingAt(titleindex, newRating);
+        // These 2 lines only update a copy of the user in the array
+        //User user = users[userindex];
+        //user.setRatingAt(titleindex, newRating);
+
+        // then we'd have to update the users array with the updated copy
+        // users[userindex] = u;
+        
+        // but why make an unnecessary copy? (inneficient)
+        // just update the user in the array directly!!!
+        users[userindex].setRatingAt(titleindex, newRating);
     }
     return !errored;
 }

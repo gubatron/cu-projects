@@ -31,6 +31,7 @@ using namespace std;
      cout << "8. View Ratings" << endl;
      cout << "9. Get Recommendations" << endl;
      cout << "10. Quit" << endl;
+     cout << "11. Automated test" << endl;
  }
 
 
@@ -167,14 +168,14 @@ int main(int argc, char const *argv[])
                     // check out book
                     //////////////////////////////////////////////////////////////////////////
                     // CODE HERE
-                    library.readBooks("books.txt");
-                    library.readRatings("ratings.txt");
+                    
+                    
                     cout << "Enter a username: " << endl;
                     getline(cin, username);
-                    cout << "[username -> " << username << "]" << endl;
+                    
                     cout << "Enter a book title: " << endl;
                     getline(cin, title);
-                    cout << "[title -> " << title << "]" << endl;
+                    
                     cout << "Enter a rating for the book: " << endl;
                     cin >> rating;
                     
@@ -185,29 +186,43 @@ int main(int argc, char const *argv[])
                     cout << endl;
                     break;
                     
+                case 11: 
+                    library.readBooks("b.txt");
+                    library.readRatings("r.txt");
+                    cout << "Books: " << library.getNumBooks() << endl;
+                    cout << "Ratings: " << library.getNumUsers() << endl;
+                    
+                    cout << "book 3: " << library.calcAvgRating("SPeak") << endl;
+                    library.checkOutBook("doris", "SPeak", 0);
+                    cout << "book 3: " << library.calcAvgRating("SPeak") << endl;
+                    
+                    break;
     //             case 8:
     //                 // view ratings 
     //                 cout << "Enter a username: " << endl;
     //                 //////////////////////////////////////////////////////////////////////////
+    //                 // CODE HERE
     //                 //////////////////////////////////////////////////////////////////////////
                     
     //                 cout << endl;
-    //                 continue;
     //                 break;
                     
     //             case 9:
     //                 // get recommendations
     //                 cout << "Enter a username: " << endl;
-    //                 ////o
+    //                 //////////////////////////////////////////////////////////////////////////
+    //                 // CODE HERE
+    //                 //////////////////////////////////////////////////////////////////////////
+
     //                 cout << "invalid input" << endl << endl;
     //         }
     // }
 	//////////////////////////////////////////////////////////////////////////
 
-            } //switch
+            } // switch
     } // while
     return 0;
-}
+} // main
 
 
 
