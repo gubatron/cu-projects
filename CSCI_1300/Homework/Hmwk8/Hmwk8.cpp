@@ -31,7 +31,7 @@ using namespace std;
      cout << "8. View Ratings" << endl;
      cout << "9. Get Recommendations" << endl;
      cout << "10. Quit" << endl;
-     cout << "11. Automated test" << endl;
+     //5cout << "11. Automated test" << endl;
  }
 
 
@@ -49,7 +49,7 @@ int main(int argc, char const *argv[])
     double count1 = 0; // (5)
     
     string filename = ""; // (1)(2)
-    string username = ""; // (4)(6)
+    string username = ""; // (4)(6)(8)
     string title = ""; // (5)(7)
     int rating = 0; // (7)
     
@@ -169,7 +169,6 @@ int main(int argc, char const *argv[])
                     //////////////////////////////////////////////////////////////////////////
                     // CODE HERE
                     
-                    
                     cout << "Enter a username: " << endl;
                     getline(cin, username);
                     
@@ -189,23 +188,24 @@ int main(int argc, char const *argv[])
                 case 11: 
                     library.readBooks("b.txt");
                     library.readRatings("r.txt");
-                    cout << "Books: " << library.getNumBooks() << endl;
-                    cout << "Ratings: " << library.getNumUsers() << endl;
-                    
-                    cout << "book 3: " << library.calcAvgRating("SPeak") << endl;
-                    library.checkOutBook("doris", "SPeak", 0);
-                    cout << "book 3: " << library.calcAvgRating("SPeak") << endl;
-                    
+                    library.addUser("new_user");
+                    library.viewRatings("new_user");
                     break;
-    //             case 8:
-    //                 // view ratings 
-    //                 cout << "Enter a username: " << endl;
-    //                 //////////////////////////////////////////////////////////////////////////
-    //                 // CODE HERE
-    //                 //////////////////////////////////////////////////////////////////////////
+                case 8:
+                    // view ratings 
                     
-    //                 cout << endl;
-    //                 break;
+                    library.readBooks("books.txt");
+                    library.readRatings("ratings.txt");
+                    
+                    cout << "Enter a username: " << endl;
+                    //////////////////////////////////////////////////////////////////////////
+                    // CODE HERE
+                    getline(cin, username);
+                    library.viewRatings(username);
+                    //////////////////////////////////////////////////////////////////////////
+                    
+                    cout << endl;
+                    break;
                     
     //             case 9:
     //                 // get recommendations

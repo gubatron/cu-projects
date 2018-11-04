@@ -262,7 +262,7 @@ bool Library::addUser(string username)
     
     int ratings[200]; 
     getFreshRatings(ratings);
-    User user(username, ratings, sizeof(ratings));
+    User user(username, ratings, 0);
     users[numUsers++] = user; // increase numUsers after line is executed
     return true;
 } 
@@ -322,7 +322,7 @@ bool Library::checkOutBook(string username, string bookTitle, int newRating)
 }
 
 // PROBLEM 8
-void Library::viewRatings (string username)
+void Library::viewRatings(string username)
 {
     /**
      * if exists, print all ratings
@@ -330,6 +330,40 @@ void Library::viewRatings (string username)
      * if new user, user name not rated any books
      * use getCountRead - if 0, hasn't rated anything. Else print titles and ratings by traversing
     */
+    
+    if (numBooks == 0 || numUsers == 0)
+    {
+        cout << "Database has not been fully initialized" << endl;
+        return;
+    }
+    
+    int userindex = HelperUserArraySearch(username);
+    if (userindex == -1)
+    {
+        cout << username << " does not exist in the database" << endl;
+        return;
+    }
+    
+    User user = users[userindex];
+    if (user.getNumRatings() == 0)
+    {
+        cout << user.getUsername() << " has not rated any books yet" << endl;
+        return;
+    }
+    
+    // if read
+    cout << "Here are the books that " << user.getUsername() << " rated" << endl;
+    for (int i = 0; i < 200; i++)
+    {
+        int rating = user.getRatingAt(i);
+        if (rating > 0 && rating < 6)
+        {
+            Book book = books[i];
+            cout << "Title : " << book.getTitle() << endl;
+            cout << "Rating : " << user.getRatingAt(i) << endl;
+            cout << "-----" << endl;
+        }
+    }
 }
 
 // PROBLEM 9
