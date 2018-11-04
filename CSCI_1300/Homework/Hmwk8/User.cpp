@@ -1,68 +1,56 @@
-#include "User.h" // header file "User.h"
+#include "User.h"
 
 //implementation file 
 
-User::User()
-{
+User::User() {
     username = "";
     numRatings = 0;
     size = 200;
-    for (int i = 0; i < size; i++)
-    {
+    for (int i = 0; i < size; i++) {
         ratings[i] = -1;
     }
 }
+
 // only passes 3 because size is fixed to 200
-User::User(string username_input, int ratings_input[], int numRatings_input)
-{
+User::User(string username_input, int ratings_input[], int numRatings_input) {
     username = username_input;
-    for (int i = 0; i < 200; i++)
-    {
+    for (int i = 0; i < 200; i++) {
         ratings[i] = ratings_input[i];
     }
     numRatings = numRatings_input;
 }
 
-string User::getUsername()
-{
+string User::getUsername() {
     return username;
 }
 
-void User::setUsername(string username_input)
-{
+void User::setUsername(string username_input) {
     username = username_input;
 }
 
-int User::getRatingAt(int index)
-{
-    if (index > 199 || index < 0)
-    {
-        return -1; 
+int User::getRatingAt(int index) {
+    if (index > 199 || index < 0) {
+        return -1;
     }
     return ratings[index];
 }
 
-bool User::setRatingAt(int index, int value)
-{
-    if (index < 0 || index > 199 || value < 0 || value > 5)
-    {
+bool User::setRatingAt(int index, int value) {
+    if (index < 0 || index > 199 || value < 0 || value > 5) {
         return false;
     }
-    if (ratings[index] == -1)
-    {
+    if (ratings[index] == -1) {
         numRatings++;
     }
     ratings[index] = value;
     return true;
 }
 
-int User::getNumRatings()
-{
+int User::getNumRatings() {
     return numRatings;
 }
 
-void User::setNumRatings(int numRatings_input)
-{
+void User::setNumRatings(int numRatings_input) {
     numRatings = numRatings_input;
 }
 
