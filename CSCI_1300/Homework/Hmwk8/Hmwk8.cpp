@@ -6,12 +6,15 @@
 
 #include <iostream>
 #include <iomanip>
+#ifdef __APPLE__ // Mac build
 #include "Book.h"
 #include "User.h"
 #include "Library.h"
-// #include "Book.cpp"
-// #include "User.cpp"
-// #include "Library.cpp"
+#else // Moodle
+ #include "Book.cpp"
+ #include "User.cpp"
+ #include "Library.cpp"
+#endif
 using namespace std;
 
 

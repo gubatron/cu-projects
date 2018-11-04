@@ -446,21 +446,22 @@ void Library::getRecommendations(string username)
     // I have someone similar, let's see if they have books rated from 3 to 5
     User bestUser = users[bestUserIndex];
     int num_recommendations = 0;
-    string recommendations[200];
+    int recommendations[200]; // array of   index -> rating
     for (int i = 0; i < 200; i++)
     {
         int my_book_rating = user.getRatingAt(i);
         if (my_book_rating > 0 && my_book_rating < 6)
         {
             // don't recommend something I already read
-            recommendations[i] = "not_recommended";
+            recommendations[i] = -1;
             continue;
         }
         int rating = bestUser.getRatingAt(i);
         if (rating > 2 && rating < 6)
         {
             // print only if we have > 1 rec
-            recommendations[num_recommendations++] = books[i].getTitle() + " by " + books[i].getAuthor();
+            recommendations[i] = rating;// books[i].getTitle() + " by " + books[i].getAuthor();
+            num_recommendations++;
         }
     }
     
