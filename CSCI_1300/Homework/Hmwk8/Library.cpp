@@ -379,11 +379,15 @@ int Library::ssd(User a, User b)
     int result = 0;
     for (int i = 0; i < 200; i++)
     {
-        if (a.getRatingAt(i) == -1 || b.getRatingAt(i) == -1)
-        {
-            continue;
+        int a_rating = a.getRatingAt(i);
+        if (a_rating == -1) {
+            a_rating = 0; // turn -1's into 0s, new user.
         }
-        result += pow((a.getRatingAt(i) - b.getRatingAt(i)),2);
+        int b_rating = b.getRatingAt(i);
+        if (b_rating == -1) {
+            b_rating = 0;
+        }
+        result += pow((a_rating - b_rating), 2);
     }
     return result;
 }
@@ -411,14 +415,7 @@ void Library::getRecommendations(string username)
     
     // new user cannot be most similar user
     User user = users[userindex];
-    int numReadBooks = getCountReadBooks(username);
-    bool isNewUser = numReadBooks == 0;
-    // if (isNewUser)
-    // {
-    //     cout << "There are no recommendations for " << user.getUsername() << " at the present" << endl;
-    //     return;
-    // }
-    
+
     // compare SSD values for all users 
     int bestSSD = 999999; // initialized to big value to make comparison easier for first iteration 
     int bestUserIndex = -1; // the index of the best user found so far given the bestSSD
@@ -450,10 +447,13 @@ void Library::getRecommendations(string username)
     User bestUser = users[bestUserIndex];
     int num_recommendations = 0;
     string recommendations[200];
-    for (int i = 0; i < 200 && num_recommendations < 5; i++)
+    for (int i = 0; i < 200; i++)
     {
-        if (user.getRatingAt(i) != 0)
+        int my_book_rating = user.getRatingAt(i);
+        if (my_book_rating > 0 && my_book_rating < 6)
         {
+            // don't recommend something I already read
+            recommendations[i] = "not_recommended";
             continue;
         }
         int rating = bestUser.getRatingAt(i);

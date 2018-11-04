@@ -37,7 +37,6 @@ int User::getRatingAt(int index)
 {
     if (index > 199 || index < 0)
     {
-        cout << "getRatingAt(" << index << "): invalid index, return -1!" << endl; 
         return -1; 
     }
     return ratings[index];
