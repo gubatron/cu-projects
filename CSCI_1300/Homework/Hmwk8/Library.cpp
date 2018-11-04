@@ -415,7 +415,7 @@ void Library::getRecommendations(string username)
     
     // compare SSD values for all users 
     int bestSSD = 999999; // initialized to big value to make comparison easier for first iteration 
-    int bestUserIndex; // the index of the best user found so far given the bestSSD
+    int bestUserIndex = -1; // the index of the best user found so far given the bestSSD
     for (int i = 0; i < numUsers; i++)
     {
         if (i == userindex)
@@ -434,14 +434,39 @@ void Library::getRecommendations(string username)
             bestUserIndex = i;
         }
     }
-    if (bestSSD == 999999) // no one else has read any books
+    if (bestUserIndex == -1) // no one else has read any books
     {
         cout << "There are no recommendations for " << user.getUsername() << " at the present" << endl;
         return;
     }
     
     // I have someone similar, let's see if they have books rated from 3 to 5
+    User bestUser = users[bestUserIndex];
+    int num_recommendations = 0;
+    string recommendations[5];
+    for (int i = 0; i < 200 && num_recommendations < 5; i++)
+    {
+        int rating = bestUser.getRatingAt(i);
+        if (rating > 2 && rating < 6)
+        {
+            // print only if we have > 1 rec
+            recommendations[i] = lowercase(books[i].getTitle()) + " by " + lowercase(books[i].getAuthor());
+            num_recommendations++;
+        }
+    }
     
-    //users[bestUserIndex].getRatingAt()
+    if (num_recommendations == 0) // best match has no books to recommend
+    {
+        cout << "There are no recommendations for " << user.getUsername() << " at the present" << endl;
+        return;
+    }
     
+    if (num_recommendations > 0) // at least 1 recommendation
+    {
+        cout << "Here are the list of recommendations" << endl;
+        for (int i = 0; i < num_recommendations; i++)
+        {
+            cout << recommendations[i] << endl;
+        }
+    }
 }

@@ -208,9 +208,9 @@ int main(int argc, char const *argv[])
                     cout << "Enter a username: " << endl;
                     //////////////////////////////////////////////////////////////////////////
                     // CODE HERE
+                    getline(cin, username);
+                    library.getRecommendations(username);
                     //////////////////////////////////////////////////////////////////////////
-
-                    cout << "invalid input" << endl << endl;
                     break;
                     
                 case 10:
@@ -222,7 +222,7 @@ int main(int argc, char const *argv[])
                     library.readBooks("b.txt");
                     library.readRatings("r.txt");
                     
-                    a = library.getUser("joan");
+                    a = library.getUser("joanna");
                     b = library.getUser("barbara");
                     cout << library.ssd(a,b) << endl;
                     break;
