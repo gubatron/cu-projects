@@ -47,19 +47,16 @@ int User::getRatingAt(int index)
 
 bool User::setRatingAt(int index, int value)
 {
-    if (index >= 0 && index < 200 && value >= 0 && value <= 5)
-    {
-        if(ratings[index] == -1)
-        {
-            numRatings++;
-        }
-        ratings[index] = value;
-        return true;   
-    }
-    else
+    if (index < 0 || index > 199 || value < 0 || value > 5)
     {
         return false;
     }
+    if (ratings[index] == -1)
+    {
+        numRatings++;
+    }
+    ratings[index] = value;
+    return true;
 }
 
 int User::getNumRatings()

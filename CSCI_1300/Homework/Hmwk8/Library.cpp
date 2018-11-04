@@ -215,7 +215,7 @@ double Library::calcAvgRating(string bookTitle)
     for (int userindex = 0; userindex < numUsers; userindex++)  // userindex = row
     {
         int score = users[userindex].getRatingAt(titleindex);
-        if (score > 0) 
+        if (score > 0 && score <= 5) 
         {
             titleindex_value += score;
             count++;
