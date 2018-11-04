@@ -7,17 +7,17 @@
 #include <iostream>
 #include <iomanip>
 
-#ifdef __APPLE__// Include .h's for apple and linux, moodle likes .cpps for some reason
-#include "User.h"
-#include "Library.h"
-#elif __linux__
-#include "User.h"
-#include "Library.h"
-#else // Moodle
+// #ifdef __APPLE__// Include .h's for apple and linux, moodle likes .cpps for some reason
+// #include "User.h"
+// #include "Library.h"
+// #elif __linux__
+// #include "User.h"
+// #include "Library.h"
+// #else // Moodle
 #include "Book.cpp"
 #include "User.cpp"
 #include "Library.cpp"
-#endif
+// #endif
 using namespace std;
 
 
@@ -49,6 +49,7 @@ int main(int argc, char const *argv[]) {
     Library library;
 
     string choice;
+    int intchoice;
     int nb = 0; // number of books (1) 
     int nu = 0; // number of users (2)
     int count = 0; // (4)
@@ -57,15 +58,36 @@ int main(int argc, char const *argv[]) {
     string filename; // (1)(2)
     string username; // (4)(6)(8)
     string title; // (5)(7)
+    string str_rating = ""; // (7)
     int rating = 0; // (7)
 
     User a, b; //(11)   TEST
 
 
     while (choice != "10") {
-        displayMenu();
+        cout << "before getline -> [choice="<< choice << "]" << endl;
+        displayMenu();            
         getline(cin, choice);
-        switch (stoi(choice)) {
+        cout << "after getline -> [choice="<< choice << "]" << endl;
+
+        try
+        {
+            // if the user enters something other
+            // than an int, stoi will throw an
+            // exception, if not caught the app
+            // will crash with:
+            // > terminate called after throwing an instance of 'std::invalid_argument'
+            // > what():  stoi
+            //
+            // See: https://stackoverflow.com/questions/41070101/terminate-called-after-throwing-an-instance-of-stdinvalid-argument-what-s
+            //
+            intchoice = stoi(choice);
+        } catch (std::invalid_argument &e)
+        {
+            intchoice = -1;
+        }
+        choice = "";
+        switch (intchoice) {
             case 1:
                 // read book file
                 cout << "Enter a book file name:" << endl;
@@ -119,7 +141,7 @@ int main(int argc, char const *argv[]) {
                 //////////////////////////////////////////////////////////////////////////
                 getline(cin, username);
                 count = library.getCountReadBooks(username);
-                if (count != -1) {
+                if (count > -1) {
                     cout << username << " rated " << count << " books" << endl;
                 }
                 //////////////////////////////////////////////////////////////////////////
@@ -134,7 +156,7 @@ int main(int argc, char const *argv[]) {
                 //////////////////////////////////////////////////////////////////////////
                 getline(cin, title);
                 count1 = library.calcAvgRating(title);
-                if (count1 != -1) {
+                if (count1 > -1) {
                     cout << "The average rating for " << title << " is ";
                     cout << fixed << setprecision(2) << count1 << endl;
                 }
@@ -145,7 +167,7 @@ int main(int argc, char const *argv[]) {
 
             case 6:
                 // make a new account
-                cout << "Enter a username:" << endl;
+                cout << "Enter username:" << endl;
                 //////////////////////////////////////////////////////////////////////////
                 // CODE HERE
                 getline(cin,username);
@@ -160,15 +182,20 @@ int main(int argc, char const *argv[]) {
                 //////////////////////////////////////////////////////////////////////////
                 // CODE HERE
 
-                cout << "Enter a username: " << endl;
+                cout << "Enter username: " << endl;
                 getline(cin, username);
 
-                cout << "Enter a book title: " << endl;
+                cout << "Enter book title: " << endl;
                 getline(cin, title);
 
-                cout << "Enter a rating for the book: " << endl;
-                cin >> rating;
-
+                cout << "Enter rating for the book: " << endl;
+                getline(cin, str_rating);
+                try {
+                    rating = stoi(str_rating);
+                } catch (std::invalid_argument &e)
+                {
+                    rating = -1;
+                }
                 library.checkOutBook(username, title, rating);
 
                 //////////////////////////////////////////////////////////////////////////
@@ -205,21 +232,22 @@ int main(int argc, char const *argv[]) {
             case 10:
                 // quit
                 cout << "good bye!" << endl;
+                return 0;
                 break;
-            case 11:
-                // TESTER CASE
-                library.readBooks("b.txt");
-                //library.readRatings("r.txt");
-                library.addUser("newUser1");
-                library.addUser("newUser2");
-                library.addUser("newUser3");
-                library.checkOutBook("newUser2", "The Five People You Meet in Heaven", 3);
-                library.getRecommendations("newUser1");
+            // case 11:
+            //     // TESTER CASE
+            //     library.readBooks("b.txt");
+            //     //library.readRatings("r.txt");
+            //     library.addUser("newUser1");
+            //     library.addUser("newUser2");
+            //     library.addUser("newUser3");
+            //     library.checkOutBook("newUser2", "The Five People You Meet in Heaven", 3);
+            //     library.getRecommendations("newUser1");
 
-                //a = library.getUser("joanna");
-                //b = library.getUser("barbara");
-                cout << library.ssd(a, b) << endl;
-                break;
+            //     //a = library.getUser("joanna");
+            //     //b = library.getUser("barbara");
+            //     cout << library.ssd(a, b) << endl;
+            //     break;
             default:
                 cout << "invalid input" << endl << endl;
         } // switch
@@ -227,7 +255,3 @@ int main(int argc, char const *argv[]) {
     return 0;
 } // main
 
-
-
-// file:///C:/Users/nicol/Downloads/Hmwk8.pdf
-// https://moodle.cs.colorado.edu/pluginfile.php/113446/mod_resource/content/5/hmwk7.pdf

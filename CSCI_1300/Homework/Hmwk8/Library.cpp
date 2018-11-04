@@ -217,11 +217,13 @@ bool Library::addUser(string username) { // HELPER FUNCTION THAT COMPARES USERNA
     if (numUsers == 200) //number of users is greater than 200
     {
         cout << "Database full" << endl;
+        cout << username << " could not be added in the database" << endl;
         return false;
     }
 
     if (HelperUserArraySearch(username) != -1) {
         cout << username << " already exists in the database" << endl;
+        cout << username << " could not be added in the database" << endl;
         return false;
     }
 
@@ -229,6 +231,7 @@ bool Library::addUser(string username) { // HELPER FUNCTION THAT COMPARES USERNA
     getFreshRatings(ratings);
     User user(username, ratings, 0);
     users[numUsers++] = user; // increase numUsers after line is executed
+    cout << "Welcome to the library " << username << endl;
     return true;
 }
 
@@ -244,6 +247,7 @@ bool Library::checkOutBook(string username, string bookTitle, int newRating) {
     */
     if (numBooks == 0 || numUsers == 0) {
         cout << "Database has not been fully initialized" << endl;
+        cout << username << " could not check out " << bookTitle << endl;
         return false;
     }
 
