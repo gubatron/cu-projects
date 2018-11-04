@@ -445,41 +445,44 @@ void Library::getRecommendations(string username)
     
     // I have someone similar, let's see if they have books rated from 3 to 5
     User bestUser = users[bestUserIndex];
-    int num_recommendations = 0;
-    int recommendations[200]; // array of   index -> rating
+    bool got_some_recommendations = false;
+    bool recommendations[200]; // array of   index -> recommended or not
     for (int i = 0; i < 200; i++)
     {
         int my_book_rating = user.getRatingAt(i);
         if (my_book_rating > 0 && my_book_rating < 6)
         {
             // don't recommend something I already read
-            recommendations[i] = -1;
+            recommendations[i] = false;
             continue;
         }
         int rating = bestUser.getRatingAt(i);
         if (rating > 2 && rating < 6)
         {
             // print only if we have > 1 rec
-            recommendations[i] = rating;// books[i].getTitle() + " by " + books[i].getAuthor();
-            num_recommendations++;
+            recommendations[i] = true;
+            got_some_recommendations = true;
         }
     }
     
-    if (num_recommendations == 0) // best match has no books to recommend
+    if (!got_some_recommendations) // best match has no books to recommend
     {
         cout << "There are no recommendations for " << user.getUsername() << " at the present" << endl;
         return;
     }
     
-    if (num_recommendations > 0) // at least 1 recommendation
+    cout << "Here are the list of recommendations:" << endl;
+    for (int i = 0, num_recommendations = 0; i < 200 && num_recommendations < 5; i++) // each time one is recommended, one is subtracted
     {
-        sort(recommendations, recommendations + num_recommendations);
-        
-        cout << "Here are the list of recommendations:" << endl;
-        for (int i = 0; i < num_recommendations; i++)
+        if (recommendations[i])
         {
-            cout << recommendations[i] << endl;
+            int rating = bestUser.getRatingAt(i);
+            if (rating < 3) {
+                continue;
+            }
             
+            num_recommendations++;
+            cout << books[i].getTitle() << " by " << books[i].getAuthor() << endl;
         }
     }
 }
