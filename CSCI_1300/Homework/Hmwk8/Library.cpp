@@ -413,5 +413,35 @@ void Library::getRecommendations(string username)
         return;
     }
     
+    // compare SSD values for all users 
+    int bestSSD = 999999; // initialized to big value to make comparison easier for first iteration 
+    int bestUserIndex; // the index of the best user found so far given the bestSSD
+    for (int i = 0; i < numUsers; i++)
+    {
+        if (i == userindex)
+        {
+            continue; // don't compare against same user
+        }
+        if (getCountReadBooks(users[i].getUsername()) == 0)
+        {
+            continue; // don't compare against new users
+        }
+        
+        int currentSSD = ssd(user,users[i]);
+        if (currentSSD < bestSSD)
+        {
+            bestSSD = currentSSD;
+            bestUserIndex = i;
+        }
+    }
+    if (bestSSD == 999999) // no one else has read any books
+    {
+        cout << "There are no recommendations for " << user.getUsername() << " at the present" << endl;
+        return;
+    }
+    
+    // I have someone similar, let's see if they have books rated from 3 to 5
+    
+    //users[bestUserIndex].getRatingAt()
     
 }
