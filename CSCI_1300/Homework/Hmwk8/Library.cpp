@@ -367,9 +367,51 @@ void Library::viewRatings(string username)
 }
 
 // PROBLEM 9
+////////////////////////////////////////////////////////////////////////////////
+User Library::getUser(string username)
+{
+    return users[HelperUserArraySearch(username)];
+}
+
+int Library::ssd(User a, User b)
+{
+    int result = 0;
+    for (int i = 0; i < 200; i++)
+    {
+        result += pow((a.getRatingAt(i) - b.getRatingAt(i)),2);
+    }
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void Library::getRecommendations(string username)
 {
-    /**
-     * 
+    /*
+     * generate recommendations for user based on user's similarity ratins with others
+     * if user is a new user, ignore them - use getCountReadBooks to weed them out 
     */
+    
+    if (numBooks == 0 || numUsers == 0)
+    {
+        cout << "Database has not been fully initialized" << endl;
+        return;
+    }
+    
+    int userindex = HelperUserArraySearch(username);
+    if (userindex == -1)
+    {
+        cout << username << " does not exist in the database" << endl;
+        return;
+    }
+    
+    User user = users[userindex];
+    int numReadBooks = getCountReadBooks(username);
+    bool isNewUser = numReadBooks == 0;
+    if (isNewUser) // user has read some books, not a new user
+    {
+        cout << "There are no recommendations for " << user.getUsername() << " at the present" << endl;
+        return;
+    }
+    
+    
 }

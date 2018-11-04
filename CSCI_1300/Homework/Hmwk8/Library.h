@@ -27,7 +27,10 @@ public:
     bool addUser(string username);              // takes string (username); returns TRUE if username is successfully added to database. FALSE otherwise
     bool checkOutBook(string username, string bookTitle, int newRating); //takes username, title of book, new rating respectively. Return TRUE if rating successfully updated. FALSE otherwise
     void viewRatings(string username);         // takes string (username); prints all books a user has provided ratings for; void
+    User getUser(string username);  // returns a copy of the user
+    int ssd(User a, User b);    // return SSD score between two users
     void getRecommendations(string username);   // takes string username; prints first 5 book recommendations from most similar (other) user; void
+    
 private:
     Book books[200];   // array of Book objects
     User users[200];   // array of User objects

@@ -53,6 +53,8 @@ int main(int argc, char const *argv[])
     string title = ""; // (5)(7)
     int rating = 0; // (7)
     
+     User a,b; //(11)   TEST
+    
     // Book booksData[200]; //
     // User userData[200]; // 
     
@@ -185,17 +187,11 @@ int main(int argc, char const *argv[])
                     cout << endl;
                     break;
                     
-                case 11: 
-                    library.readBooks("b.txt");
-                    library.readRatings("r.txt");
-                    library.addUser("new_user");
-                    library.viewRatings("new_user");
-                    break;
                 case 8:
                     // view ratings 
                     
-                    library.readBooks("books.txt");
-                    library.readRatings("ratings.txt");
+                    // library.readBooks("books.txt");
+                    // library.readRatings("ratings.txt");
                     
                     cout << "Enter a username: " << endl;
                     //////////////////////////////////////////////////////////////////////////
@@ -207,18 +203,30 @@ int main(int argc, char const *argv[])
                     cout << endl;
                     break;
                     
-    //             case 9:
-    //                 // get recommendations
-    //                 cout << "Enter a username: " << endl;
-    //                 //////////////////////////////////////////////////////////////////////////
-    //                 // CODE HERE
-    //                 //////////////////////////////////////////////////////////////////////////
+                case 9:
+                    // get recommendations
+                    cout << "Enter a username: " << endl;
+                    //////////////////////////////////////////////////////////////////////////
+                    // CODE HERE
+                    //////////////////////////////////////////////////////////////////////////
 
-    //                 cout << "invalid input" << endl << endl;
-    //         }
-    // }
-	//////////////////////////////////////////////////////////////////////////
-
+                    cout << "invalid input" << endl << endl;
+                    break;
+                    
+                case 10:
+                    // quit
+                    cout << "good bye!" << endl;
+                    break;
+                case 11: 
+                    library.readBooks("b.txt");
+                    library.readRatings("r.txt");
+                    
+                    a = library.getUser("joan");
+                    b = library.getUser("barbara");
+                    cout << library.ssd(a,b) << endl;
+                    break;
+                default:
+                    cout << "invalid input" << endl << endl;
             } // switch
     } // while
     return 0;
