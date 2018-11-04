@@ -6,13 +6,14 @@
 
 #include <iostream>
 #include <iomanip>
-// #include "Book.h"
-// #include "User.h"
-// #include "Library.h"
-#include "Book.cpp"
-#include "User.cpp"
-#include "Library.cpp"
+#include "Book.h"
+#include "User.h"
+#include "Library.h"
+// #include "Book.cpp"
+// #include "User.cpp"
+// #include "Library.cpp"
 using namespace std;
+
 
 /* displayMenu:
  * displays a menu with options
@@ -218,12 +219,17 @@ int main(int argc, char const *argv[])
                     cout << "good bye!" << endl;
                     break;
                 case 11: 
-                
+                    // TESTER CASE
                     library.readBooks("b.txt");
-                    library.readRatings("r.txt");
-                    
-                    a = library.getUser("joanna");
-                    b = library.getUser("barbara");
+                    //library.readRatings("r.txt");
+                    library.addUser("newUser1");
+                    library.addUser("newUser2");
+                    library.addUser("newUser3");
+                    library.checkOutBook("newUser2", "The Five People You Meet in Heaven", 3);
+                    library.getRecommendations("newUser1");
+
+                    //a = library.getUser("joanna");
+                    //b = library.getUser("barbara");
                     cout << library.ssd(a,b) << endl;
                     break;
                 default:

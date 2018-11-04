@@ -163,12 +163,13 @@ int Library::getCountReadBooks(string username)
     if (userindex == -1)
     {
         cout << username << " does not exist in the database" << endl;
-        booksRead = -2;
+        return -2;
     }
     
     for (int ratingindex = 0; ratingindex < numBooks; ratingindex++) // ratingindex = column
     {
-        if (users[userindex].getRatingAt(ratingindex) > 0) 
+        int rating = users[userindex].getRatingAt(ratingindex);
+        if (rating > 0 && rating < 6) 
         {
             booksRead++;
         }
@@ -378,6 +379,10 @@ int Library::ssd(User a, User b)
     int result = 0;
     for (int i = 0; i < 200; i++)
     {
+        if (a.getRatingAt(i) == -1 || b.getRatingAt(i) == -1)
+        {
+            continue;
+        }
         result += pow((a.getRatingAt(i) - b.getRatingAt(i)),2);
     }
     return result;
@@ -404,14 +409,15 @@ void Library::getRecommendations(string username)
         return;
     }
     
+    // new user cannot be most similar user
     User user = users[userindex];
     int numReadBooks = getCountReadBooks(username);
     bool isNewUser = numReadBooks == 0;
-    if (isNewUser) // user has read some books, not a new user
-    {
-        cout << "There are no recommendations for " << user.getUsername() << " at the present" << endl;
-        return;
-    }
+    // if (isNewUser)
+    // {
+    //     cout << "There are no recommendations for " << user.getUsername() << " at the present" << endl;
+    //     return;
+    // }
     
     // compare SSD values for all users 
     int bestSSD = 999999; // initialized to big value to make comparison easier for first iteration 
@@ -443,15 +449,18 @@ void Library::getRecommendations(string username)
     // I have someone similar, let's see if they have books rated from 3 to 5
     User bestUser = users[bestUserIndex];
     int num_recommendations = 0;
-    string recommendations[5];
+    string recommendations[200];
     for (int i = 0; i < 200 && num_recommendations < 5; i++)
     {
+        if (user.getRatingAt(i) != 0)
+        {
+            continue;
+        }
         int rating = bestUser.getRatingAt(i);
         if (rating > 2 && rating < 6)
         {
             // print only if we have > 1 rec
-            recommendations[i] = lowercase(books[i].getTitle()) + " by " + lowercase(books[i].getAuthor());
-            num_recommendations++;
+            recommendations[num_recommendations++] = books[i].getTitle() + " by " + books[i].getAuthor();
         }
     }
     
@@ -463,10 +472,13 @@ void Library::getRecommendations(string username)
     
     if (num_recommendations > 0) // at least 1 recommendation
     {
-        cout << "Here are the list of recommendations" << endl;
+        sort(recommendations, recommendations + num_recommendations);
+        
+        cout << "Here are the list of recommendations:" << endl;
         for (int i = 0; i < num_recommendations; i++)
         {
             cout << recommendations[i] << endl;
+            
         }
     }
 }

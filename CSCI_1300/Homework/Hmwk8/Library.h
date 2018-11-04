@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <algorithm> // for transform function (6)
+#include <algorithm> // for transform function (6) and sort (9)
 
 #include "Book.h"
 #include "User.h"

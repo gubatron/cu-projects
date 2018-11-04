@@ -35,14 +35,12 @@ void User::setUsername(string username_input)
 
 int User::getRatingAt(int index)
 {
-    if (index >= numRatings || index < 0)
+    if (index > 199 || index < 0)
     {
+        cout << "getRatingAt(" << index << "): invalid index, return -1!" << endl; 
         return -1; 
     }
-    else
-    {
-        return ratings[index];
-    }
+    return ratings[index];
 }
 
 bool User::setRatingAt(int index, int value)
