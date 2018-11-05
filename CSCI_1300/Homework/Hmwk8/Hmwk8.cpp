@@ -65,10 +65,10 @@ int main(int argc, char const *argv[]) {
 
 
     while (choice != "10") {
-        cout << "before getline -> [choice="<< choice << "]" << endl;
+        // cout << "before getline -> [choice="<< choice << "]" << endl;
         displayMenu();            
         getline(cin, choice);
-        cout << "after getline -> [choice="<< choice << "]" << endl;
+        // cout << "after getline -> [choice="<< choice << "]" << endl;
 
         try
         {
@@ -196,7 +196,9 @@ int main(int argc, char const *argv[]) {
                 {
                     rating = -1;
                 }
-                library.checkOutBook(username, title, rating);
+                if (!library.checkOutBook(username, title, rating)) {
+                    cout << username << " could not check out " << title << endl;
+                };
 
                 //////////////////////////////////////////////////////////////////////////
 
@@ -209,7 +211,7 @@ int main(int argc, char const *argv[]) {
                 // library.readBooks("books.txt");
                 // library.readRatings("ratings.txt");
 
-                cout << "Enter a username: " << endl;
+                cout << "Enter username: " << endl;
                 //////////////////////////////////////////////////////////////////////////
                 // CODE HERE
                 getline(cin, username);
@@ -221,12 +223,13 @@ int main(int argc, char const *argv[]) {
 
             case 9:
                 // get recommendations
-                cout << "Enter a username: " << endl;
+                cout << "Enter username: " << endl;
                 //////////////////////////////////////////////////////////////////////////
                 // CODE HERE
                 getline(cin, username);
                 library.getRecommendations(username);
                 //////////////////////////////////////////////////////////////////////////
+                cout << endl;
                 break;
 
             case 10:

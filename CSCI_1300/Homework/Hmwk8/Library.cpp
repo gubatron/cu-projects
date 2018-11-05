@@ -247,7 +247,6 @@ bool Library::checkOutBook(string username, string bookTitle, int newRating) {
     */
     if (numBooks == 0 || numUsers == 0) {
         cout << "Database has not been fully initialized" << endl;
-        cout << username << " could not check out " << bookTitle << endl;
         return false;
     }
 
@@ -280,6 +279,7 @@ bool Library::checkOutBook(string username, string bookTitle, int newRating) {
         // but why make an unnecessary copy? (inneficient)
         // just update the user in the array directly!!!
         users[userindex].setRatingAt(titleindex, newRating);
+        cout << "We hope you enjoyed your book. The rating has been updated" << endl;
     }
     return !errored;
 }
