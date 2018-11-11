@@ -7,7 +7,7 @@
 class Milestone {
 public:
   // Constructor
-  explicit Milestone(string milestoneName,
+  Milestone(string milestoneName,
 	    int distance,
 	    bool isItAFort,
 	    int minDays,
