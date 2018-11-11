@@ -108,7 +108,7 @@ string Library::lowercase(string s) {
     transform(s.begin(), s.end(), s.begin(), ::tolower); // help problem 6; found online
     return s;
 }
-
+// resets ratings to -1
 void Library::getFreshRatings(int ratings[]) {
     for (int i = 0; i < 200; i++) {
         ratings[i] = -1;
@@ -228,7 +228,7 @@ bool Library::addUser(string username) { // HELPER FUNCTION THAT COMPARES USERNA
     }
 
     int ratings[200];
-    getFreshRatings(ratings);
+    getFreshRatings(ratings); // sets all ratings to -1
     User user(username, ratings, 0);
     users[numUsers++] = user; // increase numUsers after line is executed
     cout << "Welcome to the library " << username << endl;
@@ -269,15 +269,7 @@ bool Library::checkOutBook(string username, string bookTitle, int newRating) {
 
     // if nothing goes wrong, update rating
     if (!errored) {
-        // These 2 lines only update a copy of the user in the array
-        //User user = users[userindex];
-        //user.setRatingAt(titleindex, newRating);
-
-        // then we'd have to update the users array with the updated copy
-        // users[userindex] = u;
-
-        // but why make an unnecessary copy? (inneficient)
-        // just update the user in the array directly!!!
+        // update user array directly 
         users[userindex].setRatingAt(titleindex, newRating);
         cout << "We hope you enjoyed your book. The rating has been updated" << endl;
     }
@@ -325,6 +317,7 @@ void Library::viewRatings(string username) {
 
 // PROBLEM 9
 ////////////////////////////////////////////////////////////////////////////////
+// Sum of Squared Differences
 int Library::ssd(User a, User b) {
     int result = 0;
     for (int i = 0; i < 200; i++) {
