@@ -1,0 +1,2 @@
+#include "Sickness.h"
+//implementation

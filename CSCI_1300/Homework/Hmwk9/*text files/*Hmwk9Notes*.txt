@@ -1,0 +1,11 @@
+Many probabilities
+- create fuc with true false outcomes? 
+- since will do rand many times, just make a function and call it for a given percentage. 
+        (look at instructions for percentage)
+
+- random numbers in a range
+use this to travel from milesA to milesB
+int min = 35;
+int max = 57;
+    
+int r = rand()%(max-min+1) + min;

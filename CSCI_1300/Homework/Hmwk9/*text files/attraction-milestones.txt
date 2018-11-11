@@ -1,0 +1,8 @@
+Perth
+795km         4km
+Kalbarri
+1441km        3km
+Alice Springs
+8462km        5km
+Sydney
+11278km       5km
