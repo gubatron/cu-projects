@@ -14,7 +14,7 @@ public:
 // private to the class
 private: 
     Sickness cause;
-    string // ???s
+    string // ???
 }; 
 
 #endif
