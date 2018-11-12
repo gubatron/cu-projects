@@ -1,7 +1,4 @@
-#include <iostream>
-#include <string>
-
-using namespace std;
+#include "Common.h"
 
 #ifndef SERVO_H
 #define SERVO_H
@@ -12,30 +9,21 @@ public:
     // default constrctor - initialize variables
     Servo();
     
-    // money
+    // money *** should I make a Money Class??
     
-    // food
-    
-    // fuel
-    
-    // tires
-    
-    // film
-    
-    // van parts
-    
-    // ports (there is one servo per port)
+    // Supplies
     
 
 // private to the class
 private: 
-    // what things belong to servo only??
-    // money changes
-    double money;
-    double food; // pounds
-    int tires; 
-    int film;
-    int van parts;
+    Supplies purchase; // for each item at the servo
+    // money --
+    
+    // double money;
+    // double food; // pounds
+    // int tires; 
+    // int film;
+    // int van parts;
     
 };
 

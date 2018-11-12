@@ -1,8 +1,8 @@
 Perth
-795km         4km
+795km         $10
 Kalbarri
-1441km        3km
+1441km        $0
 Alice Springs
-8462km        5km
+8462km        $15
 Sydney
-11278km       5km
+11278km       $15

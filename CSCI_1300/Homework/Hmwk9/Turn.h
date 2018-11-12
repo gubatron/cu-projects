@@ -1,7 +1,4 @@
-#include <iostream>
-#include <string>
-
-using namespace std;
+#include "Common.h"
 
 #ifndef TURN_H
 #define TURN_H
@@ -9,11 +6,18 @@ using namespace std;
 // where methods and member variables are defined
 class Turn {
 public:
-    *
+    // continue
+    // rest
+    // quit
+    
 
 // private to the class
 private: 
-    *
+    // next milestone
+    // date ++
+    // food --
+    // distance ++
+    // @end of turn: chance of misfortune --> pig or sickness which affects health
 }; 
 
 #endif

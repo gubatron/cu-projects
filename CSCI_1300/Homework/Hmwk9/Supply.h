@@ -1,7 +1,4 @@
-#include <iostream>
-#include <string>
-
-using namespace std;
+#include "Common.h"
 
 #ifndef SUPPLY_H
 #define SUPPLY_H
@@ -13,7 +10,7 @@ public:
 
 // private to the class
 private:
-  const string name; // "bullets", the name won't change
+  const string name; // name of a supply (medkit; clothes, food...)
   const float cost; // in dollars, the cost won't change
   int amount; // how many you got left, this will change
 }; 

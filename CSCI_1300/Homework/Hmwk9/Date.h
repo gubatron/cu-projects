@@ -1,7 +1,4 @@
-#include <iostream>
-#include <string>
-
-using namespace std;
+#include "Common.h"
 
 #ifndef DATE_H
 #define DATE_H

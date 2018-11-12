@@ -1,7 +1,4 @@
-#include <iostream>
-#include <string>
-
-using namespace std;
+#include "Common.h"
 
 #ifndef HEALTH_H
 #define HEALTH_H
@@ -9,11 +6,12 @@ using namespace std;
 // where methods and member variables are defined
 class Health {
 public:
-    *
+    
 
 // private to the class
 private: 
-    *
+    // one per player
+    // Sickness occurs at random
 }; 
 
 #endif

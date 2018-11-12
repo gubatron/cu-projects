@@ -7,10 +7,11 @@
 
 #include <iostream>
 #include <iomanip>
-// #include ""
-// #include ""
-// #include ""
-// #include ""
-// #include ""
-// #include ""
-// #include ""
+#include "Player.h"
+#include "Milestone.h"
+#include "Date.h"
+
+
+// while loop
+// checks everytime a turn comes
+// if conditions are bad, exit loop and end game
