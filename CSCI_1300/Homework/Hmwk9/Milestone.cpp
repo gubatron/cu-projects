@@ -1,16 +1,26 @@
 #include "Milestone.h"
 // implementaton file
 
-bool Milestone::isFort() {
-    if (currentMilestone.isAFort) {
-        // option: stop at servo; continue
-        return true;
-    }
-    
-}
+Milestone::Milestone(string milestoneName, 
+                    int distance, 
+                    bool isItAFort,
+                    int minDays,
+                    float costPerDay)
+                    
+                    
+string Milestone::getName()
 
 
-bool Milestone::isAttraction() {
-    if (current)
-}
+int Milestone::getDistanceFromOrigin()
 
+
+bool Milestone::isFort()
+
+
+bool Milestone::isAttraction()
+
+
+bool Milestone::canLeaveTheSameDay()
+
+
+int Milestone::getMiniumDaysRequired()

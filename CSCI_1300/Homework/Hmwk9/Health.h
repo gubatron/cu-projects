@@ -3,13 +3,17 @@
 #ifndef HEALTH_H
 #define HEALTH_H
 
-// where methods and member variables are defined
+
 class Health {
 public:
+    Health();
     
+    Helath(bool eventInput); // default constructor
+    
+    double healthBar(double value);
 
-// private to the class
 private: 
+    bool event;
     // one per player
     // Sickness occurs at random
 }; 

@@ -6,6 +6,10 @@
 // where methods and member variables are defined
 class Sickness {
 public:
+    Sickness();
+    
+    string getSickness(int causeChoice);
+    
     // health
     // misfortune
     // push through
@@ -14,7 +18,8 @@ public:
 
 // private to the class
 private: 
-    string cause; // random chance
+    string choice; // random chance
+    
     
 }; 
 

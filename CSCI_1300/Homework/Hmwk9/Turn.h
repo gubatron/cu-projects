@@ -3,16 +3,15 @@
 #ifndef TURN_H
 #define TURN_H
 
-// where methods and member variables are defined
 class Turn {
 public:
-    // continue
-    // rest
-    // quit
+    Turn();
     
+    string getChoice(int choiceInput);
 
-// private to the class
 private: 
+    int choice; // 1) cont; 2) rest; 3) quit
+    
     // next milestone
     // date ++
     // food --

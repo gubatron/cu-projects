@@ -1,12 +1,6 @@
-Port Headland
-2368km
-Halls Creek
-4705km
-Top Springs
-7271km
-Brisbane
-10256km
-Melbourne
-12117km
-Bremer Bay 
-13698km
+2368 Port Headland
+4705 Halls Creek
+7271 Top Springs
+10256 Brisbane
+12117 Melbourne
+13698 Bremer Bay

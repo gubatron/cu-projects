@@ -6,29 +6,25 @@
 // where methods and member variables are defined
 class Supplies {
 public:
-    // food
+    Supplies();
     
-    // fuel
+    string getSupplies(string choiceName); // return string
     
-    // tires
-    
-    // film
-    
-    // vanParts
-    
-    // clothes
-    
-    // ??forts (there is one servo per fort)
+    void setSupplies(string choiceName);
 
-// private to the class
+    // Each supply has it's own conditions
+    // How do I connect Supplies.h with Supply.h
+    
+    
 private: 
-    Supply item; // for each item to be purchased (food, film, fuel...)
-    // Supply fuel;
-    // Supply tires;
-    // Supply film;
-    // Supply vanParts;
-    // Supply clothes;
-    // Supply medKit;
-}; 
+    Supply tires;
+    Supply clothing;
+    Supply film;
+    Supply engine;
+    Supply bumpers;
+    Supply battery;
+    Supply medicalKit;
+    
+};
 
 #endif

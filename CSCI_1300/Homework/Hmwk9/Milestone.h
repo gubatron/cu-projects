@@ -37,5 +37,5 @@ private:
 
 #endif
 
-// can be a fort or an attraction
+// At attractions, the money paid is just a toll/fee
 // 

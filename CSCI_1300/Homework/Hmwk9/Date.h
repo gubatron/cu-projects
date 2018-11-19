@@ -3,13 +3,20 @@
 #ifndef DATE_H
 #define DATE_H
 
-// where methods and member variables are defined
+
 class Date {
 public:
-    *
+    Date();
+    
+    int dateCount(int dayInput, int monthInput, int yearInput);
 
-// private to the class
+// GAME LASTS X AMOUNT OF DAYS
+
 private: 
+    int day;
+    int month;
+    int year;
+    
     // turns (2 days long)
     // rest (1 day)
     // calendar count

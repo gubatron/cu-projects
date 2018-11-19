@@ -3,20 +3,23 @@
 #ifndef SERVO_H
 #define SERVO_H
 
-// where methods and member variables are defined
 class Servo {
 public:
     // default constrctor - initialize variables
     Servo();
     
+    string getItem(int purchaseInput); // purchace choice 
+    
+    float printBill(int purchaseInput) // adds/subtracts items
     // money *** should I make a Money Class??
     
     // Supplies
     
 
-// private to the class
-private: 
-    Supplies purchase; // for each item at the servo
+private:
+    int amount; // how many are left, this will change
+    Supplies name; // "film", the name won't change CONSTANT
+    const float cost; // in dollars, the cost won't change
     // money --
     
     // double money;
