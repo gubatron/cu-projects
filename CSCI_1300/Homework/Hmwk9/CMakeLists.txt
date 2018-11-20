@@ -6,7 +6,7 @@
 #    build with: `make`
 #    clean with: `make clean`
 #
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 2.8)
 project(hmwk9 CXX)
 
 set(SOURCE_FILES

@@ -14,7 +14,7 @@ public:
         my_tm.tm_year = year - 1900;
         my_tm.tm_mon = month - 1;
         my_tm.tm_mday = day;
-        date_as_long = mktime(&my_tm) + 60*60*12;
+        date_as_long = mktime(&my_tm);
     }
 
     int getYear() {
