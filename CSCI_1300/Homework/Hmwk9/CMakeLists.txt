@@ -11,7 +11,10 @@ project(hmwk9 CXX)
 
 set(SOURCE_FILES
         Supply.h
+        Milestone.cpp
         Servo.cpp
+        Player.cpp
+        Game.cpp
         )
 
 if (CMAKE_CXX_COMPILER_ID MATCHES Clang)

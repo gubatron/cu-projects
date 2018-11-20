@@ -1,4 +1,7 @@
 #include "Common.h"
+#include "Player.h"
+#include "Milestone.h"
+#include "Servo.h"
 
 #ifndef GAME_H
 #define GAME_H
@@ -7,20 +10,17 @@ class Game {
 public:
     Game();
     
-    string enterPlayer(string playerNameInput);
+    std::string enterPlayer(std::string playerNameInput);
     
-    int readForts(string fortFile);
-    
-    int readAttractions(string attractionFile);
-    
+    int readMilestonesFile(std::string filePath);
+
     void setDate(int dayInput); // not sure if this is correct
     
-    int visitServo(string purchaceItem); // not sure if this is correct
+    int visitServo(std::string purchaseItem); // not sure if this is correct
 
 private:
     Player playerName;
     Milestone location;
-    Date day; // not sure if this is correct
     Servo store; // not sure if this is correct
     
 

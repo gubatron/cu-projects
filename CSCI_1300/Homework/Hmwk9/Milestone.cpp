@@ -2,7 +2,7 @@
 // implementation file
 
                     
-string Milestone::getName() {
+std::string Milestone::getName() {
     return name;
 }
 
@@ -11,7 +11,7 @@ int Milestone::getDistanceFromOrigin() {
 }
 
 bool Milestone::isFort() {
-    return isFort;
+    return is_fort;
 }
 
 bool Milestone::canLeaveTheSameDay() {

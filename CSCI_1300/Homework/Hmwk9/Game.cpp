@@ -5,26 +5,54 @@
 // Hmwk9 / Final Project
 
 
-#include <iostream>
-#include <iomanip>
-
+#include "Common.h"
+#include "Servo.h"
 #include "Player.h"
 #include "Milestone.h"
-#include "Date.h"
-
-
-// while loop
-// checks everytime a turn comes
-// if conditions are bad, exit loop and end game
-
+#include "Supply.h"
    
 ///////////////////////////////////////////////////////////////
 // SKELETON
 ////////////////////////////////////////////////////////////// 
-  
-main()
-{
-    Game OutbackGanders
+
+class Date {
+    Date(int year, int month, int day) {
+        my_tm->tm_year = year - 1900;
+        my_tm->tm_mon = month - 1;
+        my_tm->tm_mday = day;
+
+    }
+
+private:
+    struct tm * my_tm;
+    time_t date_as_long;
+};
+
+int main() {
+    //Reference: https://www.tutorialspoint.com/cplusplus/cpp_date_time.htm
+    time_t now = time(nullptr); //time_t is a long, represents seconds since Epoch time: Jan 1st, 1970.
+    struct tm * my_tm = localtime(&now);
+
+    time_t date_in_long = mktime(my_tm);
+    date_in_long += 24*60*60;
+    my_tm = localtime(&date_in_long);
+
+    int year = 1900 + my_tm->tm_year;
+    int month = 1 + my_tm->tm_mon;
+    int day = my_tm->tm_mday;
+    long seconds_utc = my_tm->tm_gmtoff;
+    std::string time_zone(my_tm->tm_zone);
+
+
+    std::cout << "year: " << year << " month: " << month << " day: " << day << std::endl;
+    std::cout << "now: " << now << " == seconds_utc: " << seconds_utc << " - Timezone: " << time_zone << std::endl;
+
+    return 0;
+}
+
+//main()
+//{
+//    Game OutbackGanders
     /*
     - initialize
         - read files -- ifstream attraction and fort files
@@ -32,7 +60,7 @@ main()
         - enter main player and companion names
     - visitServo
         - get supplies
-        - options to purchace more than one, not at all, apply min/max purhcaces, buy same item many times, don't leave store without at least without fuel.  
+        - options to purchase more than one, not at all, apply min/max purhcases, buy same item many times, don't leave store without at least without fuel.
     - setDate
         - give option of default date
         - if say no, give option of other starting date ranges. 
@@ -51,11 +79,12 @@ main()
             - Km until next fort/attraction
             - Days left until flight leaves 
         // choice to travel, rest, take photos
-            - if travel -- display status
+            - if travel -- display status, 2 days go by, 800km
             - if rest -- remove 1 kg food/person and 1 day goes by
             - if take photos -- film amount goes down, $ goes up per photo taken (bc you sold them)
+                                1 day goes by, 200km
         // check misfortunes
-            - random 40% chance of misfortune occuring 
+            - random 40% chance of misfortune occurring
             - if sickness (happens to one of the two players at one time)
                 - drop bear attack -- use med kit or keep going -- health is affected
                 - motion sickness -- use med kit or keep going -- health is affected
@@ -63,7 +92,7 @@ main()
                 - snake bite -- use med kit or keep going -- health is affected
             - kidnapping -- GAME OVER
             - ran into kangaroo
-                - use spare bumper. If no bumber, have a second chance but if hit another roo... GAME OVER
+                - use spare bumper. If no number, have a second chance but if hit another roo... GAME OVER
             - ran out of fuel 
                 - if no spare in van... GAME OVER
             - tires pop
@@ -85,12 +114,12 @@ main()
     // Causes for end game
         - no food left
         - health == 0.0
-        - no spare parts for van
+        - no spare parts for van (engine, bumper, battery, fuel)
         - first player dies
         - print Leader name, km traveled, food remaining, cash remaining
         - ofsteam stats to results.txt (as players die, update file with highest score at the top)
     */
-}
+// }
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////

@@ -5,24 +5,21 @@
 
 class Player {
 public:
-    Player();
-    
-    string getName(string nameInput);
-    
-    int setPlayer(int playerNumber); // p1 or p2
-    // Turn
-    // Servo
-    // Misfortune
-    // Health
+    Player(std::string playerName, int playerNumber) : name(playerName), number(playerNumber), health(100) {
+    }
 
-private: 
-    string name; // two players total ***** Should each of them have a private member?
-}; 
+    std::string getName() const;
+
+    int getPlayerNumber() const;
+
+    int getHealth() const;
+
+    int affectHealth(int healthChange);
+
+private:
+    const std::string name; // two players total ***** Should each of them have a private member?
+    const int number;
+    int health;
+};
 
 #endif
-
-// two players
-// HEALTH bars
-// eat food
-// have happiness
-// have sickness

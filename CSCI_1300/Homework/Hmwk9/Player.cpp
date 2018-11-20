@@ -1,15 +1,21 @@
-#include "Players.h"
-// implementaton file
+#include "Player.h"
 
-Player::Player() {
-    // consructor
-}
-    
-string Player::getName(string nameInput) {
-    return nameInput;
+// implementation file
+
+
+std::string Player::getName() const {
+    return name;
 }
 
-int Player::setPlayer(int playerNumber) {
-    // how do I assign p1 or p2 to their respective names?
-  
-} 
+int Player::getPlayerNumber() const {
+    return number;
+}
+
+int Player::getHealth() const {
+    return health;
+}
+
+int Player::affectHealth(int healthChange) {
+    health += healthChange;
+    return health;
+}
