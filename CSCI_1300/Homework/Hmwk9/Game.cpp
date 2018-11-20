@@ -6,6 +6,7 @@
 
 
 #include "Common.h"
+#include "Date.h"
 #include "Servo.h"
 #include "Player.h"
 #include "Milestone.h"
@@ -15,38 +16,18 @@
 // SKELETON
 ////////////////////////////////////////////////////////////// 
 
-class Date {
-    Date(int year, int month, int day) {
-        my_tm->tm_year = year - 1900;
-        my_tm->tm_mon = month - 1;
-        my_tm->tm_mday = day;
 
-    }
-
-private:
-    struct tm * my_tm;
-    time_t date_as_long;
-};
 
 int main() {
-    //Reference: https://www.tutorialspoint.com/cplusplus/cpp_date_time.htm
-    time_t now = time(nullptr); //time_t is a long, represents seconds since Epoch time: Jan 1st, 1970.
-    struct tm * my_tm = localtime(&now);
-
-    time_t date_in_long = mktime(my_tm);
-    date_in_long += 24*60*60;
-    my_tm = localtime(&date_in_long);
-
-    int year = 1900 + my_tm->tm_year;
-    int month = 1 + my_tm->tm_mon;
-    int day = my_tm->tm_mday;
-    long seconds_utc = my_tm->tm_gmtoff;
-    std::string time_zone(my_tm->tm_zone);
-
-
-    std::cout << "year: " << year << " month: " << month << " day: " << day << std::endl;
-    std::cout << "now: " << now << " == seconds_utc: " << seconds_utc << " - Timezone: " << time_zone << std::endl;
-
+    Date newYears200(2000, 01, 01);
+    std::cout << "New Years: " << newYears200.to_string() << std::endl;
+    // add 30 days
+    newYears200.addDays(31);
+    std::cout << "31 days later: " << newYears200.to_string() << std::endl;
+    newYears200.addDays(29);
+    std::cout << "29 days later: " << newYears200.to_string() << std::endl;
+    newYears200.addDays(-29-31);
+    std::cout << "-60 days back: " << newYears200.to_string() << std::endl;
     return 0;
 }
 
