@@ -31,8 +31,7 @@ public:
 
     void addDays(int nDays) {
         date_as_long += nDays * (24*60*60);
-        struct tm * stack_tm = localtime(&date_as_long);
-        my_tm = *stack_tm;
+        my_tm = *localtime(&date_as_long);
     }
 
     std::string to_string() {
