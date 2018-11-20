@@ -13,29 +13,32 @@ public:
 	    int minDays,
 	    float costPerDay) : name(milestoneName),
                                 distanceFromOrigin(distance),
-                                is_fort(isItAFort),
+                                isFort(isItAFort),
                                 minimumDaysRequired(minDays),
-                              	costPerDayInAUD(costPerDay) {
+                                dailyTollPerPerson(costPerDay) {
   }
  
   // Methods
   string getName();
-  int getDistanceFromOrigin();
-  bool isFort();
-  bool isAttraction();
+  int getDistanceFromOrigin(); // in KM
+  bool isFort(); // all forts are where the player can buy supplies from a Servo
   bool canLeaveTheSameDay();
-  int getMiniumDaysRequired(); // can be zero
+  int getMinimumDaysRequired(); // can be zero if player can leave right away
+  float getDailyTollPerPerson(); // can be zero if it's a fort or a special attraction
 
 // private to the class
 private:
-  string name;
-  int distanceFromOrigin; // in km
-  bool is_fort; // if not, it's an attraction.
-  int minimumDaysRequired;
-  float costPerDayInAUD; // extra cost to the whole party
+  const string name;
+  const int distanceFromOrigin; // in km
+  const bool isFort; // if not, it's an attraction.
+  const int minimumDaysRequired;
+  const float dailyTollPerPerson; // cost in AUD per person in party
 }; 
 
 #endif
 
 // At attractions, the money paid is just a toll/fee
-// 
+//
+
+
+

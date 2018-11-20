@@ -1,33 +1,31 @@
 #include "Common.h"
+#include "Supply.h"
 
 #ifndef SERVO_H
 #define SERVO_H
 
+/**
+ * We will have a single Servo instance.
+ * All Forts will reuse this Servo instance to allow player to purchase supplies.
+ *
+ * The servo can:
+ *  -> List all available supplies with their prices and units.
+ *  -> Add supplies to a shopping cart
+ *  -> Remove supplies from shopping cart
+ *  -> Reset the shopping cart (empty cart)
+ *  -> Checkout
+ */
 class Servo {
 public:
-    // default constrctor - initialize variables
-    Servo();
-    
-    string getItem(int purchaseInput); // purchace choice 
-    
-    float printBill(int purchaseInput) // adds/subtracts items
-    // money *** should I make a Money Class??
-    
-    // Supplies
-    
+    // default constructor - initialize variables
+    Servo() {
+        initializeSupplies();
+    }
 
 private:
-    int amount; // how many are left, this will change
-    Supplies name; // "film", the name won't change CONSTANT
-    const float cost; // in dollars, the cost won't change
-    // money --
-    
-    // double money;
-    // double food; // pounds
-    // int tires; 
-    // int film;
-    // int van parts;
-    
+    void initializeSupplies();
+    float surchargePremium; // extra percentage to charge on supplies, goes from 0.0 to 1.0)
+    std::vector<Supply> supplies; // "film", the name won't change CONSTANT
 };
 
 #endif

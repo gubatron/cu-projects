@@ -1,26 +1,27 @@
 #include "Milestone.h"
-// implementaton file
+// implementation file
 
-Milestone::Milestone(string milestoneName, 
-                    int distance, 
-                    bool isItAFort,
-                    int minDays,
-                    float costPerDay)
                     
-                    
-string Milestone::getName()
+string Milestone::getName() {
+    return name;
+}
 
+int Milestone::getDistanceFromOrigin() {
+    return distanceFromOrigin;
+}
 
-int Milestone::getDistanceFromOrigin()
+bool Milestone::isFort() {
+    return isFort;
+}
 
+bool Milestone::canLeaveTheSameDay() {
+    return minimumDaysRequired == 0;
+}
 
-bool Milestone::isFort()
+int Milestone::getMinimumDaysRequired() {
+    return minimumDaysRequired;
+}
 
-
-bool Milestone::isAttraction()
-
-
-bool Milestone::canLeaveTheSameDay()
-
-
-int Milestone::getMiniumDaysRequired()
+float Milestone::getDailyTollPerPerson() {
+    return dailyTollPerPerson;
+}
