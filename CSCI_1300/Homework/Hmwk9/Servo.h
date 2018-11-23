@@ -20,28 +20,28 @@ class Servo {
 public:
 	// default constructor - initialize variables
 	Servo() {
-		//supplies = {};
-		initializeSupplies();
+		supplies = Supply::possibleSupplies();
 		resetCart();
 	}
 
-	double getSurchargePremium(int milestoneOffset) {
+	double getSurchargePremium(unsigned int milestoneOffset) {
 		return (milestoneOffset * 0.25) + 1; // prices increment at per milestone
 	}
 
 
 	void addSupplyToCart(Supply &productChoice, int productAmount);
 
-	float getTotal();
+	float getTotal(unsigned int milestonesOffset);
 
 	/** Each milestone adds 25% surcharge */
-	double getSurchargePercent(unsigned int milestoneOffset);
+	float getSurchargePercent(unsigned int milestoneOffset);
 
-	void checkout(Van &van);
+	void checkout(Van &van, unsigned int milestonesOffset);
 		// van.restock(cart,getTotal())
 
+
+
 private:
-    void initializeSupplies();
 	void resetCart(); // adds all supplies to cart with amount zero
 	std::vector<Supply> supplies; // "film", the name won't change CONSTANT
 	std::map<Supply, int> cart; // shopping cart

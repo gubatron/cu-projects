@@ -1,12 +1,26 @@
 // CSCI1300 Fall 2018
 // Author: Nicole Leon-Molina
-// Recitation: <202> – John Klingner
+// Recitation: <202> ï¿½ John Klingner
 // Cloud9 Workspace Editor Link: https://ide.c9.io/nile8832/nicole-csci1300
 // Hmwk9 / Final Project
 
 
 #include "Common.h"
 #include "Game.h"
+
+int main() {
+    Game game;
+    std::cout << game.getVan().balance() << std::endl;
+    std::vector<Supply> possibleSupplies = Supply::possibleSupplies();
+    game.getServo().addSupplyToCart(possibleSupplies[0], 4);
+    game.getServo().addSupplyToCart(possibleSupplies[3], 5);
+    game.getServo().addSupplyToCart(possibleSupplies[0], 1);
+    game.getServo().checkout(game.getVan(), 0);
+    std::cout << game.getVan().balance() << std::endl;
+
+
+    return 0;
+}
 
 //int main() {
 	/* print Welcome statement: Welcome to Outback Ganders....

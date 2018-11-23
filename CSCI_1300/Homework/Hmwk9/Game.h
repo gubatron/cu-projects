@@ -9,55 +9,72 @@
 
 class Game {
 public:
-	Game();
+    Game() : deadline(Calendar(2019, 12, 2)),
+             defaultStartDate(Calendar(2019, 12, 2)),
+             startDate(Calendar(2019, 12, 2)),
+             currentDate(Calendar(2019, 12, 2)) {
+        readMilestonesFile("txt-files/milestones.txt");
+        currentMilestone = &milestones[0];
+        nextMilestone = &milestones[1];
+    }
 
-	int readMilestonesFile(std::string filePath);
-	
-	int enterPlayer(std::string playerName);
+    int readMilestonesFile(std::string filePath);
 
-	/** Distance from start to home */
-	int totalDistance();
+    size_t enterPlayer(std::string &playerName);
 
-	/** Distance from current van location to final destination */
-	int distanceToHome(); 
+    /** Distance from start to home */
+    int totalDistance();
 
-	/** Distance from current van location to next milestone */
-	int distanceToNextMilestone();
+    /** Distance from current van location to final destination */
+    int distanceToHome();
 
-	int daysLeft();
+    /** Distance from current van location to next milestone */
+    int distanceToNextMilestone();
 
-	int daysTranscurred();
+    int daysLeft();
 
-	int partyAlive();
+    int daysTranscurred();
 
-	bool partyBroke();
+    int partyAlive();
 
-	bool partyStarved();
-	
-	void rest();
+    bool partyBroke();
 
-	void travel();
+    bool partyStarved();
 
-	void takePhotos();
+    void rest();
 
-	void quit();
+    void travel();
 
-	void setDate(int dayInput); 
+    void takePhotos();
 
+    void quit();
+
+    void addDays(int days);
+
+    Servo &getServo() {
+        return store;
+    }
+
+    Milestone getCurrentMilestone() {
+        return *currentMilestone;
+    }
+
+    Van &getVan();
 
 private:
     std::vector<Player> party;
-	std::vector<Milestone> milestones;
+    std::vector<Milestone> milestones;
     Servo store;
-	Milestone *currentMilestone;
-	Milestone *nextMilestone;
-	Calendar deadline;
-	Calendar defaultStartDate; // suggested start
-	Calendar startDate;
-	Calendar currentDate;
-	Van van;
-    
+    Milestone *currentMilestone;
+    Milestone *nextMilestone;
+    Calendar deadline;
+    Calendar defaultStartDate; // suggested start
+    Calendar startDate;
+    Calendar currentDate;
+    Van van;
+
 
 };
 
 #endif
+

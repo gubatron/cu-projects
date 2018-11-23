@@ -5,10 +5,10 @@
 
 class Player {
 public:
-    Player(int playerNumber, std::string playerName) : number(playerNumber), name(playerName), health(100) {
+    Player(size_t playerNumber, std::string playerName) : number(playerNumber), name(playerName), health(100) {
     }
 
-    int getPlayerNumber() const;
+    size_t getPlayerNumber() const;
 
     std::string getName() const;
 
@@ -17,9 +17,9 @@ public:
     int affectHealth(int healthChange);
 
 private:
-    const int number;
-    int health;
+    const size_t number;
     const std::string name;
+    int health;
 };
 
 #endif

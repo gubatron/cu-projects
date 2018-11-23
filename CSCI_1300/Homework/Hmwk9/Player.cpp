@@ -4,7 +4,7 @@ std::string Player::getName() const {
     return name;
 }
 
-int Player::getPlayerNumber() const {
+size_t Player::getPlayerNumber() const {
     return number;
 }
 

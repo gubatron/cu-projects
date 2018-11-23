@@ -1,38 +1,33 @@
 #include "Servo.h"
 #include "Supply.h"
 
-// implementation file
-
-void Servo::initializeSupplies() {
-  supplies.emplace_back(Supply(0, "Tire", 20, 1, 0, "tire", "tires"));
-  supplies.emplace_back(Supply(1, "Food", 0.5, 1, 90, "kg", "kgs"));
-  supplies.emplace_back(Supply(2, "Film", 2, 20, 0, "roll", "rolls"));
-  supplies.emplace_back(Supply(3, "Engine", 40, 1, 1, "engine", "engines"));
-  supplies.emplace_back(Supply(4, "Battery", 40, 1, 1, "battery", "batteries"));
-  supplies.emplace_back(Supply(5, "Bumper", 40, 1, 1, "bumper", "bumpers"));
-  supplies.emplace_back(Supply(6, "Medical Kit", 25, 1, 0, "kit", "kits"));
-  supplies.emplace_back(Supply(7, "Fuel", 1.5, 1, 36, "liter", "liters"));
-}
-
-void Servo::resetCart()
-{
-	for (auto &it: supplies) {
-		cart.insert(std::make_pair(it, 0));
-	}	
+void Servo::resetCart() {
+    if (!cart.empty()) {
+        cart.clear();
+    }
+    cart = Supply::emptyCart();
 }
 
 void Servo::addSupplyToCart(Supply &productChoice, int productAmount) {
-	// TODO : add to previous amount
-	cart.insert(std::make_pair(productChoice, productAmount));
+    cart[productChoice] += productAmount;
 }
 
-float Servo::getTotal() {
-	return 0.0f;
+float Servo::getTotal(unsigned int milestonesOffset) {
+    float invoiceAmount = 0;
+    for (std::pair<Supply, int> keyValue : cart) {
+        Supply supply = keyValue.first;
+        int amount = keyValue.second;
+        float supplyTotal = supply.costPerUnit * amount;
+        invoiceAmount += supplyTotal;
+    }
+    return invoiceAmount * getSurchargePercent(milestonesOffset);
 }
 
-double Servo::getSurchargePercent(unsigned int milestoneOffset) {
-	return 1 + (milestoneOffset * .25);
+float Servo::getSurchargePercent(unsigned int milestoneOffset) {
+    return static_cast<float>(1 + (milestoneOffset * .25));
 }
 
-void Servo::checkout(Van &van) {
+void Servo::checkout(Van &van, unsigned int milestonesOffset) {
+  // restock the van with our cart, and charge it the full amount of our cart's contents
+    van.restock(cart, getTotal(milestonesOffset));
 }
