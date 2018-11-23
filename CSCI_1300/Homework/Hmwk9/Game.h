@@ -14,8 +14,6 @@ public:
              startDate(Calendar(2019, 12, 2)),
              currentDate(Calendar(2019, 12, 2)) {
         readMilestonesFile("txt-files/milestones.txt");
-        currentMilestone = &milestones[0];
-        nextMilestone = &milestones[1];
     }
 
     int readMilestonesFile(std::string filePath);
@@ -55,18 +53,19 @@ public:
         return store;
     }
 
-    Milestone getCurrentMilestone() {
-        return *currentMilestone;
+    Milestone* getCurrentMilestone() {
+        return &milestones[currentMilestoneOffset];
     }
 
     Van &getVan();
+
+    unsigned int getCurrentMilestoneOffset() const;
 
 private:
     std::vector<Player> party;
     std::vector<Milestone> milestones;
     Servo store;
-    Milestone *currentMilestone;
-    Milestone *nextMilestone;
+    unsigned int currentMilestoneOffset;
     Calendar deadline;
     Calendar defaultStartDate; // suggested start
     Calendar startDate;

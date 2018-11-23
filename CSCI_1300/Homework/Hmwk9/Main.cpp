@@ -15,7 +15,7 @@ int main() {
     game.getServo().addSupplyToCart(possibleSupplies[0], 4);
     game.getServo().addSupplyToCart(possibleSupplies[3], 5);
     game.getServo().addSupplyToCart(possibleSupplies[0], 1);
-    game.getServo().checkout(game.getVan(), 0);
+    game.getServo().checkout(game.getVan(), game.getCurrentMilestoneOffset());
     std::cout << game.getVan().balance() << std::endl;
 
 

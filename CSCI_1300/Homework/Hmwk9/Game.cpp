@@ -80,3 +80,7 @@ void Game::addDays(int days) {
 Van &Game::getVan() {
     return van;
 }
+
+unsigned int Game::getCurrentMilestoneOffset() const {
+    return currentMilestoneOffset;
+}
