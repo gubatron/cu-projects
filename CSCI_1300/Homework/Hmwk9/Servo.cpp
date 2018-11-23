@@ -14,3 +14,25 @@ void Servo::initializeSupplies() {
   supplies.emplace_back(Supply(7, "Fuel", 1.5, 1, 36, "liter", "liters"));
 }
 
+void Servo::resetCart()
+{
+	for (auto &it: supplies) {
+		cart.insert(std::make_pair(it, 0));
+	}	
+}
+
+void Servo::addSupplyToCart(Supply &productChoice, int productAmount) {
+	// TODO : add to previous amount
+	cart.insert(std::make_pair(productChoice, productAmount));
+}
+
+float Servo::getTotal() {
+	return 0.0f;
+}
+
+double Servo::getSurchargePercent(unsigned int milestoneOffset) {
+	return 1 + (milestoneOffset * .25);
+}
+
+void Servo::checkout(Van &van) {
+}

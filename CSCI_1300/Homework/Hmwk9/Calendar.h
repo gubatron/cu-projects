@@ -10,7 +10,7 @@ public:
         // localtime converts a long (time_t) to a tm structure
         time_t rawtime;
         time(&rawtime);
-        my_tm = localtime(&rawtime); // properly initializes the struct tm
+        my_tm = localtime_s(&rawtime); // properly initializes the struct tm
         my_tm->tm_year = year - 1900;
         my_tm->tm_mon = month - 1;
         my_tm->tm_mday = day;
@@ -31,13 +31,16 @@ public:
 
     void addDays(int nDays) {
         date_as_long += nDays * (24*60*60);
-        my_tm = localtime(&date_as_long);
+        my_tm = localtime_s(&date_as_long);
     }
 
     std::string to_string() {
         return std::to_string(getYear()) + "/" + std::to_string(getMonth()) + "/" + std::to_string(getDay());
     }
 
+	// int daysTo(Calendar days) {
+	// 
+	// }
 private:
     struct tm* my_tm;
     time_t date_as_long;

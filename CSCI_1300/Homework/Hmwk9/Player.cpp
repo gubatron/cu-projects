@@ -1,8 +1,5 @@
 #include "Player.h"
 
-// implementation file
-
-
 std::string Player::getName() const {
     return name;
 }

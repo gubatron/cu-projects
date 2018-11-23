@@ -5,21 +5,21 @@
 
 class Player {
 public:
-    Player(std::string playerName, int playerNumber) : name(playerName), number(playerNumber), health(100) {
+    Player(int playerNumber, std::string playerName) : number(playerNumber), name(playerName), health(100) {
     }
 
-    std::string getName() const;
-
     int getPlayerNumber() const;
+
+    std::string getName() const;
 
     int getHealth() const;
 
     int affectHealth(int healthChange);
 
 private:
-    const std::string name; // two players total ***** Should each of them have a private member?
     const int number;
     int health;
+    const std::string name;
 };
 
 #endif

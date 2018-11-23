@@ -20,8 +20,13 @@ public:
     recommendedPurchaseUnits(recommendedUnits),
     unitName(unit),
     pluralUnitName(pluralUnit) {
-    }
+	}
 
+	bool operator<(const Supply &other) const {
+		return name < other.name;
+	}
+
+private:
     const int id; // supply identifier, is the same position in the Servo's supplies array
     const std::string name; // name of supply, e.g. Tire, Film, Battery, Medical Kit
     const float costPerUnit; // cost in AUD
@@ -29,6 +34,8 @@ public:
     const int recommendedPurchaseUnits;
     const std::string unitName; // e.g. liters, units, kgs
     const std::string pluralUnitName;
+
+	
 };
 
 #endif

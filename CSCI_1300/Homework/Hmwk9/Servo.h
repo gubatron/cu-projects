@@ -1,5 +1,6 @@
 #include "Common.h"
 #include "Supply.h"
+#include "Van.h"
 
 #ifndef SERVO_H
 #define SERVO_H
@@ -17,15 +18,33 @@
  */
 class Servo {
 public:
-    // default constructor - initialize variables
-    Servo() {
-        initializeSupplies();
-    }
+	// default constructor - initialize variables
+	Servo() {
+		//supplies = {};
+		initializeSupplies();
+		resetCart();
+	}
+
+	double getSurchargePremium(int milestoneOffset) {
+		return (milestoneOffset * 0.25) + 1; // prices increment at per milestone
+	}
+
+
+	void addSupplyToCart(Supply &productChoice, int productAmount);
+
+	float getTotal();
+
+	/** Each milestone adds 25% surcharge */
+	double getSurchargePercent(unsigned int milestoneOffset);
+
+	void checkout(Van &van);
+		// van.restock(cart,getTotal())
 
 private:
     void initializeSupplies();
-    float surchargePremium; // extra percentage to charge on supplies, goes from 0.0 to 1.0)
-    std::vector<Supply> supplies; // "film", the name won't change CONSTANT
+	void resetCart(); // adds all supplies to cart with amount zero
+	std::vector<Supply> supplies; // "film", the name won't change CONSTANT
+	std::map<Supply, int> cart; // shopping cart
 };
 
 #endif
