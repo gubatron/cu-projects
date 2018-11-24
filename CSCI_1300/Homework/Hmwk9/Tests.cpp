@@ -78,11 +78,23 @@ bool testRestTurn() {
     return true;
 }
 
+bool testRandomEvents() {
+	int n = 0;
+	for (int i = 0; i < 1000000; i++) {
+		if (randomEvent(35)) {
+			n++;
+		}
+	}
+	std::cout << "testRandomEvents - n for 35% = " << n << std::endl;
+	return true;
+}
+
 bool runTests() {
     bool passedAll = true;
     passedAll = passedAll && testServoPurchase();
     passedAll = passedAll && calendarTests();
     passedAll = passedAll && testRestTurn();
+	passedAll = passedAll && testRandomEvents();
 
     if (!passedAll) {
         std::cout << "TESTS KO!";

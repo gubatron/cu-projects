@@ -6,5 +6,6 @@ bool testServoPurchase();
 bool calendarTests();
 bool testRestTurn();
 bool runTests();
+bool testRandomEvents();
 
 #endif

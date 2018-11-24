@@ -89,12 +89,49 @@ void Game::rest() {
 }
 
 void Game::travel() {
-}
+	// time goes by
+	addDays(2);
+
+	// food is consumed
+	int numberOfPlayersAlive = partyAlive();
+	int totalPoundsPerDay = numberOfPlayersAlive * 2;
+	van.modifySupplyAmount(SUPPLY_FOOD, -totalPoundsPerDay);
+
+	// distance is traveled (400 - 800 km)
+	// if no misfortune and milestone is 800km or further away - travel 800km in turn
+	// van.move(800);
+	// else (if misfortune), travel 400km
+	// if milestone is closer than 800km
+
+	// fuel is used -- consume 5L/100km (36L tank per 720km)
+}	//van.getAmountOfSupply(SUPPLY_FUEL);
 
 void Game::takePhotos() {
+	// time goes by
+	addDays(1);
+
+	// solve puzzle (random nubmer generator)
+
+	// could encounter a sight (random) 
+	/** sigth name - chance of encounter - $ earned - photos/film used
+		beach - 50% - $5 - 5 photos
+		boulder - 25% - $7 - 10 photos
+		town - 15% - $15 - 8 photos
+		city - 7% - $25 - 10 photos
+		landmark - 5% - $30 - 12 photos
+		*/
+	
+
+	// film rolls are used (# depends on sight)
+
+
+	// money goes up
+	
 }
 
 void Game::quit() {
+	// game ended
+	// cout statement of regret. Shortened trip
 }
 
 void Game::addDays(int days) {

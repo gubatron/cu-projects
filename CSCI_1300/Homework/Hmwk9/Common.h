@@ -18,5 +18,8 @@ const int SUPPLY_BUMPER = 5;
 const int SUPPLY_MEDICAL_KIT = 6;
 const int SUPPLY_FUEL = 7;
 
+inline bool randomEvent(int probability) {
+	return ((rand() % 100) + 1) <= probability; // covers [1 to 100]
+}
 
 #endif

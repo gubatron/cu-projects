@@ -11,12 +11,15 @@
 
 
 int main(int numberOfArguments, char **arguments) {
+	/* initialize random seed: */
+	srand(time(NULL));
     if (numberOfArguments == 2 && strcmp(arguments[1], "--test") == 0) {
         if (!runTests()) {
             return 1;
         }
         return 0;
     }
+	runTests();
 //    UserInterface ui;
 //    ui.startGame();
     return 0;
