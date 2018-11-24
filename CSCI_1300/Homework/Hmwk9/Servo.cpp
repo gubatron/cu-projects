@@ -28,6 +28,6 @@ float Servo::getSurchargePercent(unsigned int milestoneOffset) {
 }
 
 void Servo::checkout(Van &van, unsigned int milestonesOffset) {
-  // restock the van with our cart, and charge it the full amount of our cart's contents
+    // restock the van with our cart, and charge it the full amount of our cart's contents
     van.restock(cart, getTotal(milestonesOffset));
 }

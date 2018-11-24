@@ -1,5 +1,5 @@
 #include "Milestone.h"
-                  
+
 std::string Milestone::getName() {
     return name;
 }

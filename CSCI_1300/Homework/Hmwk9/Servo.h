@@ -18,33 +18,33 @@
  */
 class Servo {
 public:
-	// default constructor - initialize variables
-	Servo() {
-		supplies = Supply::possibleSupplies();
-		resetCart();
-	}
+    // default constructor - initialize variables
+    Servo() {
+        supplies = Supply::possibleSupplies();
+        resetCart();
+    }
 
-	double getSurchargePremium(unsigned int milestoneOffset) {
-		return (milestoneOffset * 0.25) + 1; // prices increment at per milestone
-	}
+    double getSurchargePremium(unsigned int milestoneOffset) {
+        return (milestoneOffset * 0.25) + 1; // prices increment at per milestone
+    }
 
 
-	void addSupplyToCart(Supply &productChoice, int productAmount);
+    void addSupplyToCart(Supply &productChoice, int productAmount);
 
-	float getTotal(unsigned int milestonesOffset);
+    float getTotal(unsigned int milestonesOffset);
 
-	/** Each milestone adds 25% surcharge */
-	float getSurchargePercent(unsigned int milestoneOffset);
+    /** Each milestone adds 25% surcharge */
+    float getSurchargePercent(unsigned int milestoneOffset);
 
-	void checkout(Van &van, unsigned int milestonesOffset);
-		// van.restock(cart,getTotal())
+    void checkout(Van &van, unsigned int milestonesOffset);
+    // van.restock(cart,getTotal())
 
 
 
 private:
-	void resetCart(); // adds all supplies to cart with amount zero
-	std::vector<Supply> supplies; // "film", the name won't change CONSTANT
-	std::map<Supply, int> cart; // shopping cart
+    void resetCart(); // adds all supplies to cart with amount zero
+    std::vector<Supply> supplies; // "film", the name won't change CONSTANT
+    std::map<Supply, int> cart; // shopping cart
 };
 
 #endif
