@@ -7,5 +7,6 @@ bool calendarTests();
 bool testRestTurn();
 bool runTests();
 bool testRandomEvents();
+bool testTravelTurn();
 
 #endif

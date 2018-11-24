@@ -8,6 +8,7 @@
 #include <ctime>
 #include <map>
 #include <sstream>
+#include  <algorithm> // std::min
 
 const int SUPPLY_TIRE = 0;
 const int SUPPLY_FOOD = 1;
@@ -20,6 +21,10 @@ const int SUPPLY_FUEL = 7;
 
 inline bool randomEvent(int probability) {
 	return ((rand() % 100) + 1) <= probability; // covers [1 to 100]
+}
+
+inline int randomBetween(int a, int b) {
+	return rand()%(b - a + 1) + a;
 }
 
 #endif

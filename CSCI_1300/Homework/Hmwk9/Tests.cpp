@@ -86,6 +86,33 @@ bool testRandomEvents() {
 		}
 	}
 	std::cout << "testRandomEvents - n for 35% = " << n << std::endl;
+
+	for (int i = 0; i < 100; i++) {
+		int n = randomBetween(21, 25);
+		if (!(n >= 21 && n <= 25)) {
+			std::cout << "randomBetween() failed - " << n << std::endl;
+			return false;
+		}
+	}
+	std::cout << "randomBetween() succeeded " << std::endl;
+	return true;
+}
+
+bool testTravelTurn() {
+	// Test without misfortunes. Just travel method
+	srand(5); // this test always travels the same "random" distance
+	Game game;
+	game.enterPlayer("Nicole");
+	game.enterPlayer("Austin");
+	game.enterPlayer("Angel");
+	game.enterPlayer("Paulina");
+	Van van = game.getVan();
+	van.modifySupplyAmount(SUPPLY_FOOD, 100);
+	van.modifySupplyAmount(SUPPLY_FUEL, 40);
+	game.travel();
+	std::cout << "testTravelTurn() - distance " << game.traveledDistance() << std::endl;
+	std::cout << "testTravelTurn() - food " << van.getAmountOfSupply(SUPPLY_FOOD) << std::endl;
+	std::cout << "testTravelTurn() - fuel " << van.getAmountOfSupply(SUPPLY_FUEL) << std::endl;
 	return true;
 }
 
@@ -95,6 +122,8 @@ bool runTests() {
     passedAll = passedAll && calendarTests();
     passedAll = passedAll && testRestTurn();
 	passedAll = passedAll && testRandomEvents();
+	passedAll = passedAll && testTravelTurn();
+
 
     if (!passedAll) {
         std::cout << "TESTS KO!";

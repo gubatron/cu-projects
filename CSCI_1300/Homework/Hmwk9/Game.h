@@ -12,13 +12,18 @@ public:
     Game() : deadline(Calendar(2019, 12, 2)),
              defaultStartDate(Calendar(2019, 9, 5)),
              startDate(Calendar(2019, 9, 5)),
-             currentDate(Calendar(2019, 9, 5)) {
-        readMilestonesFile("txt-files/milestones.txt");
+             currentDate(Calendar(2019, 9, 5)),
+         	 currentMilestoneOffset(0)
+	{
+        readMilestonesFile("milestones.txt");
     }
 
     int readMilestonesFile(std::string filePath);
 
     size_t enterPlayer(std::string &playerName);
+	
+	/** Distance traveled by the van*/
+	unsigned int traveledDistance();
 
     /** Distance from start to home */
     unsigned int totalDistance();

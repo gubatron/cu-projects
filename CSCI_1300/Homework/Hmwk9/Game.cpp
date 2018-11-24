@@ -4,6 +4,7 @@
 int Game::readMilestonesFile(std::string filePath) {
     std::ifstream infile(filePath);
     if (infile.fail()) {
+		std::cout << "FATAL ERROR: Could not load milestones file: " << filePath << std::endl;
         return -1;
     }
     std::string line;
@@ -26,6 +27,11 @@ size_t Game::enterPlayer(std::string &playerName) {
     size_t playerId = party.size();
     party.emplace_back(Player(playerId, playerName));
     return playerId;
+}
+
+unsigned int Game::traveledDistance()
+{
+	return van.distanceTraveled();
 }
 
 unsigned int Game::totalDistance() {
@@ -97,20 +103,27 @@ void Game::travel() {
 	int totalPoundsPerDay = numberOfPlayersAlive * 2;
 	van.modifySupplyAmount(SUPPLY_FOOD, -totalPoundsPerDay);
 
-	// distance is traveled (400 - 800 km)
-	// if no misfortune and milestone is 800km or further away - travel 800km in turn
-	// van.move(800);
-	// else (if misfortune), travel 400km
-	// if milestone is closer than 800km
+	// distance is traveled random(400 - 800 km) or what's left to the next milestone
+	int travelDistance = std::min(randomBetween(400, 800), distanceToNextMilestone());
+	
+	van.move(travelDistance);
+	
+	// If we land at the next milestone, we update the milestone index
+	if (distanceToNextMilestone() == travelDistance) {
+		currentMilestoneOffset++;
+	}
 
 	// fuel is used -- consume 5L/100km (36L tank per 720km)
-}	//van.getAmountOfSupply(SUPPLY_FUEL);
+	int fuelConsumed = (travelDistance / 100) * 5;
+	van.modifySupplyAmount(SUPPLY_FUEL, -fuelConsumed);
+}
 
 void Game::takePhotos() {
 	// time goes by
 	addDays(1);
 
 	// solve puzzle (random nubmer generator)
+
 
 	// could encounter a sight (random) 
 	/** sigth name - chance of encounter - $ earned - photos/film used

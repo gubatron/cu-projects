@@ -40,7 +40,7 @@ public:
         supplies.emplace_back(Supply(SUPPLY_BATTERY, "Battery", 40, 1, 1, "battery", "batteries"));
         supplies.emplace_back(Supply(SUPPLY_BUMPER, "Bumper", 40, 1, 1, "bumper", "bumpers"));
         supplies.emplace_back(Supply(SUPPLY_MEDICAL_KIT, "Medical Kit", 25, 1, 0, "kit", "kits"));
-        supplies.emplace_back(Supply(SUPPLY_FUEL, "Fuel", 1.5, 1, 36, "liter", "liters"));
+        supplies.emplace_back(Supply(SUPPLY_FUEL, "Fuel", 1.5, 36, 40, "liter", "liters"));
         return supplies;
     }
 
