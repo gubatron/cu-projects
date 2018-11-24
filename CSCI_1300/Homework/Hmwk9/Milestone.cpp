@@ -4,7 +4,7 @@ std::string Milestone::getName() {
     return name;
 }
 
-int Milestone::getDistanceFromOrigin() {
+unsigned int Milestone::getDistanceFromOrigin() {
     return distanceFromOrigin;
 }
 

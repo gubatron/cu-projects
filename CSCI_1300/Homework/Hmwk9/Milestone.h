@@ -8,7 +8,7 @@ class Milestone {
 public:
     // Constructor
     Milestone(std::string milestoneName,
-              int distance,
+              unsigned int distance,
               bool isItAFort,
               float costPerDay) : name(milestoneName),
                                   distanceFromOrigin(distance),
@@ -19,7 +19,7 @@ public:
     // Methods
     std::string getName();
 
-    int getDistanceFromOrigin(); // in KM
+    unsigned int getDistanceFromOrigin(); // in KM
 
     bool isFort(); // all forts are where the player can buy supplies from a Servo
 
@@ -30,7 +30,7 @@ public:
 // private to the class
 private:
     const std::string name;
-    const int distanceFromOrigin; // in km
+    const unsigned int distanceFromOrigin; // in km
     const bool is_fort; // if not, it's an attraction.
     const float dailyTollPerPerson; // cost in AUD per person in party
 };

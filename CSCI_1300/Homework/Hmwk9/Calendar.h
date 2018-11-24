@@ -38,12 +38,19 @@ public:
         return std::to_string(getYear()) + "/" + std::to_string(getMonth()) + "/" + std::to_string(getDay());
     }
 
-	// int daysTo(Calendar days) {
-	// 
-	// }
+    /** Subtract two calendar and return number of days! */
+    long operator-(const Calendar &other) const {
+        long differenceInSeconds = other.date_as_long - date_as_long;
+        if (differenceInSeconds < 0) {
+            differenceInSeconds *= -1;
+        }
+        long secondsInADay = 3600*24;
+        return differenceInSeconds / secondsInADay;
+    }
 private:
     struct tm* my_tm;
     time_t date_as_long;
 };
 
-#endif //CALENDAR_H
+#endif
+

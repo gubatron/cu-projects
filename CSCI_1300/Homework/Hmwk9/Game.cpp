@@ -10,7 +10,7 @@ int Game::readMilestonesFile(std::string filePath) {
     while (std::getline(infile, line)) {
         if (line != "") {
             std::istringstream ss(line);
-            int distance;
+            unsigned int distance;
             int cost;
             std::string name;
             ss >> distance >> cost >> name;
@@ -28,39 +28,64 @@ size_t Game::enterPlayer(std::string &playerName) {
     return playerId;
 }
 
-int Game::totalDistance() {
-    return 0;
+unsigned int Game::totalDistance() {
+    unsigned long lastIndex = milestones.size() - 1;
+    Milestone lastMilestone = milestones[lastIndex];
+    return lastMilestone.getDistanceFromOrigin();
 }
 
-int Game::distanceToHome() {
-    return 0;
+unsigned int Game::remainingDistance() {
+    return totalDistance() - van.distanceTraveled();
 }
 
 int Game::distanceToNextMilestone() {
-    return 0;
+    int lastMilestoneIndex = milestones.size() - 1;
+    int nextMilestoneIndex = getCurrentMilestoneOffset() + 1;
+    if (nextMilestoneIndex > lastMilestoneIndex) {
+        return 0;
+    }
+    Milestone nextMilestone = milestones[nextMilestoneIndex];
+    int nextMilestoneTotalDistance = nextMilestone.getDistanceFromOrigin();
+    return nextMilestoneTotalDistance - van.distanceTraveled();
 }
 
 int Game::daysLeft() {
-    return 0;
+    return deadline - currentDate;
 }
 
 int Game::daysTranscurred() {
-    return 0;
+    return currentDate - startDate;
 }
 
 int Game::partyAlive() {
-    return 0;
+    if (party.empty()) {
+        return 0;
+    }
+    int totalAlive = 0;
+    for (const auto &player : party) {
+        if (player.getHealth() > 0) {
+            totalAlive += 1;
+        }
+    }
+    return totalAlive;
 }
 
 bool Game::partyBroke() {
-    return false;
+    return van.balance() == 0.0f;
 }
 
 bool Game::partyStarved() {
-    return false;
+    return van.getAmountOfSupply(SUPPLY_FOOD) == 0;
 }
 
 void Game::rest() {
+  // time goes by
+  addDays(1);
+
+  // food is consumed
+  int numberOfPlayersAlive = partyAlive();
+  int totalPoundsPerDay = numberOfPlayersAlive * 2;
+  van.modifySupplyAmount(SUPPLY_FOOD, -totalPoundsPerDay);
 }
 
 void Game::travel() {

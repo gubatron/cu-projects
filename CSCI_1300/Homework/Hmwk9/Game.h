@@ -10,9 +10,9 @@
 class Game {
 public:
     Game() : deadline(Calendar(2019, 12, 2)),
-             defaultStartDate(Calendar(2019, 12, 2)),
-             startDate(Calendar(2019, 12, 2)),
-             currentDate(Calendar(2019, 12, 2)) {
+             defaultStartDate(Calendar(2019, 9, 5)),
+             startDate(Calendar(2019, 9, 5)),
+             currentDate(Calendar(2019, 9, 5)) {
         readMilestonesFile("txt-files/milestones.txt");
     }
 
@@ -21,10 +21,10 @@ public:
     size_t enterPlayer(std::string &playerName);
 
     /** Distance from start to home */
-    int totalDistance();
+    unsigned int totalDistance();
 
     /** Distance from current van location to final destination */
-    int distanceToHome();
+    unsigned int remainingDistance();
 
     /** Distance from current van location to next milestone */
     int distanceToNextMilestone();
@@ -53,8 +53,8 @@ public:
         return store;
     }
 
-    Milestone* getCurrentMilestone() {
-        return &milestones[currentMilestoneOffset];
+    Milestone &getCurrentMilestone() {
+        return milestones[currentMilestoneOffset];
     }
 
     Van &getVan();

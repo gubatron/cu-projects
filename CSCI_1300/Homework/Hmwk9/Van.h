@@ -12,12 +12,20 @@ public:
         distance = 0;
     }
 
-    unsigned int distanceFromOrigin() {
+    unsigned int distanceTraveled() {
         return distance;
     }
 
     float balance() {
         return money;
+    }
+
+    void spend(float amountOfMoney) {
+        // Make sure they can't hack Van's Balance by spending negative money
+        if (amountOfMoney < 0) {
+            amountOfMoney *= -1;
+        }
+        money -= amountOfMoney;
     }
 
     void restock(std::map<Supply, int> cart, float invoiceAmount) {
@@ -36,8 +44,18 @@ public:
         }
     }
 
+    int getAmountOfSupply(int supplyId) {
+        // static_cast is to get rid of old style cast warning if we did "(unsigned long)"
+        // warning: use of old-style cast [-Wold-style-cast]
+        Supply supply = VECTOR_POSSIBLE_SUPPLIES[static_cast<unsigned long>(supplyId)];
+        return supplies[supply];
+    }
+
     /** Used by fortune and misfortune events */
-    void modifySupply(Supply supply, int amount) {
+    void modifySupplyAmount(int supplyId, int amount) {
+        // static_cast is to get rid of old style cast warning if we did "(unsigned long)"
+        // warning: use of old-style cast [-Wold-style-cast]
+        Supply supply = VECTOR_POSSIBLE_SUPPLIES[static_cast<unsigned long>(supplyId)];
         supplies[supply] += amount;
     }
 
@@ -49,7 +67,6 @@ private:
     std::map<Supply, int> supplies; // map { supply -> amountInUnits }
     float money;
     unsigned int distance;
-
 };
 
 #endif
