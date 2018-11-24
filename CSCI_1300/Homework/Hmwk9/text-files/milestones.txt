@@ -1,0 +1,10 @@
+795 10 Perth
+1441 8 Kalbarri
+2368 0 Port Headland
+4705 0 Halls Creek
+7271 0 Top Springs
+8462 15 Alice Springs
+10256 0 Brisbane
+11278 15 Sydney
+12117 0 Melbourne
+13698 0 Bremer Bay
