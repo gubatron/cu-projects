@@ -18,7 +18,7 @@ set(SOURCE_FILES
         Player.cpp
         Game.cpp
         Main.cpp
-        )
+        Tests.cpp)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
     add_compile_options(
