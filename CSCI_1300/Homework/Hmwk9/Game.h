@@ -20,7 +20,7 @@ public:
 
     int readMilestonesFile(std::string filePath);
 
-    size_t enterPlayer(std::string &playerName);
+    size_t enterPlayer(const std::string &playerName);
 	
 	/** Distance traveled by the van*/
 	unsigned int traveledDistance();

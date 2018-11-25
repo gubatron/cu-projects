@@ -23,7 +23,7 @@ int Game::readMilestonesFile(std::string filePath) {
     return 0;
 }
 
-size_t Game::enterPlayer(std::string &playerName) {
+size_t Game::enterPlayer(const std::string &playerName) {
     size_t playerId = party.size();
     party.emplace_back(Player(playerId, playerName));
     return playerId;
