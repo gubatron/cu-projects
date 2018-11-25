@@ -10,6 +10,10 @@ public:
         supplies = Supply::emptyCart();
         money = 1000;
         distance = 0;
+        modifySupplyAmount(SUPPLY_ENGINE, 1);
+        modifySupplyAmount(SUPPLY_BUMPER, 1);
+        modifySupplyAmount(SUPPLY_BATTERY, 1);
+        modifySupplyAmount(SUPPLY_TIRE, 4);
     }
 
     unsigned int distanceTraveled() {
