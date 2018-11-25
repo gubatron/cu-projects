@@ -53,6 +53,26 @@ bool calendarTests() {
     return true;
 }
 
+bool testRandomEvents() {
+    int n = 0;
+    for (int i = 0; i < 1000000; i++) {
+        if (randomEvent(35)) {
+            n++;
+        }
+    }
+    std::cout << "testRandomEvents - n for 35% = " << n << std::endl;
+
+    for (int i = 0; i < 100; i++) {
+        int n = randomBetween(21, 25);
+        if (!(n >= 21 && n <= 25)) {
+            std::cout << "randomBetween() failed - " << n << std::endl;
+            return false;
+        }
+    }
+    std::cout << "randomBetween() succeeded " << std::endl;
+    return true;
+}
+
 bool testRestTurn() {
     Game game;
     Van van = game.getVan();
@@ -78,25 +98,6 @@ bool testRestTurn() {
     return true;
 }
 
-bool testRandomEvents() {
-	int n = 0;
-	for (int i = 0; i < 1000000; i++) {
-		if (randomEvent(35)) {
-			n++;
-		}
-	}
-	std::cout << "testRandomEvents - n for 35% = " << n << std::endl;
-
-	for (int i = 0; i < 100; i++) {
-		int n = randomBetween(21, 25);
-		if (!(n >= 21 && n <= 25)) {
-			std::cout << "randomBetween() failed - " << n << std::endl;
-			return false;
-		}
-	}
-	std::cout << "randomBetween() succeeded " << std::endl;
-	return true;
-}
 
 bool testTravelTurn() {
 	// Test without misfortunes. Just travel method
@@ -114,6 +115,10 @@ bool testTravelTurn() {
 	std::cout << "testTravelTurn() - food " << van.getAmountOfSupply(SUPPLY_FOOD) << std::endl;
 	std::cout << "testTravelTurn() - fuel " << van.getAmountOfSupply(SUPPLY_FUEL) << std::endl;
 	return true;
+}
+
+bool testTakePhotosTurn() {
+    return true;
 }
 
 bool runTests() {

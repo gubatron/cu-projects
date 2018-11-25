@@ -4,9 +4,10 @@
 
 bool testServoPurchase();
 bool calendarTests();
-bool testRestTurn();
-bool runTests();
 bool testRandomEvents();
+bool testRestTurn();
 bool testTravelTurn();
+bool testTakePhotosTurn();
+bool runTests();
 
 #endif

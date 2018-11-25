@@ -8,8 +8,6 @@
 #include "Common.h"
 #include "Tests.h"
 
-
-
 int main(int numberOfArguments, char **arguments) {
 	/* initialize random seed: */
 	srand(time(NULL));
