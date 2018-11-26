@@ -10,14 +10,15 @@ cmake_minimum_required(VERSION 3.8)
 project(hmwk9 CXX)
 
 set(SOURCE_FILES
-        Supply.h
         Calendar.h
+        Supply.h
+        Photo.h
         Van.h
-        Milestone.cpp
-        Servo.cpp
-        Player.cpp
         Game.cpp
         Main.cpp
+        Milestone.cpp
+        Player.cpp
+        Servo.cpp
         Tests.cpp)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
