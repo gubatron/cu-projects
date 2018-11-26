@@ -7,19 +7,22 @@
 
 #include "Common.h"
 #include "Tests.h"
+#include "UI.h"
 
 int main(int numberOfArguments, char **arguments) {
-	/* initialize random seed: */
+	/* initialize random seed using time seconds so game outcomes are always different */
 	srand(time(NULL));
+
+	// If you want to run tests, pass "--test" to the executable.
     if (numberOfArguments == 2 && strcmp(arguments[1], "--test") == 0) {
         if (!runTests()) {
             return 1;
         }
         return 0;
     }
-	runTests();
-//    UserInterface ui;
-//    ui.startGame();
+
+    UI ui;
+    ui.start();
     return 0;
 }
 

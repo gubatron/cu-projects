@@ -14,7 +14,8 @@ public:
              defaultStartDate(Calendar(2019, 9, 5)),
              startDate(Calendar(2019, 9, 5)),
              currentDate(Calendar(2019, 9, 5)),
-             lastVisitedMilestoneOffset(0) {
+             lastVisitedMilestoneOffset(0),
+             playerQuit(false) {
         readMilestonesFile("milestones.txt");
     }
 
@@ -54,36 +55,31 @@ public:
 
     void addDays(int days);
 
+    // boolean timeIsUp(); checks if current date isn't already past the deadline date.
+
+    Van &getVan();
+
     Servo &getServo() {
         return store;
     }
 
-    Milestone &getLastVisitedMilestone() {
-        Milestone &lastVisitedMilestone = milestones[lastVisitedMilestoneOffset];
-        if (traveledDistance() == lastVisitedMilestone.getDistanceFromOrigin()) {
-            return lastVisitedMilestone;
-        }
-        // If not at a milestone, return special "In-Transit" milestone
-        Milestone inTransitMilestone = Milestone("In-Transit", traveledDistance(), false, 0.0f);
-        return inTransitMilestone;
-    }
-
-    Van &getVan();
-
     unsigned int getLastVisitedMilestoneOffset() const;
 
+    Milestone &getLastVisitedMilestone();
+
+    unsigned int state();
+
 private:
+    bool playerQuit;
+    unsigned int lastVisitedMilestoneOffset;
     std::vector<Player> party;
     std::vector<Milestone> milestones;
     Servo store;
-    unsigned int lastVisitedMilestoneOffset;
     Calendar deadline;
     Calendar defaultStartDate; // suggested start
     Calendar startDate;
     Calendar currentDate;
     Van van;
-
-
 };
 
 #endif

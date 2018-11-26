@@ -8,7 +8,7 @@ unsigned int Milestone::getDistanceFromOrigin() {
     return distanceFromOrigin;
 }
 
-bool Milestone::isFort() {
+bool Milestone::isServo() {
     return is_fort;
 }
 

@@ -10,6 +10,8 @@
 #include <sstream>
 #include  <algorithm> // std::min
 
+// MAX NUMBER OF PLAYERS THAT CAN BE ADDED TO THE PARTY
+const int MAX_NUMBER_OF_PLAYERS = 2;
 
 // Vital supplies
 const int SUPPLY_FOOD = 0;
@@ -53,6 +55,27 @@ const unsigned int PHOTO_TOWN_PHOTOS_TAKEN = 8;
 const unsigned int PHOTO_CITY_PHOTOS_TAKEN = 10;
 const unsigned int PHOTO_LANDMARK_PHOTOS_TAKEN = 12;
 
+// POSSIBLE GAME STATES, IF NOT GAME_NOT_OVER GAME HAS ENDED FOR THAT REASON
+const unsigned int GAME_NOT_OVER = 0;
+const unsigned int GAME_OVER_RUN_OUT_OF_FUEL = 1;
+const unsigned int GAME_OVER_PARTY_DIED = 2;
+const unsigned int GAME_OVER_PARTY_STARVED = 3;
+const unsigned int GAME_OVER_PARTY_BROKE = 4;
+const unsigned int GAME_OVER_ARRIVED = 5;
+const unsigned int GAME_OVER_TIME_IS_UP = 6;
+const unsigned int GAME_OVER_USER_QUIT = 999;
+
+// UI VALID OPTIONS
+
+const std::string UI_INVALID_OPTION = "invalid";
+const std::string UI_OPTION_QUIT_Q = "q";
+const std::string UI_OPTION_QUIT_QUIT = "quit";
+
+const std::string UI_MILESTONE_OPTION_TRAVEL = "1";
+const std::string UI_MILESTONE_OPTION_REST = "2";
+const std::string UI_MILESTONE_OPTION_TAKE_PHOTOS = "3";
+const std::string UI_MILESTONE_OPTION_GO_TO_SERVO = "4";
+const std::string UI_MILESTONE_OPTION_ENTER_PLAYER = "5";
 
 inline bool randomEvent(int probability) {
 	return ((rand() % 100) + 1) <= probability; // covers [1 to 100]

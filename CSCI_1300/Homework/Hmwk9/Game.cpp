@@ -119,22 +119,6 @@ void Game::travel() {
 }
 
 bool Game::takePhotos(Photo photoSubjectChoice) {
-    // UI will be something like this:
-    //    Attempt to shoot a subject, pick one below:
-    //
-    //    1. Beach
-    //    2. Animal
-    //    3. Town
-    //    4. City
-    //    5. Landmark
-    //
-    //    > 2
-    //    You chose Animal, you have a 25% of taking good photos
-    //    Calculating odds...
-    //    (Possible outputs)
-    //    a) Sorry, no animals were found, you took 8 bad pictures, you earned AUD $0
-    //    b) Success, you took 8 pictures of Animal -> you earned AUD $80
-
     // time goes by
     addDays(1);
 
@@ -152,9 +136,7 @@ bool Game::takePhotos(Photo photoSubjectChoice) {
 }
 
 void Game::quit() {
-    Game end;
-    end.quit();
-    std::cout << "Crikey! Your trip ended on short notice! Ooroo!" << std::endl;
+  playerQuit = true;
 }
 
 void Game::addDays(int days) {
@@ -167,4 +149,40 @@ Van &Game::getVan() {
 
 unsigned int Game::getLastVisitedMilestoneOffset() const {
     return lastVisitedMilestoneOffset;
+}
+
+Milestone &Game::getLastVisitedMilestone() {
+    Milestone &lastVisitedMilestone = milestones[lastVisitedMilestoneOffset];
+    if (traveledDistance() == lastVisitedMilestone.getDistanceFromOrigin()) {
+        return lastVisitedMilestone;
+    }
+    // If not at a milestone, return special "In-Transit" milestone
+    Milestone inTransitMilestone = Milestone("In-Transit", traveledDistance(), false, 0.0f);
+    return inTransitMilestone;
+}
+
+unsigned int Game::state() {
+    if (playerQuit) {
+        return GAME_OVER_USER_QUIT;
+    }
+    if (van.getAmountOfSupply(SUPPLY_FUEL) <= 0) {
+        return GAME_OVER_RUN_OUT_OF_FUEL;
+    }
+    if (!partyAlive()) {
+        return GAME_OVER_PARTY_DIED;
+    }
+    if (partyStarved()) {
+        return GAME_OVER_PARTY_STARVED;
+    }
+    if (partyBroke()) {
+        return GAME_OVER_PARTY_BROKE;
+    }
+    if (getLastVisitedMilestoneOffset() == milestones.size() - 1) {
+        return GAME_OVER_ARRIVED;
+    }
+    // TODO: Check that the date is not the last
+    // if (timeIsUp()) {
+    //   return GAME_OVER_TIME_IS_UP;
+    // }
+    return GAME_NOT_OVER;
 }

@@ -21,7 +21,7 @@ public:
 
     unsigned int getDistanceFromOrigin(); // in KM
 
-    bool isFort(); // all forts are where the player can buy supplies from a Servo
+    bool isServo(); // all forts are where the player can buy supplies from a Servo
 
     bool canLeaveTheSameDay();
 
