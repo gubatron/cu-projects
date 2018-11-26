@@ -1,10 +1,11 @@
 #include "Game.h"
 #include <fstream>
+#include <AppleTextureEncoder.h>
 
 int Game::readMilestonesFile(std::string filePath) {
     std::ifstream infile(filePath);
     if (infile.fail()) {
-		std::cout << "FATAL ERROR: Could not load milestones file: " << filePath << std::endl;
+        std::cout << "FATAL ERROR: Could not load milestones file: " << filePath << std::endl;
         return -1;
     }
     std::string line;
@@ -29,9 +30,8 @@ size_t Game::enterPlayer(const std::string &playerName) {
     return playerId;
 }
 
-unsigned int Game::traveledDistance()
-{
-	return van.distanceTraveled();
+unsigned int Game::traveledDistance() {
+    return van.distanceTraveled();
 }
 
 unsigned int Game::totalDistance() {
@@ -46,7 +46,7 @@ unsigned int Game::remainingDistance() {
 
 int Game::distanceToNextMilestone() {
     int lastMilestoneIndex = milestones.size() - 1;
-    int nextMilestoneIndex = getCurrentMilestoneOffset() + 1;
+    int nextMilestoneIndex = getLastVisitedMilestoneOffset() + 1;
     if (nextMilestoneIndex > lastMilestoneIndex) {
         return 0;
     }
@@ -85,66 +85,76 @@ bool Game::partyStarved() {
 }
 
 void Game::rest() {
-  // time goes by
-  addDays(1);
+    // time goes by
+    addDays(1);
 
-  // food is consumed
-  int numberOfPlayersAlive = partyAlive();
-  int totalPoundsPerDay = numberOfPlayersAlive * 2;
-  van.modifySupplyAmount(SUPPLY_FOOD, -totalPoundsPerDay);
+    // food is consumed
+    int numberOfPlayersAlive = partyAlive();
+    int totalPoundsPerDay = numberOfPlayersAlive * 2;
+    van.modifySupplyAmount(SUPPLY_FOOD, -totalPoundsPerDay);
 }
 
 void Game::travel() {
-	// time goes by
-	addDays(2);
+    // time goes by
+    addDays(2);
 
-	// food is consumed
-	int numberOfPlayersAlive = partyAlive();
-	int totalPoundsPerDay = numberOfPlayersAlive * 2;
-	van.modifySupplyAmount(SUPPLY_FOOD, -totalPoundsPerDay);
+    // food is consumed
+    int numberOfPlayersAlive = partyAlive();
+    int totalPoundsPerDay = numberOfPlayersAlive * 2;
+    van.modifySupplyAmount(SUPPLY_FOOD, -totalPoundsPerDay);
 
-	// distance is traveled random(400 - 800 km) or what's left to the next milestone
-	int travelDistance = std::min(randomBetween(400, 800), distanceToNextMilestone());
-	
-	van.move(travelDistance);
-	
-	// If we land at the next milestone, we update the milestone index
-	if (distanceToNextMilestone() == travelDistance) {
-		currentMilestoneOffset++;
-	}
+    // distance is traveled random(400 - 800 km) or what's left to the next milestone
+    int travelDistance = std::min(randomBetween(400, 800), distanceToNextMilestone());
 
-	// fuel is used -- consume 5L/100km (36L tank per 720km)
-	int fuelConsumed = (travelDistance / 100) * 5;
-	van.modifySupplyAmount(SUPPLY_FUEL, -fuelConsumed);
+    van.move(travelDistance);
+
+    // If we land at the next milestone, we update the milestone index
+    if (distanceToNextMilestone() == 0) {
+        lastVisitedMilestoneOffset++;
+    }
+
+    // fuel is used -- consume 5L/100km (36L tank per 720km)
+    int fuelConsumed = (travelDistance / 100) * 5;
+    van.modifySupplyAmount(SUPPLY_FUEL, -fuelConsumed);
 }
 
-void Game::takePhotos() {
-	// time goes by
-	addDays(1);
+bool Game::takePhotos(Photo photoSubjectChoice) {
+    // UI will be something like this:
+    //    Attempt to shoot a subject, pick one below:
+    //
+    //    1. Beach
+    //    2. Animal
+    //    3. Town
+    //    4. City
+    //    5. Landmark
+    //
+    //    > 2
+    //    You chose Animal, you have a 25% of taking good photos
+    //    Calculating odds...
+    //    (Possible outputs)
+    //    a) Sorry, no animals were found, you took 8 bad pictures, you earned AUD $0
+    //    b) Success, you took 8 pictures of Animal -> you earned AUD $80
 
-	// solve puzzle (random nubmer generator)
+    // time goes by
+    addDays(1);
 
+    int diceRoll = randomBetween(1, 100);
+    bool success = diceRoll <= (photoSubjectChoice.probability * 100);
 
-	// could encounter a sight (random) 
-	/** sigth name - chance of encounter - $ earned - photos/film used
-		beach - 50% - $5 - 5 photos
-		boulder - 25% - $7 - 10 photos
-		town - 15% - $15 - 8 photos
-		city - 7% - $25 - 10 photos
-		landmark - 5% - $30 - 12 photos
-		*/
-	
+    // photos are spent no matter the outcome
+    van.modifySupplyAmount(SUPPLY_PHOTOS, -photoSubjectChoice.photosTaken);
 
-	// film rolls are used (# depends on sight)
-
-
-	// money goes up
-	
+    // money goes up on success
+    if (success) {
+        van.earn(photoSubjectChoice.earnings * photoSubjectChoice.photosTaken);
+    }
+    return success;
 }
 
 void Game::quit() {
-	// game ended
-	// cout statement of regret. Shortened trip
+    Game end;
+    end.quit();
+    std::cout << "Crikey! Your trip ended on short notice! Ooroo!" << std::endl;
 }
 
 void Game::addDays(int days) {
@@ -155,6 +165,6 @@ Van &Game::getVan() {
     return van;
 }
 
-unsigned int Game::getCurrentMilestoneOffset() const {
-    return currentMilestoneOffset;
+unsigned int Game::getLastVisitedMilestoneOffset() const {
+    return lastVisitedMilestoneOffset;
 }

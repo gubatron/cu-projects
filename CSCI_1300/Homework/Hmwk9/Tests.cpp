@@ -4,8 +4,8 @@
 bool testServoPurchase() {
     Game game;
     Van van = game.getVan();
-    Supply food = VECTOR_POSSIBLE_SUPPLIES[SUPPLY_FOOD];
-    Supply engine = VECTOR_POSSIBLE_SUPPLIES[SUPPLY_ENGINE];
+    Supply food = POSSIBLE_SUPPLIES[SUPPLY_FOOD];
+    Supply engine = POSSIBLE_SUPPLIES[SUPPLY_ENGINE];
     if (van.getAmountOfSupply(SUPPLY_FOOD) != 0) {
         std::cout << "testServoPurchase() failed - Van shouldn't have food at the start" << std::endl;
         return false;
@@ -19,7 +19,7 @@ bool testServoPurchase() {
     game.getServo().addSupplyToCart(food, 1);
 
     // check out
-    game.getServo().checkout(van, game.getCurrentMilestoneOffset());
+    game.getServo().checkout(van, game.getLastVisitedMilestoneOffset());
 
     int amountOfFoodInVan = van.getAmountOfSupply(SUPPLY_FOOD);
     if (amountOfFoodInVan != 5) {
@@ -107,17 +107,97 @@ bool testTravelTurn() {
 	game.enterPlayer("Austin");
 	game.enterPlayer("Angel");
 	game.enterPlayer("Paulina");
-	Van van = game.getVan();
-	van.modifySupplyAmount(SUPPLY_FOOD, 100);
-	van.modifySupplyAmount(SUPPLY_FUEL, 40);
-	game.travel();
+    game.getVan().modifySupplyAmount(SUPPLY_FOOD, 100);
+    game.getVan().modifySupplyAmount(SUPPLY_FUEL, 40);
+
+    std::cout << "=====================================================================" << std::endl;
+    std::cout << "START:" << std::endl;
+    std::cout << "testTravelTurn() - distance " << game.traveledDistance() << std::endl;
+    std::cout << "testTravelTurn() - food " << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << std::endl;
+    std::cout << "testTravelTurn() - fuel " << game.getVan().getAmountOfSupply(SUPPLY_FUEL) << std::endl;
+    std::cout << "testTravelTurn() - current milestone: " << game.getLastVisitedMilestone().getName() << std::endl;
+    std::cout << "=====================================================================" << std::endl;
+
+    game.travel();
 	std::cout << "testTravelTurn() - distance " << game.traveledDistance() << std::endl;
-	std::cout << "testTravelTurn() - food " << van.getAmountOfSupply(SUPPLY_FOOD) << std::endl;
-	std::cout << "testTravelTurn() - fuel " << van.getAmountOfSupply(SUPPLY_FUEL) << std::endl;
+	std::cout << "testTravelTurn() - food " << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << std::endl;
+	std::cout << "testTravelTurn() - fuel " << game.getVan().getAmountOfSupply(SUPPLY_FUEL) << std::endl;
+	std::cout << "testTravelTurn() - current milestone: " << game.getLastVisitedMilestone().getName() << std::endl;
+    std::cout << "=====================================================================" << std::endl;
+
+    if (game.getLastVisitedMilestoneOffset() != 0) {
+        std::cout << "testTravelTurn() failed - at this point the last visited milestone offset should be 0, not " << game.getLastVisitedMilestoneOffset() << std::endl;
+        return false;
+    }
+
+    game.travel();
+    std::cout << "testTravelTurn() - distance " << game.traveledDistance() << std::endl;
+    std::cout << "testTravelTurn() - food " << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << std::endl;
+    std::cout << "testTravelTurn() - fuel " << game.getVan().getAmountOfSupply(SUPPLY_FUEL) << std::endl;
+    std::cout << "testTravelTurn() - current milestone: " << game.getLastVisitedMilestone().getName() << std::endl;
+    std::cout << "=====================================================================" << std::endl;
+    game.travel();
+    std::cout << "testTravelTurn() - distance " << game.traveledDistance() << std::endl;
+    std::cout << "testTravelTurn() - food " << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << std::endl;
+    std::cout << "testTravelTurn() - fuel " << game.getVan().getAmountOfSupply(SUPPLY_FUEL) << std::endl;
+    std::cout << "testTravelTurn() - current milestone: " << game.getLastVisitedMilestone().getName() << std::endl;
 	return true;
 }
 
 bool testTakePhotosTurn() {
+    Game game;
+    game.enterPlayer("Nicole");
+    game.enterPlayer("Austin");
+    game.enterPlayer("Angel");
+    game.enterPlayer("Paulina");
+    game.getVan().modifySupplyAmount(SUPPLY_FOOD, 100);
+    game.getVan().modifySupplyAmount(SUPPLY_FUEL, 40);
+    game.getVan().modifySupplyAmount(SUPPLY_PHOTOS, 10);
+
+
+    std::cout << "NO PICTURES TAKEN." << std::endl;
+    std::cout << "testTakePhotosTurn() - daysTranscurred: " << game.daysTranscurred() << std::endl;
+    std::cout << "testTakePhotosTurn() - photos left: " << game.getVan().getAmountOfSupply(SUPPLY_PHOTOS) << std::endl;
+    std::cout << "testTakePhotosTurn() - balance: " << game.getVan().balance() << std::endl;
+    std::cout << "=====================================================================" << std::endl;
+
+
+    bool tookBeachPhotos = game.takePhotos(POSSIBLE_PHOTOS[PHOTO_BEACH]);
+
+    std::cout << "testTakePhotosTurn() - tookBeachPhotos? " << tookBeachPhotos << std::endl;
+    std::cout << "testTakePhotosTurn() - daysTranscurred: " << game.daysTranscurred() << std::endl;
+    std::cout << "testTakePhotosTurn() - photos left: " << game.getVan().getAmountOfSupply(SUPPLY_PHOTOS) << std::endl;
+    std::cout << "testTakePhotosTurn() - balance: " << game.getVan().balance() << std::endl;
+    std::cout << "=====================================================================" << std::endl;
+
+    bool tookAnimalPhotos = game.takePhotos(POSSIBLE_PHOTOS[PHOTO_ANIMAL]);
+    std::cout << "testTakePhotosTurn() - tookAnimalPhotos? " << tookAnimalPhotos << std::endl;
+    std::cout << "testTakePhotosTurn() - daysTranscurred: " << game.daysTranscurred() << std::endl;
+    std::cout << "testTakePhotosTurn() - photos left: " << game.getVan().getAmountOfSupply(SUPPLY_PHOTOS) << std::endl;
+    std::cout << "testTakePhotosTurn() - balance: " << game.getVan().balance() << std::endl;
+    std::cout << "=====================================================================" << std::endl;
+
+    bool tookTownPhotos = game.takePhotos(POSSIBLE_PHOTOS[PHOTO_TOWN]);
+    std::cout << "testTakePhotosTurn() - tookTownPhotos? " << tookTownPhotos << std::endl;
+    std::cout << "testTakePhotosTurn() - daysTranscurred: " << game.daysTranscurred() << std::endl;
+    std::cout << "testTakePhotosTurn() - photos left: " << game.getVan().getAmountOfSupply(SUPPLY_PHOTOS) << std::endl;
+    std::cout << "testTakePhotosTurn() - balance: " << game.getVan().balance() << std::endl;
+    std::cout << "=====================================================================" << std::endl;
+
+    bool tookCityPhotos = game.takePhotos(POSSIBLE_PHOTOS[PHOTO_CITY]);
+    std::cout << "testTakePhotosTurn() - tookCityPhotos? " << tookCityPhotos << std::endl;
+    std::cout << "testTakePhotosTurn() - daysTranscurred: " << game.daysTranscurred() << std::endl;
+    std::cout << "testTakePhotosTurn() - photos left: " << game.getVan().getAmountOfSupply(SUPPLY_PHOTOS) << std::endl;
+    std::cout << "testTakePhotosTurn() - balance: " << game.getVan().balance() << std::endl;
+    std::cout << "=====================================================================" << std::endl;
+
+    bool tookLandmarkPhotos = game.takePhotos(POSSIBLE_PHOTOS[PHOTO_LANDMARK]);
+    std::cout << "testTakePhotosTurn() - tookLandmarkPhotos? " << tookLandmarkPhotos << std::endl;
+    std::cout << "testTakePhotosTurn() - daysTranscurred: " << game.daysTranscurred() << std::endl;
+    std::cout << "testTakePhotosTurn() - photos left: " << game.getVan().getAmountOfSupply(SUPPLY_PHOTOS) << std::endl;
+    std::cout << "testTakePhotosTurn() - balance: " << game.getVan().balance() << std::endl;
+    std::cout << "=====================================================================" << std::endl;
+
     return true;
 }
 
@@ -128,6 +208,7 @@ bool runTests() {
     passedAll = passedAll && testRestTurn();
 	passedAll = passedAll && testRandomEvents();
 	passedAll = passedAll && testTravelTurn();
+    passedAll = passedAll && testTakePhotosTurn();
 
 
     if (!passedAll) {

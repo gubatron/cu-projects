@@ -1,5 +1,5 @@
 0 0 Albany
-795 10 Perth
+812 10 Perth
 1441 8 Kalbarri
 2368 0 Port Headland
 4705 0 Halls Creek

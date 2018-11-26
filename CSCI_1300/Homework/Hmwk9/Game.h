@@ -3,6 +3,7 @@
 #include "Milestone.h"
 #include "Servo.h"
 #include "Calendar.h"
+#include "Photo.h"
 
 #ifndef GAME_H
 #define GAME_H
@@ -13,17 +14,16 @@ public:
              defaultStartDate(Calendar(2019, 9, 5)),
              startDate(Calendar(2019, 9, 5)),
              currentDate(Calendar(2019, 9, 5)),
-         	 currentMilestoneOffset(0)
-	{
+             lastVisitedMilestoneOffset(0) {
         readMilestonesFile("milestones.txt");
     }
 
     int readMilestonesFile(std::string filePath);
 
     size_t enterPlayer(const std::string &playerName);
-	
-	/** Distance traveled by the van*/
-	unsigned int traveledDistance();
+
+    /** Distance traveled by the van*/
+    unsigned int traveledDistance();
 
     /** Distance from start to home */
     unsigned int totalDistance();
@@ -48,7 +48,7 @@ public:
 
     void travel();
 
-    void takePhotos();
+    bool takePhotos(Photo photoSubjectChoice);
 
     void quit();
 
@@ -58,19 +58,25 @@ public:
         return store;
     }
 
-    Milestone &getCurrentMilestone() {
-        return milestones[currentMilestoneOffset];
+    Milestone &getLastVisitedMilestone() {
+        Milestone &lastVisitedMilestone = milestones[lastVisitedMilestoneOffset];
+        if (traveledDistance() == lastVisitedMilestone.getDistanceFromOrigin()) {
+            return lastVisitedMilestone;
+        }
+        // If not at a milestone, return special "In-Transit" milestone
+        Milestone inTransitMilestone = Milestone("In-Transit", traveledDistance(), false, 0.0f);
+        return inTransitMilestone;
     }
 
     Van &getVan();
 
-    unsigned int getCurrentMilestoneOffset() const;
+    unsigned int getLastVisitedMilestoneOffset() const;
 
 private:
     std::vector<Player> party;
     std::vector<Milestone> milestones;
     Servo store;
-    unsigned int currentMilestoneOffset;
+    unsigned int lastVisitedMilestoneOffset;
     Calendar deadline;
     Calendar defaultStartDate; // suggested start
     Calendar startDate;
