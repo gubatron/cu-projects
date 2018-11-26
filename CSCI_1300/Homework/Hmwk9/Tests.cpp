@@ -150,9 +150,10 @@ bool testTakePhotosTurn() {
     game.enterPlayer("Austin");
     game.enterPlayer("Angel");
     game.enterPlayer("Paulina");
+
     game.getVan().modifySupplyAmount(SUPPLY_FOOD, 100);
     game.getVan().modifySupplyAmount(SUPPLY_FUEL, 40);
-    game.getVan().modifySupplyAmount(SUPPLY_PHOTOS, 10);
+    game.getVan().modifySupplyAmount(SUPPLY_PHOTOS, 45);
 
 
     std::cout << "NO PICTURES TAKEN." << std::endl;
@@ -161,6 +162,7 @@ bool testTakePhotosTurn() {
     std::cout << "testTakePhotosTurn() - balance: " << game.getVan().balance() << std::endl;
     std::cout << "=====================================================================" << std::endl;
 
+    srand(5000); // restart number generator seed for deterministic results
 
     bool tookBeachPhotos = game.takePhotos(POSSIBLE_PHOTOS[PHOTO_BEACH]);
 

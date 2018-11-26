@@ -25,12 +25,12 @@ const int SUPPLY_TIRE = 5;
 const int SUPPLY_PHOTOS = 6;
 const int SUPPLY_MEDICAL_KIT = 7;
 
-// PHOTO SUBJECTS
-const int PHOTO_BEACH = 1;
-const int PHOTO_ANIMAL = 2;
-const int PHOTO_TOWN = 3;
-const int PHOTO_CITY = 4;
-const int PHOTO_LANDMARK = 5;
+// PHOTO SUBJECT IDS
+const int PHOTO_BEACH = 0;
+const int PHOTO_ANIMAL = 1;
+const int PHOTO_TOWN = 2;
+const int PHOTO_CITY = 3;
+const int PHOTO_LANDMARK = 4;
 
 // CHANCE OF SHOOTING AN OBJECT
 const float PHOTO_BEACH_PROBABILITY = 0.50f;
