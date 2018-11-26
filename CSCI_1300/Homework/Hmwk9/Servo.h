@@ -20,7 +20,7 @@ class Servo {
 public:
     // default constructor - initialize variables
     Servo() {
-        supplies = Supply::possibleSupplies();
+        //supplies = Supply::possibleSupplies();
         resetCart();
     }
 

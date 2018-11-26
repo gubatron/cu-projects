@@ -4,6 +4,7 @@
 #define SUPPLY_H
 
 // where methods and member variables are defined
+
 class Supply {
 public:
     Supply(int supplyId,
@@ -22,35 +23,8 @@ public:
     pluralUnitName(pluralUnit) {
     }
 
-    static std::map<Supply, int> emptyCart() {
-        std::map<Supply, int> empty;
-        std::vector<Supply> supplies = possibleSupplies();
-        for (auto &it: supplies) {
-            empty.insert(std::make_pair(it, 0));
-        }
-        return empty;
-    }
-
-    static std::vector<Supply> possibleSupplies() {
-        std::vector<Supply> supplies;
-        supplies.emplace_back(Supply(SUPPLY_TIRE, "Tire", 20, 1, 0, "tire", "tires"));
-        supplies.emplace_back(Supply(SUPPLY_FOOD, "Food", 0.5, 1, 90, "kg", "kgs"));
-        supplies.emplace_back(Supply(SUPPLY_FILM, "Film", 2, 20, 0, "roll", "rolls"));
-        supplies.emplace_back(Supply(SUPPLY_ENGINE, "Engine", 40, 1, 1, "engine", "engines"));
-        supplies.emplace_back(Supply(SUPPLY_BATTERY, "Battery", 40, 1, 1, "battery", "batteries"));
-        supplies.emplace_back(Supply(SUPPLY_BUMPER, "Bumper", 40, 1, 1, "bumper", "bumpers"));
-        supplies.emplace_back(Supply(SUPPLY_MEDICAL_KIT, "Medical Kit", 25, 1, 0, "kit", "kits"));
-        supplies.emplace_back(Supply(SUPPLY_FUEL, "Fuel", 1.5, 36, 40, "liter", "liters"));
-        return supplies;
-    }
-
-    bool operator<(const Supply &other) const {
-        return id < other.id;
-    }
-
-    bool operator==(const Supply &other) const {
-        return id == other.id;
-    }
+    /** Returns a map of supplies with amounts set to 0, an empty shopping cart */
+    static std::map<Supply, int> emptyCart();
 
     const int id; // supply identifier, is the same position in the Servo's supplies array
     const std::string name; // name of supply, e.g. Tire, Film, Battery, Medical Kit
@@ -59,10 +33,35 @@ public:
     const int recommendedPurchaseUnits;
     const std::string unitName; // e.g. liters, units, kgs
     const std::string pluralUnitName;
+
+    bool operator<(const Supply &other) const {
+        return id < other.id;
+    }
+
+    bool operator==(const Supply &other) const {
+        return id == other.id;
+    }
 };
 
-// Let's create a single instance of this vector so we don't have to create this
-// over and over with calls to Supply::possibleSupplies()
-const std::vector<Supply> VECTOR_POSSIBLE_SUPPLIES = Supply::possibleSupplies();
+const Supply POSSIBLE_SUPPLIES[] = {
+Supply(SUPPLY_FOOD, "Food", 0.5, 1, 90, "kg", "kgs"),
+Supply(SUPPLY_FUEL, "Fuel", 1.5, 36, 40, "liter", "liters"),
+Supply(SUPPLY_ENGINE, "Engine", 40, 1, 1, "engine", "engines"),
+Supply(SUPPLY_BATTERY, "Battery", 40, 1, 1, "battery", "batteries"),
+Supply(SUPPLY_BUMPER, "Bumper", 40, 1, 1, "bumper", "bumpers"),
+Supply(SUPPLY_TIRE, "Tire", 20, 1, 0, "tire", "tires"),
+Supply(SUPPLY_PHOTOS, "Photos", 0.05f, 36, 36, "photo", "photos"),
+Supply(SUPPLY_MEDICAL_KIT, "Medical Kit", 25, 1, 0, "kit", "kits")
+};
+
+// did not want to create a .cpp file just for one method, also the array above
+// was better in the .h so the possible supplies can be included in Servo.cpp.
+inline std::map<Supply, int> Supply::emptyCart() {
+    std::map<Supply, int> empty;
+    for (auto &it: POSSIBLE_SUPPLIES) {
+        empty.insert(std::make_pair(it, 0));
+    }
+    return empty;
+}
 
 #endif
