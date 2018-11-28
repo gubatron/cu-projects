@@ -12,6 +12,9 @@ void Servo::addSupplyToCart(Supply &productChoice, int productAmount) {
     cart[productChoice] += productAmount;
 }
 
+// TODO: ADD TOTAL BILL
+
+/** Used at all servos but the first one*/
 float Servo::getTotal(unsigned int milestonesOffset) {
     float invoiceAmount = 0;
     for (std::pair<Supply, int> keyValue : cart) {

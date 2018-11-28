@@ -75,16 +75,12 @@ Pigs formula.chance
 //{
 //    Game OutbackGanders
 /*
-- initialize
-    - read files -- ifstream attraction and fort files
-- enterPlayer
-    - enter main player and companion names
-- visitServo
-    - get supplies
-    - options to purchase more than one, not at all, apply min/max purhcases, buy same item many times, don't leave store without at least without fuel.
 - setDate
     - give option of default date
     - if say no, give option of other starting date ranges.
+- visitServo
+    - get supplies
+    - options to purchase more than one, not at all, apply min/max purhcases, buy same item many times, don't leave store without at least without fuel.
 
 loop (!Game.end())
 {
@@ -93,13 +89,7 @@ loop (!Game.end())
         - Player 1 health
         - Player 2 health
         - Food left
-        - Money left
-        - Fuel left
-        - Km traveled
-        - Km left
-        - Km until next fort/attraction
-        - Days left until flight leaves
-    // choice to travel, rest, take photos
+        - Money left 
         - if travel -- display status, 2 days go by, 800km
         - if rest -- remove 1 kg food/person and 1 day goes by
         - if take photos -- film amount goes down, $ goes up per photo taken (bc you sold them)

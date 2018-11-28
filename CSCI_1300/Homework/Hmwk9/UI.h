@@ -13,6 +13,8 @@ private:
     std::string askForValidMilestoneScreenOption(bool servoOptionShown, bool enterPlayerMenuOptionShown);
     void gameOver(const unsigned int reason);
     void enterPlayer();
+	void selectStartDate();
+	void servoSupplyList();
     void servoScreen();
 
     void travel();

@@ -34,8 +34,8 @@ public:
 
     /** Distance from current van location to next milestone */
     int distanceToNextMilestone();
-
-    int daysLeft();
+    
+	int daysLeft();
 
     int daysTranscurred();
 

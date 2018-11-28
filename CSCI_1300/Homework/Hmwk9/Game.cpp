@@ -1,6 +1,6 @@
 #include "Game.h"
 #include <fstream>
-#include <AppleTextureEncoder.h>
+//#include <AppleTextureEncoder.h>
 
 int Game::readMilestonesFile(std::string filePath) {
     std::ifstream infile(filePath);
