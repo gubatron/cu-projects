@@ -183,10 +183,10 @@ void UI::selectStartDate() {
 	// This screen tells user current date and instucts to choose a start date. 
 	printFile("start_date_intro.txt");
 	std::cout << "On what day would you like to start your journey? (q / quit to quit; d / D for default) ";
+	
 	std::cout << std::endl;
+	askIntQuestion("Enter a start day (ie. 5): ");
 	while (true) {
-		std::cout << "Enter a start day (ie. 5): "; // day but I need to call Calendar()
-										 // and use stoi for inputs. Do I just ask for a day or offer start date choices?
 		std::string dateInput;
 		getline(std::cin, dateInput);
 		trim(dateInput);
@@ -206,14 +206,7 @@ void UI::selectStartDate() {
 				return;
 			}
 
-			std::cout << "Please enter a valid number between 1-31 inclusive: ";
-			getline(std::cin, dateInput);
-			int days = toInt(dateInput);
-			while (days < 0 || days > 30) {
-				std::cout << "Please enter a valid number between 0-30 inclusive: ";
-				getline(std::cin, dateInput);
-				days = toInt(dateInput);
-			}
+		
 
 			if (days == 1) {
 				std::cout << "Is 'September " << dateInput << "st , 2019' correct? (y/n): ";
@@ -254,7 +247,7 @@ void UI::selectStartDate() {
 
 void UI::servoScreen() {
 	std::cout << std::endl;
-	std::cout << "    Ow ya goin mate! Welcome to the Servo. What can I get for ya? 		   " << std::endl;
+	std::cout << "    Ow ya goin' mate! Welcome to the Servo. What can I get for ya?  " << std::endl;
 
 	// call servo supply list and maybe put prices at the end of each line as it reads the file
 	while (true) {
@@ -425,7 +418,7 @@ void UI::toTitle(std::string & str) {
 
 void UI::trim(std::string &str) {
     str.erase(0, str.find_first_not_of(' '));       //prefixing spaces
-    str.erase(str.find_last_not_of(' ') + 1);         //surfixing spaces
+    str.erase(str.find_last_not_of(' ') + 1);       //sufixing spaces
 }
 
 int UI::toInt(const std::string &str) {
@@ -435,4 +428,30 @@ int UI::toInt(const std::string &str) {
 	catch (const std::invalid_argument&) {
 		return -1;
 	}
+}
+
+int UI::readInt() {
+	std::string str;
+	getline(std::cin, str);
+	trim(str);
+
+	if ((str == UI_OPTION_QUIT_Q || str == UI_OPTION_QUIT_QUIT)) {
+		return UI_QUIT_CODE;
+	}
+
+	return toInt(str);
+}
+
+int UI::askIntQuestion(std::string question) {
+	std::cout << question; 
+	
+	int readValue = readInt();
+	while (readValue < validMin || readValue > validMax) {
+		std::cout << "Please enter a valid number between 0-30 inclusive: ";
+		getline(std::cin, dateInput);
+		days = toInt(dateInput);
+	}
+	//return 
+
+	// int min; int max;
 }

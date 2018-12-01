@@ -64,6 +64,10 @@ private:
      * */
 	int toInt(const std::string &str);
 
+	int readInt(); 
+
+	int askIntQuestion(std::string question);
+
     Game game;
     Player nullPlayer;
 };
