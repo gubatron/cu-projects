@@ -182,7 +182,7 @@ void UI::enterPlayer() {
 void UI::selectStartDate() {
 	// This screen tells user current date and instucts to choose a start date. 
 	printFile("start_date_intro.txt");
-	std::cout << "		On what day would you like to start your journey? (q / quit to quit; d / D for default) ";
+	std::cout << "On what day would you like to start your journey? (q / quit to quit; d / D for default) ";
 	std::cout << std::endl;
 	while (true) {
 		std::cout << "Enter a start day (ie. 5): "; // day but I need to call Calendar()
@@ -206,10 +206,11 @@ void UI::selectStartDate() {
 				return;
 			}
 
+			std::cout << "Please enter a valid number between 1-31 inclusive: ";
 			getline(std::cin, dateInput);
 			int days = toInt(dateInput);
 			while (days < 0 || days > 30) {
-				std::cout << "Please enter a valid number between 0-30 inclusive" << std::endl;
+				std::cout << "Please enter a valid number between 0-30 inclusive: ";
 				getline(std::cin, dateInput);
 				days = toInt(dateInput);
 			}
