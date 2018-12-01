@@ -1,0 +1,12 @@
+    
+	You've saved $1000 AUD to spend for the trip. You will need to spend    
+	the rest of your money on food, fuel, spare vehicle parts, photos, and  
+	a medical kit.					
+
+	Here is a rundown of what each item does:	
+		- Food: The more you have, the less chance there is of getting sick       	   
+		- Fuel: Keeps your van running (duh!)									  
+		- Engine/Battery/Bumper/Tire: Keep a spare in case of a misfortune
+		- Photos: Stop to take photos and sell them for money!					  
+		- Meical Kit: Good health booster before you cark-it
+

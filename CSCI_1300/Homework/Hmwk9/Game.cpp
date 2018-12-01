@@ -1,6 +1,5 @@
 #include "Game.h"
 #include <fstream>
-//#include <AppleTextureEncoder.h>
 
 int Game::readMilestonesFile(std::string filePath) {
     std::ifstream infile(filePath);
@@ -35,7 +34,7 @@ unsigned int Game::traveledDistance() {
 }
 
 unsigned int Game::totalDistance() {
-    unsigned long lastIndex = milestones.size() - 1;
+    long lastIndex = milestones.size() - 1;
     Milestone lastMilestone = milestones[lastIndex];
     return lastMilestone.getDistanceFromOrigin();
 }
@@ -62,6 +61,18 @@ int Game::daysLeft() {
 int Game::daysTranscurred() {
     return currentDate - startDate;
 }
+void Game::addDays(int days) {
+    currentDate.addDays(days);
+}
+
+void Game::addToStartDate(int nDays) {
+	startDate.addDays(nDays);
+	addDays(nDays); 
+	// move current start date?
+}
+
+// bool Game::timeIsUp() {
+// TODO }
 
 int Game::partyAlive() {
     if (party.empty()) {
@@ -139,9 +150,6 @@ void Game::quit() {
   playerQuit = true;
 }
 
-void Game::addDays(int days) {
-    currentDate.addDays(days);
-}
 
 Van &Game::getVan() {
     return van;

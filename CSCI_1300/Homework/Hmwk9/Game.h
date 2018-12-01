@@ -39,6 +39,16 @@ public:
 
     int daysTranscurred();
 
+    void addDays(int days);
+
+	void addToStartDate(int nDays);
+
+	bool timeIsUp();
+    /** checks if current date isn't already past the deadline date. *
+	* time runs out after 124 days
+	*/
+
+
     int partyAlive();
 
     bool partyBroke();
@@ -52,11 +62,6 @@ public:
     bool takePhotos(Photo photoSubjectChoice);
 
     void quit();
-
-    void addDays(int days);
-
-    // boolean timeIsUp(); checks if current date isn't already past the deadline date.
-
     Van &getVan();
 
     Servo &getServo() {

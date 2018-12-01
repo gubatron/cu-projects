@@ -10,25 +10,34 @@ public:
     void start();
 private:
     int milestoneScreen();
-    std::string askForValidMilestoneScreenOption(bool servoOptionShown, bool enterPlayerMenuOptionShown);
-    void gameOver(const unsigned int reason);
-    void enterPlayer();
+   
+	std::string askForValidMilestoneScreenOption(bool servoOptionShown, bool enterPlayerMenuOptionShown);
+	
+	void printFile(std::string filePath) const;
+    
+	void enterPlayer();
+	
 	void selectStartDate();
-	void servoSupplyList();
-    void servoScreen();
+    
+	void servoScreen();
 
     void travel();
-    void rest();
-    void takePhotos();
-
+    
+	void rest();
+    
+	void takePhotos();
 
     //void selectStartDate();
-    //void pigs();
+
+	//void pigs();
 
     void showBasicMenuOptions();
-    void showEnterPlayerMenuOptions();
-    void showServoMenuOptions();
-    void showQuitMenuOptions();
+    
+	void showEnterPlayerMenuOptions();
+    
+	void showServoMenuOptions();
+    
+	void showQuitMenuOptions();
 
     /** Shows the basic menu options
      *  Depending on the milestone shows option to go to servo
@@ -38,11 +47,17 @@ private:
      * */
     void showMilestoneMenuOptions(bool &servoOptionShown, bool &enterPlayerMenuOptionShown);
 
-    /** converts string to lower case */
+	void gameOver(const unsigned int reason);
+    
+	/** converts string to lower case */
     void toLower(std::string &str);
+	
+	void toTitle(std::string &str);
 
     /** trims empty space characters on both sides of a string */
     void trim(std::string& str);
+
+	int toInt(std::string &str); 
 
     Game game;
     Player nullPlayer;
