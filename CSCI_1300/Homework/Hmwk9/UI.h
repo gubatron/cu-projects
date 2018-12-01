@@ -9,11 +9,11 @@ public:
     UI() : nullPlayer(Player(9999999,"Quiter"))  {}
     void start();
 private:
-    int milestoneScreen();
+    unsigned int milestoneScreen();
    
 	std::string askForValidMilestoneScreenOption(bool servoOptionShown, bool enterPlayerMenuOptionShown);
 	
-	void printFile(std::string filePath) const;
+	bool printFile(std::string filePath) const;
     
 	void enterPlayer();
 	
@@ -55,9 +55,14 @@ private:
 	void toTitle(std::string &str);
 
     /** trims empty space characters on both sides of a string */
-    void trim(std::string& str);
+    void trim(std::string &str);
 
-	int toInt(std::string &str); 
+    /** returns the int value expressed by a string. The string is not manipulated therefore we guarantee it will
+     * remain intact, by only accepting strings that cannot be chaged in the first place
+     *
+     * returns -1 if a string that does not represent an int was passed
+     * */
+	int toInt(const std::string &str);
 
     Game game;
     Player nullPlayer;

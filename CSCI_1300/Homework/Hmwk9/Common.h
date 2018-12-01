@@ -81,8 +81,8 @@ inline bool randomEvent(int probability) {
 	return ((rand() % 100) + 1) <= probability; // covers [1 to 100]
 }
 
-inline int randomBetween(int a, int b) {
-	return rand()%(b - a + 1) + a;
+inline unsigned int randomBetween(unsigned int a, unsigned int b) {
+	return static_cast<unsigned int>(rand()) % (b - a + 1) + a;
 }
 
 #endif

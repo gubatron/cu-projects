@@ -29,7 +29,7 @@ public:
     }
 
 
-    void addSupplyToCart(Supply &productChoice, int productAmount);
+    void addSupplyToCart(const Supply &productChoice, int productAmount);
 
     float getTotal(unsigned int milestonesOffset);
 

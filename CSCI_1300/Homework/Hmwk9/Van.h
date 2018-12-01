@@ -60,7 +60,7 @@ public:
     int getAmountOfSupply(int supplyId) {
         // static_cast is to get rid of old style cast warning if we did "(unsigned long)"
         // warning: use of old-style cast [-Wold-style-cast]
-        Supply supply = POSSIBLE_SUPPLIES[static_cast<unsigned long>(supplyId)];
+        Supply supply = SUPPLY_CATALOG[static_cast<unsigned long>(supplyId)];
         return supplies[supply];
     }
 
@@ -68,7 +68,7 @@ public:
     void modifySupplyAmount(int supplyId, int amount) {
         // static_cast is to get rid of old style cast warning if we did "(unsigned long)"
         // warning: use of old-style cast [-Wold-style-cast]
-        Supply supply = POSSIBLE_SUPPLIES[static_cast<unsigned long>(supplyId)];
+        Supply supply = SUPPLY_CATALOG[static_cast<unsigned long>(supplyId)];
         supplies[supply] += amount;
     }
 

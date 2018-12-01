@@ -4,7 +4,10 @@
 void UI::start() {
 	// initialize milestones.txt
     // This screen will welcome the player, and will use the enterPlayer() method as needed
-	printFile("welcome_screen.txt");
+	if (!printFile("welcome_screen.txt")) {
+		std::cout << "error: UI::start: printFile(\"welcome_screen.txt\") failed. File \"welcome_screen.txt\" not found." << std::endl;
+		return;
+	}
 
 	enterPlayer();
 
@@ -33,7 +36,7 @@ void UI::start() {
     gameOver(state);
 }
 
-int UI::milestoneScreen() {
+unsigned int UI::milestoneScreen() {
     // TODOS:
     // - Show the name of the current milestone (could be in transit, or at milestone, perhaps add a little
     // flair if it's a servo, other than the extra option
@@ -123,15 +126,19 @@ std::string UI::askForValidMilestoneScreenOption(bool servoOptionShown, bool ent
     return userOption;
 }
 
-void UI::printFile(std::string filePath) const {
+bool UI::printFile(std::string filePath) const {
 	std::string line = "";
 	std::ifstream f(filePath);
-	if (f.is_open()) {
-		while (getline(f, line)) {
-			std::cout << line << std::endl;
-		}
-		f.close();
+
+	if (!f.is_open()) {
+		return  false;
 	}
+
+	while (getline(f, line)) {
+		std::cout << line << std::endl;
+	}
+	f.close();
+	return true;
 }
 
 void UI::enterPlayer() {
@@ -199,10 +206,12 @@ void UI::selectStartDate() {
 				return;
 			}
 
-			int days = toInt(getline(std::cin, dateInput));
+			getline(std::cin, dateInput);
+			int days = toInt(dateInput);
 			while (days < 0 || days > 30) {
 				std::cout << "Please enter a valid number between 0-30 inclusive" << std::endl;
-				days = toInt(getline(std::cin, dateInput));
+				getline(std::cin, dateInput);
+				days = toInt(dateInput);
 			}
 
 			if (days == 1) {
@@ -268,23 +277,19 @@ void UI::servoScreen() {
 			}
 
 
-			// Supply purchase = POSSIBLE_SUPPLIES[toInt(itemNumber)];
+			// Supply purchase = SUPPLY_CATALOG[toInt(itemNumber)];
 			// Enter quantity
 			std::cout << "How many units do you want?: ";
 			std::string itemQuantity;
 			getline(std::cin, itemQuantity);
 			trim(itemQuantity);
 
-			game.getServo().addSupplyToCart(POSSIBLE_SUPPLIES[toInt(itemNumber) - 1], toInt(itemQuantity));
+			game.getServo().addSupplyToCart(SUPPLY_CATALOG[toInt(itemNumber) - 1], toInt(itemQuantity));
 
-
-
-				// int UI::enterValidNumber(int *valid_numbers_array, size_of_that_array);
-				// int supplyId = toInt(itemNumber) - 1;
-				// int quantity = toInt(itemQuantity);
-				// game.getServo().addSupplyToCart(POSSIBLE_SUPPLIES[supplyId], quantity);
-
-
+			// int UI::enterValidNumber(int *valid_numbers_array, size_of_that_array);
+			// int supplyId = toInt(itemNumber) - 1;
+			// int quantity = toInt(itemQuantity);
+			// game.getServo().addSupplyToCart(SUPPLY_CATALOG[supplyId], quantity);
 
 			// Total bill
 			// std::cout << "Do you wish to add more to your cart? (y/n)" << std::endl;
@@ -422,11 +427,11 @@ void UI::trim(std::string &str) {
     str.erase(str.find_last_not_of(' ') + 1);         //surfixing spaces
 }
 
-int UI::toInt(std::string &str) {
+int UI::toInt(const std::string &str) {
 	try {
 		return stoi(str);
 	}
-	catch (const std::invalid_argument& ia) {
+	catch (const std::invalid_argument&) {
 		return -1;
 	}
 }

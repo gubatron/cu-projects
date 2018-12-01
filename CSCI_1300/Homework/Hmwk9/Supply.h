@@ -43,7 +43,9 @@ public:
     }
 };
 
-const Supply POSSIBLE_SUPPLIES[] = {
+// The Servo's supply catalog. These instances are defined here and nowhere else and they cannot change, therefore
+// they are declared as an array of const Supply objects.
+const Supply SUPPLY_CATALOG[] = {
 Supply(SUPPLY_FOOD, "Food", 0.5, 1, 90, "kg", "kgs"),
 Supply(SUPPLY_FUEL, "Fuel", 1.5, 36, 40, "liter", "liters"),
 Supply(SUPPLY_ENGINE, "Engine", 40, 1, 1, "engine", "engines"),
@@ -58,7 +60,7 @@ Supply(SUPPLY_MEDICAL_KIT, "Medical Kit", 25, 1, 0, "kit", "kits")
 // was better in the .h so the possible supplies can be included in Servo.cpp.
 inline std::map<Supply, int> Supply::emptyCart() {
     std::map<Supply, int> empty;
-    for (auto &it: POSSIBLE_SUPPLIES) {
+    for (auto &it: SUPPLY_CATALOG) {
         empty.insert(std::make_pair(it, 0));
     }
     return empty;

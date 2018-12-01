@@ -4,8 +4,8 @@
 bool testServoPurchase() {
     Game game;
     Van van = game.getVan();
-    Supply food = POSSIBLE_SUPPLIES[SUPPLY_FOOD];
-    Supply engine = POSSIBLE_SUPPLIES[SUPPLY_ENGINE];
+    Supply food = SUPPLY_CATALOG[SUPPLY_FOOD];
+    Supply engine = SUPPLY_CATALOG[SUPPLY_ENGINE];
     if (van.getAmountOfSupply(SUPPLY_FOOD) != 0) {
         std::cout << "testServoPurchase() failed - Van shouldn't have food at the start" << std::endl;
         return false;

@@ -10,12 +10,14 @@
 
 class Game {
 public:
-    Game() : deadline(Calendar(2019, 12, 2)),
+    Game() :
+             playerQuit(false),
+             lastVisitedMilestoneOffset(0),
+             deadline(Calendar(2019, 12, 2)),
              defaultStartDate(Calendar(2019, 9, 5)),
              startDate(Calendar(2019, 9, 5)),
-             currentDate(Calendar(2019, 9, 5)),
-             lastVisitedMilestoneOffset(0),
-             playerQuit(false) {
+             currentDate(Calendar(2019, 9, 5))
+              {
         readMilestonesFile("milestones.txt");
     }
 
@@ -33,11 +35,11 @@ public:
     unsigned int remainingDistance();
 
     /** Distance from current van location to next milestone */
-    int distanceToNextMilestone();
+    unsigned int distanceToNextMilestone();
     
-	int daysLeft();
+	unsigned int daysLeft();
 
-    int daysTranscurred();
+    unsigned int daysTranscurred();
 
     void addDays(int days);
 

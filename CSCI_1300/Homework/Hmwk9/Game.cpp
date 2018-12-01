@@ -34,7 +34,7 @@ unsigned int Game::traveledDistance() {
 }
 
 unsigned int Game::totalDistance() {
-    long lastIndex = milestones.size() - 1;
+    unsigned long lastIndex = milestones.size() - 1;
     Milestone lastMilestone = milestones[lastIndex];
     return lastMilestone.getDistanceFromOrigin();
 }
@@ -43,23 +43,23 @@ unsigned int Game::remainingDistance() {
     return totalDistance() - van.distanceTraveled();
 }
 
-int Game::distanceToNextMilestone() {
-    int lastMilestoneIndex = milestones.size() - 1;
-    int nextMilestoneIndex = getLastVisitedMilestoneOffset() + 1;
+unsigned int Game::distanceToNextMilestone() {
+    auto lastMilestoneIndex = static_cast<unsigned int>(milestones.size() - 1);
+    unsigned int nextMilestoneIndex = getLastVisitedMilestoneOffset() + 1;
     if (nextMilestoneIndex > lastMilestoneIndex) {
         return 0;
     }
     Milestone nextMilestone = milestones[nextMilestoneIndex];
-    int nextMilestoneTotalDistance = nextMilestone.getDistanceFromOrigin();
+    unsigned int nextMilestoneTotalDistance = nextMilestone.getDistanceFromOrigin();
     return nextMilestoneTotalDistance - van.distanceTraveled();
 }
 
-int Game::daysLeft() {
-    return deadline - currentDate;
+unsigned int Game::daysLeft() {
+    return static_cast<unsigned int>(deadline - currentDate);
 }
 
-int Game::daysTranscurred() {
-    return currentDate - startDate;
+unsigned int Game::daysTranscurred() {
+    return static_cast<unsigned int>(currentDate - startDate);
 }
 void Game::addDays(int days) {
     currentDate.addDays(days);
@@ -115,7 +115,7 @@ void Game::travel() {
     van.modifySupplyAmount(SUPPLY_FOOD, -totalPoundsPerDay);
 
     // distance is traveled random(400 - 800 km) or what's left to the next milestone
-    int travelDistance = std::min(randomBetween(400, 800), distanceToNextMilestone());
+    unsigned int travelDistance = std::min(randomBetween(400, 800), distanceToNextMilestone());
 
     van.move(travelDistance);
 

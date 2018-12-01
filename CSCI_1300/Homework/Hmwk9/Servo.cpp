@@ -8,7 +8,7 @@ void Servo::resetCart() {
     cart = Supply::emptyCart();
 }
 
-void Servo::addSupplyToCart(Supply &productChoice, int productAmount) {
+void Servo::addSupplyToCart(const Supply &productChoice, int productAmount) {
     cart[productChoice] += productAmount;
 }
 
