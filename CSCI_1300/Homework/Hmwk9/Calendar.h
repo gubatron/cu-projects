@@ -58,7 +58,7 @@ public:
 
     /** Subtract two calendar and return number of days! */
     long subtractDays(const Calendar &other) const {
-        // substract second difference, and then divide by the seconds in a day
+        // subtract second difference, and then divide by the seconds in a day
         long differenceInSeconds = date_as_long - other.date_as_long;
         long secondsInADay = 3600*24;
         return differenceInSeconds / secondsInADay;

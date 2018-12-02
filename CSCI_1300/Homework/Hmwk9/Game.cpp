@@ -54,8 +54,8 @@ unsigned int Game::distanceToNextMilestone() {
     return nextMilestoneTotalDistance - van.distanceTraveled();
 }
 
-unsigned int Game::daysLeft() {
-    return static_cast<unsigned int>(deadline.subtractDays(currentDate));
+int Game::daysLeft() {
+    return deadline.subtractDays(currentDate);
 }
 
 unsigned int Game::daysTranscurred() {
@@ -70,7 +70,7 @@ void Game::addToStartDate(int nDays) {
 }
 
 bool Game::timeIsUp() {
-    return deadline.subtractDays(currentDate) > 0;
+    return daysLeft() < 0;
 }
 
 int Game::partyAlive() {

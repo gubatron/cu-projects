@@ -63,7 +63,18 @@ const unsigned int GAME_OVER_PARTY_STARVED = 3;
 const unsigned int GAME_OVER_PARTY_BROKE = 4;
 const unsigned int GAME_OVER_ARRIVED = 5;
 const unsigned int GAME_OVER_TIME_IS_UP = 6;
-const unsigned int GAME_OVER_USER_QUIT = 999;
+const unsigned int GAME_OVER_USER_QUIT = 7;
+
+const std::string GAME_OVER_REASONS[] = {
+    "Game not over",
+    "Ran out of fuel",
+    "Party died",
+    "Party starved",
+    "Party broke",
+    "Arrived to destination, good on 'ya mate!",
+    "Time is up",
+    "User quit game"
+};
 
 // UI VALID OPTIONS
 

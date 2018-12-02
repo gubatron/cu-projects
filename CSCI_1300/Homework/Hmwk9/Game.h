@@ -36,7 +36,7 @@ public:
     /** Distance from current van location to next milestone */
     unsigned int distanceToNextMilestone();
     
-	unsigned int daysLeft();
+	int daysLeft();
 
     unsigned int daysTranscurred();
 

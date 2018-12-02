@@ -55,8 +55,11 @@ void UI::start(bool debug) {
         game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FUEL], 100);
         game.getServo().checkout(game.getVan(), 0);
         // Let's start on the second
+        /**
         game.addToStartDate(-3); //5-3 = 2
         game.addDays(1); //1 + 1 = 2
+         */
+        game.addDays(90);
     }
 
     printPartyStatus();
@@ -72,6 +75,10 @@ void UI::start(bool debug) {
 }
 
 unsigned int UI::milestoneScreen() {
+    if (game.state() != GAME_NOT_OVER) {
+        return game.state();
+    }
+
     bool servoOptionShown = false;
     showMilestoneMenuOptions(servoOptionShown);
 
@@ -437,6 +444,7 @@ void UI::showQuitMenuOptions() {
 void UI::showMilestoneMenuOptions(bool &servoOptionShown) {
     std::cout << std::endl;
     printBreakLine();
+    printBreakLine();
     Milestone &milestone = game.getLastVisitedMilestone();
     // Show the basic options
     // 1. TRAVEL
@@ -459,7 +467,7 @@ void UI::showMilestoneMenuOptions(bool &servoOptionShown) {
 }
 
 void UI::gameOver(const unsigned int reason) {
-    std::cout << "Game Over Mofo, because of reasons " << reason << std::endl;
+    std::cout << "Game Over Galah, because of reason: " << GAME_OVER_REASONS[reason] << std::endl;
     std::cout << "Come again!!!" << std::endl << std::endl;
     std::exit(0); //https://en.cppreference.com/w/cpp/utility/program/exit
 }
@@ -548,7 +556,6 @@ int UI::askIntQuestion(std::string question, unsigned int validMin, int unsigned
             std::cout << " (max: " << validMax << ")";
         }
         std::cout << " : ";
-
         readValue = readInt();
     }
     return readValue;
