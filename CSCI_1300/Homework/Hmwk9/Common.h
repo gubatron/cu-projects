@@ -105,6 +105,13 @@ const unsigned int UI_SERVO_MENU_TIRE = 1 + SUPPLY_TIRE;
 const unsigned int UI_SERVO_MENU_PHOTOS = 1 + SUPPLY_PHOTOS;
 const unsigned int UI_SERVO_MENU_MEDICAL_KIT = 1 + SUPPLY_MEDICAL_KIT;
 
+// TAKE PHOTOS MENU OPTIONS
+const unsigned int UI_TAKE_PHOTOS_MENU_EXIT = 0;
+const unsigned int UI_TAKE_PHOTOS_MENU_BEACH = 1;
+const unsigned int UI_TAKE_PHOTOS_MENU_ANIMAL = 2;
+const unsigned int UI_TAKE_PHOTOS_MENU_TOWN = 3;
+const unsigned int UI_TAKE_PHOTOS_MENU_CITY = 4;
+const unsigned int UI_TAKE_PHOTOS_MENU_LANDMARK = 5;
 
 inline bool randomEvent(int probability) {
 	return ((rand() % 100) + 1) <= probability; // covers [1 to 100]

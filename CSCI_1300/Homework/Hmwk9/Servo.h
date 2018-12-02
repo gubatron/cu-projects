@@ -40,7 +40,6 @@ public:
     float getSurchargePercent(unsigned int milestoneOffset) const;
 
     void checkout(Van &van, unsigned int milestonesOffset);
-    // van.restock(cart,getTotal())
 
     std::map<Supply, int> getShoppingCart();
 

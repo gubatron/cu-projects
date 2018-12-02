@@ -55,11 +55,9 @@ void UI::start(bool debug) {
         game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FUEL], 100);
         game.getServo().checkout(game.getVan(), 0);
         // Let's start on the second
-        /**
+
         game.addToStartDate(-3); //5-3 = 2
         game.addDays(1); //1 + 1 = 2
-         */
-        game.addDays(90);
     }
 
     printPartyStatus();
@@ -99,6 +97,7 @@ unsigned int UI::milestoneScreen() {
         //missfortunes();
         //pigs();
     } else if (option == UI_MILESTONE_OPTION_CHECK_VAN) {
+        printPartyStatus();
         printVanSupplies();
     } else if (option == UI_MILESTONE_OPTION_GO_TO_SERVO) {
         servoScreen();
@@ -233,7 +232,7 @@ void UI::printServoMenu() {
     std::cout << "    8. Medical Kit............................$"
               << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_MEDICAL_KIT], game.getLastVisitedMilestoneOffset())
               << std::endl << std::endl;
-    std::cout << "    0. Exit servo" << std::endl << std::endl;
+    std::cout << "    0. Checkout" << std::endl << std::endl;
 
     float total = game.getServo().getTotal(game.getLastVisitedMilestoneOffset());
     if (total > 0) {
@@ -301,7 +300,7 @@ void UI::printShoppingCart() {
         int amount = keyValue.second;
         float supplyTotal = supply.costPerUnit * amount;
         if (amount > 0) {
-            std::cout << supply.name << "\t\t$" << supply.costPerUnit << "\t" << amount << "\t" << supplyTotal
+            std::cout << supply.name << "\t\tAUD $" << supply.costPerUnit << "\t" << amount << "\tAUD $" << supplyTotal
                       << std::endl;
         }
     }
@@ -326,6 +325,9 @@ void UI::servoScreen() {
         if (itemNumber == UI_SERVO_MENU_EXIT) {
             // if there are products in the cart, check out
             float total = game.getServo().getTotal(game.getLastVisitedMilestoneOffset());
+            if (total == 0) {
+                return;
+            }
             if (total > 0) {
                 // does the user have enough money?
                 float vanBalance = game.getVan().balance();
@@ -391,39 +393,50 @@ void UI::rest() {
 }
 
 void UI::takePhotos() {
-    //    Attempt to shoot a subject, pick one below:
-    //
-    //    1. Beach
-    //    2. Animal
-    //    3. Town
-    //    4. City
-    //    5. Landmark
-    //
-    //    > 2
-    //    You chose Animal, you have a 25% of taking good photos
-    //    Calculating odds...
-    //    (Possible outputs)
-    //    a) Sorry, no animals were found, you took 8 bad pictures, you earned AUD $0
-    //    b) Success, you took 8 pictures of Animal -> you earned AUD $80
-    std::cout
-    << "TODO: Print menu options to pick what picture subject user will attempt to capture (animal? beach?, etc.) "
-    << std::endl;
-    //getline(cin, optionNumberString)
-    //int optionNumber = -1;
-    // try {
-    //optionNumber = stoi(optionNumberString)
-    // } catch (when the user did not enter a number it will throw an exception, remember that from the
-    // other homework
-    //
-    //Photo chosenSubject = POSSIBLE_PHOTOS[optionNumber];
-    //bool tookPhotos = game.takePhotos(Photo)
-    // if (tookPhotos) {
-    // Success, you took 8 pictures of Animal -> you earned AUD $80
-    // } else {
-    // Sorry, no animals were found, you took 8 bad pictures, you earned AUD $0
-    //
-    // Here we just present the outcome to the user, no need to tell the game to do anything
-    // else except what we did -> game.takePhotos(Photos)
+    std::cout << std::endl << std::endl;
+    printBreakLine();
+    std::cout << "    Attempt to shoot a subject, pick one below:" << std::endl;
+    std::cout << std::endl;
+    std::cout << "    1. Beach" << std::endl;
+    std::cout << "    2. Animal" << std::endl;
+    std::cout << "    3. Town" << std::endl;
+    std::cout << "    4. City" << std::endl;
+    std::cout << "    5. Landmark" << std::endl;
+    std::cout << std::endl;
+    std::cout << "    0. Exit" << std::endl;
+    std::cout << std::endl;
+
+    int photoOption = askIntQuestion("Pick a subject", UI_TAKE_PHOTOS_MENU_EXIT, UI_TAKE_PHOTOS_MENU_LANDMARK);
+
+    if (photoOption == UI_QUIT_CODE) {
+        game.quit();
+        return;
+    }
+
+    if (photoOption == UI_TAKE_PHOTOS_MENU_EXIT) {
+        return;
+    }
+
+    std::cout << std::endl << std::endl;
+    Photo chosenSubject = POSSIBLE_PHOTOS[photoOption];
+
+    int photosLeft = game.getVan().getAmountOfSupply(SUPPLY_PHOTOS);
+    if (photosLeft < chosenSubject.photosTaken) {
+        std::cout << "Blimey, " << photosLeft << " photos isn't enough to shoot that. Buy Photos at the nearest Servo" << std::endl << std::endl;
+        return;
+    }
+
+    std::cout << "You chose " << chosenSubject.name << ", you have a " << (chosenSubject.probability*100) << "% change of taking good photos" << std::endl;
+    std::cout << std::endl << "Calculating odds..." << std::endl;
+    if (game.takePhotos(chosenSubject)) {
+        std::cout << "Success, you took " << chosenSubject.photosTaken << " pictures of " << chosenSubject.name
+                  << " and earned AUD $" << chosenSubject.earnings * chosenSubject.photosTaken;
+    } else {
+        std::cout << "Crikey! You couldn't take a single picture of any " << chosenSubject.photosTaken << ". You took "
+                  << chosenSubject.photosTaken << " blurry pictures and earned AUD $0" << std::endl;
+    }
+
+    std::cout << std::endl << std::endl;
 }
 
 void UI::showBasicMenuOptions() {
@@ -434,7 +447,7 @@ void UI::showBasicMenuOptions() {
 }
 
 void UI::showServoMenuOptions() {
-    std::cout << "5. Go to Servo" << std::endl;
+    std::cout << "5. Go to " << game.getLastVisitedMilestone().getName() << "'s Servo" << std::endl;
 }
 
 void UI::showQuitMenuOptions() {
@@ -444,6 +457,7 @@ void UI::showQuitMenuOptions() {
 void UI::showMilestoneMenuOptions(bool &servoOptionShown) {
     std::cout << std::endl;
     printBreakLine();
+    std::cout << "////////// MENU OPTIONS \\\\\\\\\\\\\\\\\\\\" << std::endl;
     printBreakLine();
     Milestone &milestone = game.getLastVisitedMilestone();
     // Show the basic options
