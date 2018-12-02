@@ -87,7 +87,7 @@ int Game::partyAlive() {
 }
 
 bool Game::partyBroke() {
-    return van.balance() == 0.0f;
+    return van.balance() <= 0.0f;
 }
 
 bool Game::partyStarved() {
