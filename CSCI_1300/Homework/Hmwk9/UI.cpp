@@ -2,14 +2,16 @@
 #include <fstream>
 
 void UI::start() {
-	// initialize milestones.txt
+    // initialize milestones.txt
     // This screen will welcome the player, and will use the enterPlayer() method as needed
-	if (!printFile("welcome_screen.txt")) {
-		std::cout << "error: UI::start: printFile(\"welcome_screen.txt\") failed. File \"welcome_screen.txt\" not found." << std::endl;
-		return;
-	}
+    if (!printFile("welcome_screen.txt")) {
+        std::cout
+        << "error: UI::start: printFile(\"welcome_screen.txt\") failed. File \"welcome_screen.txt\" not found."
+        << std::endl;
+        return;
+    }
 
-	enterPlayer();
+    enterPlayer();
 
     // to check if player quit already on the first enter player screen.
     unsigned int state = game.state();
@@ -17,21 +19,29 @@ void UI::start() {
         gameOver(state);
     }
 
-	// Date
-	selectStartDate();
+    // Date
+    std::cout << "--------------------------------------------------------------------------------------------------------" << std::endl;
+    selectStartDate();
 
-	// Servo
-	// This screen tells player about the servo
-	printFile("servo_summary.txt");
+    state = game.state();
+    if (state != GAME_NOT_OVER) {
+        gameOver(state);
+    }
 
-	servoScreen();
+    // Servo
+    // This screen tells player about the servo
+
+    std::cout << "--------------------------------------------------------------------------------------------------------" << std::endl;
+    printFile("servo_summary.txt");
+
+    servoScreen();
 
     // Game Loop: While the game state is not over, we keep showing the milestone screen
     // which can take input or direct to other screens.
     state = game.state();
     while (state == GAME_NOT_OVER) {
-		state = milestoneScreen();
-	}
+        state = milestoneScreen();
+    }
 
     gameOver(state);
 }
@@ -84,8 +94,8 @@ unsigned int UI::milestoneScreen() {
 }
 
 std::string UI::askForValidMilestoneScreenOption(bool servoOptionShown, bool enterPlayerMenuOptionShown) {
-	std::cout << std::endl;
-	std::cout << "Enter a valid option number: ";
+    std::cout << std::endl;
+    std::cout << "Enter a valid option number: ";
     std::string userOption;
     getline(std::cin, userOption);
     toLower(userOption);
@@ -127,22 +137,22 @@ std::string UI::askForValidMilestoneScreenOption(bool servoOptionShown, bool ent
 }
 
 bool UI::printFile(std::string filePath) const {
-	std::string line = "";
-	std::ifstream f(filePath);
+    std::string line = "";
+    std::ifstream f(filePath);
 
-	if (!f.is_open()) {
-		return  false;
-	}
+    if (!f.is_open()) {
+        return false;
+    }
 
-	while (getline(f, line)) {
-		std::cout << line << std::endl;
-	}
-	f.close();
-	return true;
+    while (getline(f, line)) {
+        std::cout << line << std::endl;
+    }
+    f.close();
+    return true;
 }
 
 void UI::enterPlayer() {
-	while (true) {
+    while (true) {
         std::cout << "Enter a Player name ";
 
         // If it's the first player being entered, we're on the first screen of the game
@@ -158,149 +168,121 @@ void UI::enterPlayer() {
         toTitle(playerName);
         trim(playerName);
 
-		if (playerName != "") {
-			if (game.partyAlive() == 0 && (playerName == UI_OPTION_QUIT_Q || playerName == UI_OPTION_QUIT_QUIT)) {
-				game.quit();
-				return;
-			}
+        if (playerName != "") {
+            if (game.partyAlive() == 0 && (playerName == UI_OPTION_QUIT_Q || playerName == UI_OPTION_QUIT_QUIT)) {
+                game.quit();
+                return;
+            }
 
-			std::cout << "Is '" << playerName << "' correct? (y/n): ";
-			std::string yn;
-			getline(std::cin, yn);
-			toLower(yn);
-			trim(yn);
-			std::cout << std::endl;
-			if (yn == "y" || yn == "yes" || yn == "YES") {
-				game.enterPlayer(playerName);
-				return;
-			}
-		}
+            std::cout << "Is '" << playerName << "' correct? (y/n): ";
+            std::string yn;
+            getline(std::cin, yn);
+            toLower(yn);
+            trim(yn);
+            std::cout << std::endl;
+            if (yn == "y" || yn == "yes" || yn == "YES") {
+                game.enterPlayer(playerName);
+                return;
+            }
+        }
     }
 }
 
-// TODO - BUG!! -- If dateInput is outside of range, program freezes...
 void UI::selectStartDate() {
-	// This screen tells user current date and instucts to choose a start date. 
-	printFile("start_date_intro.txt");
-	std::cout << "On what day would you like to start your journey? (q / quit to quit; d / D for default) ";
-	
-	std::cout << std::endl;
-	askIntQuestion("Enter a start day (ie. 5): ");
-	while (true) {
-		std::string dateInput;
-		getline(std::cin, dateInput);
-		trim(dateInput);
+    // This screen tells user current date and instructs to choose a start date.
+    printFile("start_date_intro.txt");
+    Calendar defaultStartDate = game.getDefaultStartDate();
+    std::cout << "    The default start date is " << defaultStartDate.to_string() << std::endl << std::endl;
 
-		// They will start (dateInput - 1) days after
-		// game.addToStartDate;
+    std::cout << std::endl;
+    int dateInput = askIntQuestion("Enter a day of September to start gandering", 1, 30);
 
-		// std::string d = defaultStartDate;
-			// ask  for how many days after they want to start, 
-			// and then add those days to the game.startDate.Right now.startDate is private in Game, 
-			// so you will probably have to create a new method in Game called addToStartDate(int n)
-			// similar to addDays.
+    if (dateInput == UI_QUIT_CODE) {
+        game.quit();
+        return;
+    }
 
-		if (dateInput != "") {
-			if (game.partyAlive() == 0 && (dateInput == UI_OPTION_QUIT_Q || dateInput == UI_OPTION_QUIT_QUIT)) {
-				game.quit();
-				return;
-			}
+    // Current date is set to Sept 1st.
+    // User will enter a dateInput representing the day of the month to start.
+    int daysToAdd = dateInput - 1;
+    game.addToStartDate(daysToAdd);
 
-		
+    std::cout << std::endl << "    Your start date is " << game.getStartDate().to_string() << std::endl;
+}
 
-			if (days == 1) {
-				std::cout << "Is 'September " << dateInput << "st , 2019' correct? (y/n): ";
-			}
-			else if (days == 2) {
-				std::cout << "Is 'September " << dateInput << "nd , 2019' correct? (y/n): ";
-			}
-			else if (days == 3) {
-				std::cout << "Is 'September " << dateInput << "rd , 2019' correct? (y/n): ";
-			}
-			else {
-				std::cout << "Is 'September " << dateInput << "th , 2019' correct? (y/n): ";
-			}
+void UI::printServoMenu() {
 
-			//else if (dateInput == "d")
-				// HOW DO I CALL THE FUNCTION????
-				// std::cout << " Is 'September " << DEFAULT << "th , 2019' correct? (y/n): ";
-		}
+    std::cout << "    You can buy items or leave the store: " << std::endl;
 
-			std::string yn;
-			getline(std::cin, yn);
-			toLower(yn);
-			trim(yn);
-			std::cout << std::endl;
-			if (yn == "y" || yn == "yes" || yn == "YES") {
-				// TODO : What is the date alternative of enterPlayer?
-				// game.enterPlayer(dateInput); ******************************************
-				return;
-			}
-	}
-		// I want to set the date
-		//Calendar date(2019, 09, dateInput);
+    std::cout << "    1. Food............[90 kg per person].....$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_FOOD], game.getLastVisitedMilestoneOffset()) << std::endl;
+    std::cout << "    2. Fuel............[40 L per tank]........$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_FUEL], game.getLastVisitedMilestoneOffset()) << std::endl;
+    std::cout << "    3. Engine.................................$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_ENGINE], game.getLastVisitedMilestoneOffset()) << std::endl;
+    std::cout << "    4. Battery................................$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_BATTERY], game.getLastVisitedMilestoneOffset()) << std::endl;
+    std::cout << "    5. Bumper.................................$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_BUMPER], game.getLastVisitedMilestoneOffset()) << std::endl;
+    std::cout << "    6. Tire...................................$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_TIRE], game.getLastVisitedMilestoneOffset()) << std::endl;
+    std::cout << "    7. Photos..........[36 per package].......$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_PHOTOS], game.getLastVisitedMilestoneOffset()) << std::endl;
+    std::cout << "    8. Medical Kit............................$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_MEDICAL_KIT], game.getLastVisitedMilestoneOffset()) << std::endl;
 
-		// 0 to 100 >
-		//
-		// and again do the if above to check if game is over
+    std::cout << "    0. Exit servo" << << std::endl;
+
 }
 
 void UI::servoScreen() {
-	std::cout << std::endl;
-	std::cout << "    Ow ya goin' mate! Welcome to the Servo. What can I get for ya?  " << std::endl;
+    std::cout << std::endl;
+    std::cout << "    Ow ya goin' mate! Welcome to the Servo. What can I get for ya?  " << std::endl;
 
-	// call servo supply list and maybe put prices at the end of each line as it reads the file
-	while (true) {
-
-		printFile("servo_supply_list.txt");
-
-		// Enter item
-		std::cout << "Enter an item number ";
-		if (game.partyAlive() == 0) {
-			std::cout << " ('q' or 'quit' to Exit the game)";
-		}
-		std::cout << " : ";
-		std::string itemNumber;
-		getline(std::cin, itemNumber);
-		trim(itemNumber);
-
-		if (itemNumber != "") {
-			if (game.partyAlive() == 0 && (itemNumber == UI_OPTION_QUIT_Q || itemNumber == UI_OPTION_QUIT_QUIT)) {
-				game.quit();
-				return;
-			}
+    // call servo supply list and maybe put prices at the end of each line as it reads the file
+    while (true) {
 
 
-			// Supply purchase = SUPPLY_CATALOG[toInt(itemNumber)];
-			// Enter quantity
-			std::cout << "How many units do you want?: ";
-			std::string itemQuantity;
-			getline(std::cin, itemQuantity);
-			trim(itemQuantity);
 
-			game.getServo().addSupplyToCart(SUPPLY_CATALOG[toInt(itemNumber) - 1], toInt(itemQuantity));
+        // Enter item
+        std::cout << "Enter an item number ";
+        if (game.partyAlive() == 0) {
+            std::cout << " ('q' or 'quit' to Exit the game)";
+        }
+        std::cout << " : ";
+        std::string itemNumber;
+        getline(std::cin, itemNumber);
+        trim(itemNumber);
 
-			// int UI::enterValidNumber(int *valid_numbers_array, size_of_that_array);
-			// int supplyId = toInt(itemNumber) - 1;
-			// int quantity = toInt(itemQuantity);
-			// game.getServo().addSupplyToCart(SUPPLY_CATALOG[supplyId], quantity);
+        if (itemNumber != "") {
+            if (game.partyAlive() == 0 && (itemNumber == UI_OPTION_QUIT_Q || itemNumber == UI_OPTION_QUIT_QUIT)) {
+                game.quit();
+                return;
+            }
 
-			// Total bill
-			// std::cout << "Do you wish to add more to your cart? (y/n)" << std::endl;
-			std::string yn;
-			getline(std::cin, yn);
-			toLower(yn);
-			trim(yn);
-			std::cout << std::endl;
-			// NOT SURE WHAT TO DO BELOW vvvv
-			if (yn == "y" || yn == "yes" || yn == "YES") {
-				//game.enterPlayer(playerName); **********************************************
-				return;
-			}
-			// y - LOOP
 
-		}
-	}
+            // Supply purchase = SUPPLY_CATALOG[toInt(itemNumber)];
+            // Enter quantity
+            std::cout << "How many units do you want?: ";
+            std::string itemQuantity;
+            getline(std::cin, itemQuantity);
+            trim(itemQuantity);
+
+            game.getServo().addSupplyToCart(SUPPLY_CATALOG[toInt(itemNumber) - 1], toInt(itemQuantity));
+
+            // int UI::enterValidNumber(int *valid_numbers_array, size_of_that_array);
+            // int supplyId = toInt(itemNumber) - 1;
+            // int quantity = toInt(itemQuantity);
+            // game.getServo().addSupplyToCart(SUPPLY_CATALOG[supplyId], quantity);
+
+            // Total bill
+            // std::cout << "Do you wish to add more to your cart? (y/n)" << std::endl;
+            std::string yn;
+            getline(std::cin, yn);
+            toLower(yn);
+            trim(yn);
+            std::cout << std::endl;
+            // NOT SURE WHAT TO DO BELOW vvvv
+            if (yn == "y" || yn == "yes" || yn == "YES") {
+                //game.enterPlayer(playerName); **********************************************
+                return;
+            }
+            // y - LOOP
+
+        }
+    }
 }
 
 void UI::travel() {
@@ -332,7 +314,9 @@ void UI::takePhotos() {
     //    (Possible outputs)
     //    a) Sorry, no animals were found, you took 8 bad pictures, you earned AUD $0
     //    b) Success, you took 8 pictures of Animal -> you earned AUD $80
-    std::cout << "TODO: Print menu options to pick what picture subject user will attempt to capture (animal? beach?, etc.) " << std::endl;
+    std::cout
+    << "TODO: Print menu options to pick what picture subject user will attempt to capture (animal? beach?, etc.) "
+    << std::endl;
     //getline(cin, optionNumberString)
     //int optionNumber = -1;
     // try {
@@ -366,13 +350,13 @@ void UI::showEnterPlayerMenuOptions() {
 }
 
 void UI::showQuitMenuOptions() {
-        std::cout << "10. Quit (q/quit)" << std::endl;
+    std::cout << "10. Quit (q/quit)" << std::endl;
 }
 
 void UI::showMilestoneMenuOptions(bool &servoOptionShown, bool &enterPlayerMenuOptionShown) {
     Milestone &milestone = game.getLastVisitedMilestone();
     // Show the basic options
-	// 1. TRAVEL 
+    // 1. TRAVEL
     // 2. REST 
     // 3. TAKE PHOTOS 
     showBasicMenuOptions();
@@ -398,6 +382,7 @@ void UI::showMilestoneMenuOptions(bool &servoOptionShown, bool &enterPlayerMenuO
 void UI::gameOver(const unsigned int reason) {
     std::cout << "Game Over Mofo, because of reasons " << reason << std::endl;
     std::cout << "Come again!!!" << std::endl << std::endl;
+    std::exit(0); //https://en.cppreference.com/w/cpp/utility/program/exit
 }
 
 // taken and modified from https://stackoverflow.com/questions/48711502/how-to-convert-stdstring-to-upper-case
@@ -409,11 +394,11 @@ void UI::toLower(std::string &str) {
                    [](char c) { return tolower(c); });
 }
 
-void UI::toTitle(std::string & str) {
-	// Puts all letters to lowercase but the first. 
-	// NICOLE -> Nicole;	nIcOlE -> nicole
-	std::transform(str.begin() + 1, str.end(), str.begin() + 1,
-		[](char c) { return tolower(c); });
+void UI::toTitle(std::string &str) {
+    // Puts all letters to lowercase but the first.
+    // NICOLE -> Nicole;	nIcOlE -> nicole
+    std::transform(str.begin() + 1, str.end(), str.begin() + 1,
+                   [](char c) { return tolower(c); });
 }
 
 void UI::trim(std::string &str) {
@@ -422,36 +407,72 @@ void UI::trim(std::string &str) {
 }
 
 int UI::toInt(const std::string &str) {
-	try {
-		return stoi(str);
-	}
-	catch (const std::invalid_argument&) {
-		return -1;
-	}
+    // stoi throws an invalid_argument exception when something other than a integer looking string
+    // is passed to it. if stoi throws the execution, we catch it and we return UI_INVALID_INPUT (-1) avoiding a crash.
+    try {
+        return stoi(str);
+    }
+    catch (const std::invalid_argument &) {
+        return UI_INVALID_INPUT;
+    }
 }
 
 int UI::readInt() {
-	std::string str;
-	getline(std::cin, str);
-	trim(str);
+    std::string str;
+    getline(std::cin, str);
+    trim(str);
 
-	if ((str == UI_OPTION_QUIT_Q || str == UI_OPTION_QUIT_QUIT)) {
-		return UI_QUIT_CODE;
-	}
+    if ((str == UI_OPTION_QUIT_Q || str == UI_OPTION_QUIT_QUIT)) {
+        return UI_QUIT_CODE;
+    }
 
-	return toInt(str);
+    return toInt(str);
 }
 
-int UI::askIntQuestion(std::string question) {
-	std::cout << question; 
-	
-	int readValue = readInt();
-	while (readValue < validMin || readValue > validMax) {
-		std::cout << "Please enter a valid number between 0-30 inclusive: ";
-		getline(std::cin, dateInput);
-		days = toInt(dateInput);
-	}
-	//return 
+int UI::askIntQuestion(std::string question, unsigned int validMin, int unsigned validMax) {
+    // if there's no minimum bound no need to ask the user again, they can enter whatever minimum
+    bool askForMinimumLimit = validMin != UI_NO_LIMIT;
+    // if there's no maximum bound no need to ask the user again, they can enter whatever maximum
+    bool askForMaximumLimit = validMax != UI_NO_LIMIT;
 
-	// int min; int max;
+
+    std::cout << question;
+    std::cout << " ('q'/'quit' to quit)";
+    if (askForMinimumLimit) {
+        std::cout << " (min: " << validMin << ")";
+    }
+    if (askForMaximumLimit) {
+        std::cout << " (max: " << validMax << ")";
+    }
+    std::cout << " : ";
+
+
+    int readValue = readInt();
+    if (readValue == UI_QUIT_CODE) {
+        return UI_QUIT_CODE;
+    }
+
+    // ASK AGAIN AND AGAIN IF ANSWERS ARE CONSIDERED INVALID OR OUT OF BOUNDS
+    while (readValue != UI_QUIT_CODE && // if they quit, no need to check for invalid values.
+           (readValue == UI_INVALID_INPUT || // user entered other than a number
+            (askForMinimumLimit && (readValue < validMin)) || // we care for min, user entered < min
+            (askForMaximumLimit && (readValue > validMax)))) { // we care for max, user entered > max
+        std::cout << question;
+        std::cout << " ('q'/'quit' to quit)";
+        if (askForMinimumLimit) {
+            std::cout << " (min: " << validMin << ")";
+        }
+        if (askForMaximumLimit) {
+            std::cout << " (max: " << validMax << ")";
+        }
+        std::cout << " : ";
+
+        readValue = readInt();
+    }
+    return readValue;
+}
+
+void UI::clearScreen() const {
+    // the simple way http://www.cplusplus.com/articles/4z18T05o/
+    std::cout << std::string(100, '\n');
 }

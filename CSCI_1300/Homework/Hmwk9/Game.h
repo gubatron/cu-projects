@@ -16,7 +16,7 @@ public:
              deadline(Calendar(2019, 12, 2)),
              defaultStartDate(Calendar(2019, 9, 5)),
              startDate(Calendar(2019, 9, 5)),
-             currentDate(Calendar(2019, 9, 5))
+             currentDate(Calendar(2019, 9, 1))
               {
         readMilestonesFile("milestones.txt");
     }
@@ -50,7 +50,6 @@ public:
 	* time runs out after 124 days
 	*/
 
-
     int partyAlive();
 
     bool partyBroke();
@@ -76,6 +75,11 @@ public:
 
     unsigned int state();
 
+    Calendar getDefaultStartDate() const;
+
+    Calendar &getStartDate();
+
+    Calendar &getCurrentDate();
 private:
     bool playerQuit;
     unsigned int lastVisitedMilestoneOffset;

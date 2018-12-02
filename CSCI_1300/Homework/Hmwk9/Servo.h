@@ -28,8 +28,9 @@ public:
         return (milestoneOffset * 0.25) + 1; // prices increment at per milestone
     }
 
-
     void addSupplyToCart(const Supply &productChoice, int productAmount);
+
+    float getSupplyCost(const Supply &productChoice, unsigned int milestoneOffset) const;
 
     float getTotal(unsigned int milestonesOffset);
 

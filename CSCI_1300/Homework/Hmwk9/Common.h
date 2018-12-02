@@ -70,7 +70,10 @@ const unsigned int GAME_OVER_USER_QUIT = 999;
 const std::string UI_INVALID_OPTION = "invalid";
 const std::string UI_OPTION_QUIT_Q = "q";
 const std::string UI_OPTION_QUIT_QUIT = "quit";
-const int UI_QUIT_CODE = 99999;
+
+const int UI_INVALID_INPUT = -1;
+const unsigned int UI_NO_LIMIT = 999999999;
+const unsigned int UI_QUIT_CODE = 999999999;
 
 const std::string UI_MILESTONE_OPTION_TRAVEL = "1";
 const std::string UI_MILESTONE_OPTION_REST = "2";

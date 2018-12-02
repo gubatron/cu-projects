@@ -51,7 +51,8 @@ private:
     
 	/** converts string to lower case */
     void toLower(std::string &str);
-	
+
+	/** converts string to lower case except for the first character */
 	void toTitle(std::string &str);
 
     /** trims empty space characters on both sides of a string */
@@ -66,8 +67,23 @@ private:
 
 	int readInt(); 
 
-	int askIntQuestion(std::string question);
+	/** Asks the question and takes into account as valid answers a min and a max value.
+	 * if validMin is UI_NO_LIMIT (999999999), then there's no minimum to consider
+	 * if validMax is UI_NO_LIMIT (999999999), then there's no maximum to consider
+	 *
+	 * This function assumes that all user input will be positive integers aka unsigned int.
+	 * Therefore we can safely use -1 and other negative numbers as error or special code outputs.
+	 *
+	 * The user can respond with 'q','quit'
+	 *
+	 * Returns:
+	 *  UI_INVALID_INPUT (-1) if the response is invalid
+	 *  UI_QUIT_CODE if the user entered 'q' or 'quit'
+	 *  A valid int response
+	 * */
+	int askIntQuestion(std::string question, unsigned int validMin, unsigned int validMax);
 
+	void clearScreen() const;
     Game game;
     Player nullPlayer;
 };

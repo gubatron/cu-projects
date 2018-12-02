@@ -67,8 +67,7 @@ void Game::addDays(int days) {
 
 void Game::addToStartDate(int nDays) {
 	startDate.addDays(nDays);
-	addDays(nDays); 
-	// move current start date?
+	addDays(nDays);
 }
 
 // bool Game::timeIsUp() {
@@ -193,4 +192,16 @@ unsigned int Game::state() {
     //   return GAME_OVER_TIME_IS_UP;
     // }
     return GAME_NOT_OVER;
+}
+
+Calendar Game::getDefaultStartDate() const {
+    return defaultStartDate;
+}
+
+Calendar &Game::getStartDate() {
+    return startDate;
+}
+
+Calendar &Game::getCurrentDate() {
+    return currentDate;
 }
