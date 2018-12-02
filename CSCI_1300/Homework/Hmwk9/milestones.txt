@@ -1,7 +1,7 @@
 0 0 Albany
 812 10 Perth
-1441 8 Kalbarri
-2368 0 Port Headland
+1441 0 Kalbarri
+2368 8 Port Headland
 4705 0 Halls Creek
 7271 0 Top Springs
 8462 15 Alice Springs

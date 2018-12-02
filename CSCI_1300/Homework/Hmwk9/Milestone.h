@@ -25,7 +25,7 @@ public:
 
     bool canLeaveTheSameDay();
 
-    float getDailyTollPerPerson(); // can be zero if it's a fort or a special attraction
+    float getDailyCostPerPlayer(); // can be zero if it's a fort or a special attraction
 
 // private to the class
 private:

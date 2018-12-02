@@ -51,7 +51,7 @@ void UI::start(bool debug) {
         // debug mode initialization
         game.enterPlayer("Alice");
         game.enterPlayer("Bob");
-        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FOOD], 100);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FOOD], 1);
         game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FUEL], 100);
         game.getServo().checkout(game.getVan(), 0);
         // Let's start on the second
@@ -426,7 +426,7 @@ void UI::takePhotos() {
         return;
     }
 
-    std::cout << "You chose " << chosenSubject.name << ", you have a " << (chosenSubject.probability*100) << "% change of taking good photos" << std::endl;
+    std::cout << "You chose " << chosenSubject.name << ", you have a " << (chosenSubject.probability*100) << "% chance of taking good photos" << std::endl;
     std::cout << std::endl << "Calculating odds..." << std::endl;
     if (game.takePhotos(chosenSubject)) {
         std::cout << "Success, you took " << chosenSubject.photosTaken << " pictures of " << chosenSubject.name
@@ -457,7 +457,7 @@ void UI::showQuitMenuOptions() {
 void UI::showMilestoneMenuOptions(bool &servoOptionShown) {
     std::cout << std::endl;
     printBreakLine();
-    std::cout << "////////// MENU OPTIONS \\\\\\\\\\\\\\\\\\\\" << std::endl;
+    std::cout << "                       ////////// MENU OPTIONS \\\\\\\\\\\\\\\\\\\\" << std::endl;
     printBreakLine();
     Milestone &milestone = game.getLastVisitedMilestone();
     // Show the basic options

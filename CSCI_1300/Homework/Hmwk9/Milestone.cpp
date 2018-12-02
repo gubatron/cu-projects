@@ -12,6 +12,6 @@ bool Milestone::isServo() {
     return is_fort;
 }
 
-float Milestone::getDailyTollPerPerson() {
+float Milestone::getDailyCostPerPlayer() {
     return dailyTollPerPerson;
 }

@@ -91,7 +91,7 @@ bool Game::partyBroke() {
 }
 
 bool Game::partyStarved() {
-    return van.getAmountOfSupply(SUPPLY_FOOD) == 0;
+    return van.getAmountOfSupply(SUPPLY_FOOD) <= 0;
 }
 
 void Game::rest() {
@@ -102,11 +102,14 @@ void Game::rest() {
     int numberOfPlayersAlive = partyAlive();
     int totalPoundsPerDay = numberOfPlayersAlive * 2;
     van.modifySupplyAmount(SUPPLY_FOOD, -totalPoundsPerDay);
+
+    van.spend(getLastVisitedMilestone().getDailyCostPerPlayer() * party.size());
 }
 
 void Game::travel() {
     // time goes by
     addDays(2);
+    van.spend(getLastVisitedMilestone().getDailyCostPerPlayer() * party.size() * 2); // x 2 days
 
     // food is consumed
     int numberOfPlayersAlive = partyAlive();
