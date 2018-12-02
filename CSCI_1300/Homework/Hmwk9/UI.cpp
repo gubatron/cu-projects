@@ -47,14 +47,26 @@ void UI::start(bool debug) {
         if (game.state() != GAME_NOT_OVER) {
             gameOver(game.state());
         }
+    } else {
+        // debug mode initialization
+        game.enterPlayer("Alice");
+        game.enterPlayer("Bob");
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FOOD], 100);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FUEL], 100);
+        game.getServo().checkout(game.getVan(), 0);
+        // Let's start on the second
+        game.addToStartDate(-3); //5-3 = 2
+        game.addDays(1); //1 + 1 = 2
     }
 
     printPartyStatus();
     printVanSupplies();
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Game Loop: While the game state is not over, we keep showing the milestone screen
     // which can take input or direct to other screens.
     while (milestoneScreen() == GAME_NOT_OVER) {}
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     gameOver(game.state());
 }
@@ -103,9 +115,7 @@ unsigned int UI::askForValidMilestoneScreenOption(bool servoOptionShown) {
 }
 
 void UI::printBreakLine() const {
-    std::cout
-    << "--------------------------------------------------------------------------------------------------------"
-    << std::endl;
+    std::cout << std::string(80, '-') << std::endl;
 }
 
 bool UI::printFile(std::string filePath) const {
@@ -250,7 +260,8 @@ void UI::printVanSupplies() {
 void UI::printPartyStatus() {
     Calendar today = game.getCurrentDate();
     Calendar startDate = game.getStartDate();
-
+    std::cout << std::endl << std::endl;
+    printBreakLine();
     std::cout << "      Current Location: " << game.getLastVisitedMilestone().getName() << std::endl;
     std::cout << "          Today's date: " << today.to_string() << std::endl;
     std::cout << "            Start date: " << startDate.to_string() << std::endl;
@@ -274,6 +285,7 @@ void UI::printPartyStatus() {
 }
 
 void UI::printShoppingCart() {
+    std::cout << std::endl;
     auto cart = game.getServo().getShoppingCart();
     std::cout << "Product" << "\t\t" << "Price" << "\t" << "Amount" << "\t" << "Sub-total" << std::endl;
     std::cout << std::endl;
@@ -423,6 +435,8 @@ void UI::showQuitMenuOptions() {
 }
 
 void UI::showMilestoneMenuOptions(bool &servoOptionShown) {
+    std::cout << std::endl;
+    printBreakLine();
     Milestone &milestone = game.getLastVisitedMilestone();
     // Show the basic options
     // 1. TRAVEL
@@ -441,6 +455,7 @@ void UI::showMilestoneMenuOptions(bool &servoOptionShown) {
     // Show quit option
     // 10. QUIT
     showQuitMenuOptions();
+    printBreakLine();
 }
 
 void UI::gameOver(const unsigned int reason) {
@@ -537,9 +552,4 @@ int UI::askIntQuestion(std::string question, unsigned int validMin, int unsigned
         readValue = readInt();
     }
     return readValue;
-}
-
-void UI::clearScreen() const {
-    // the simple way http://www.cplusplus.com/articles/4z18T05o/
-    std::cout << std::string(100, '\n');
 }

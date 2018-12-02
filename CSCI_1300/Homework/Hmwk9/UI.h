@@ -92,7 +92,6 @@ private:
 	 * */
 	int askIntQuestion(std::string question, unsigned int validMin, unsigned int validMax);
 
-	void clearScreen() const;
     Game game;
     Player nullPlayer;
 };

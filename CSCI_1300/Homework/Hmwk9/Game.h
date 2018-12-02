@@ -44,10 +44,8 @@ public:
 
 	void addToStartDate(int nDays);
 
-	bool timeIsUp();
-    /** checks if current date isn't already past the deadline date. *
-	* time runs out after 124 days
-	*/
+    /** Checks if current date isn't already past the deadline date. Time runs out after 124 days */
+    bool timeIsUp();
 
     int partyAlive();
 

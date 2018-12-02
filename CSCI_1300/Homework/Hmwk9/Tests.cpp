@@ -6,8 +6,9 @@ bool testServoPurchase() {
     Van van = game.getVan();
     Supply food = SUPPLY_CATALOG[SUPPLY_FOOD];
     Supply engine = SUPPLY_CATALOG[SUPPLY_ENGINE];
-    if (van.getAmountOfSupply(SUPPLY_FOOD) != 0) {
-        std::cout << "testServoPurchase() failed - Van shouldn't have food at the start" << std::endl;
+    if (van.getAmountOfSupply(SUPPLY_FOOD) != 2) {
+        std::cout << "testServoPurchase() failed - Van shouldn't have more than 1 pound of food at the start ("
+                  << van.getAmountOfSupply(SUPPLY_FOOD) << ")" << std::endl;
         return false;
     }
 
@@ -22,8 +23,8 @@ bool testServoPurchase() {
     game.getServo().checkout(van, game.getLastVisitedMilestoneOffset());
 
     int amountOfFoodInVan = van.getAmountOfSupply(SUPPLY_FOOD);
-    if (amountOfFoodInVan != 5) {
-        std::cout << "testServoPurchase() failed - Van should have 5 " << food.pluralUnitName << " of " << food.name
+    if (amountOfFoodInVan != 7) {
+        std::cout << "testServoPurchase() failed - Van should have 7 " << food.pluralUnitName << " of " << food.name
                   << " (" << amountOfFoodInVan << ")" << std::endl;
         return false;
     }
@@ -39,16 +40,19 @@ bool calendarTests() {
     Calendar jan1(2019, 1, 1);
     Calendar dec31(2019, 12, 31);
     Calendar jan1_2020(2020, 1, 1);
-    long daysDifference = jan1_2020 - jan1;
-    long daysDifference2 = jan1 - jan1_2020;
-    if (daysDifference != daysDifference2) {
-        std::cout << "calendarTests() failed - dayDifference should be the same no matter the order" << std::endl;
-        return false;
-    }
+    long daysDifference = jan1_2020.subtractDays(jan1);
+    long daysDifference2 = jan1.subtractDays(jan1_2020);
     if (daysDifference != 365) {
         std::cout << "calendarTests() failed - dayDifference is not 365 between jan1 and jan1_2020" << std::endl;
+        std::cout << daysDifference << std::endl;
         return false;
     }
+    if (daysDifference2 != -365) {
+        std::cout << "calendarTests() failed - dayDifference is not -365 between jan1_2020 and jan1" << std::endl;
+        std::cout << daysDifference2 << std::endl;
+        return false;
+    }
+
     std::cout << "calendarTests() success - jan1_2020 - jan1 = " << daysDifference << " == " << daysDifference2 << std::endl;
     return true;
 }

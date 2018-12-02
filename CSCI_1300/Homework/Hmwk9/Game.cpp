@@ -55,11 +55,11 @@ unsigned int Game::distanceToNextMilestone() {
 }
 
 unsigned int Game::daysLeft() {
-    return static_cast<unsigned int>(deadline - currentDate);
+    return static_cast<unsigned int>(deadline.subtractDays(currentDate));
 }
 
 unsigned int Game::daysTranscurred() {
-    return static_cast<unsigned int>(currentDate - startDate);
+    return static_cast<unsigned int>(currentDate.subtractDays(startDate));
 }
 void Game::addDays(int days) {
     currentDate.addDays(days);
@@ -69,8 +69,9 @@ void Game::addToStartDate(int nDays) {
 	startDate.addDays(nDays);
 }
 
-// bool Game::timeIsUp() {
-// TODO }
+bool Game::timeIsUp() {
+    return deadline.subtractDays(currentDate) > 0;
+}
 
 int Game::partyAlive() {
     if (party.empty()) {
@@ -182,6 +183,9 @@ unsigned int Game::state() {
     }
     if (partyBroke()) {
         return GAME_OVER_PARTY_BROKE;
+    }
+    if (timeIsUp()) {
+        return GAME_OVER_TIME_IS_UP;
     }
     if (getLastVisitedMilestoneOffset() == milestones.size() - 1) {
         return GAME_OVER_ARRIVED;

@@ -13,8 +13,8 @@ int main(int numberOfArguments, char **arguments) {
 	/* initialize random seed using time seconds so game outcomes are always different */
 	srand(static_cast<unsigned int>(time(nullptr)));
 
-	// If you want to run tests, pass "--test" to the executable.
-    if (numberOfArguments == 2 && strcmp(arguments[1], "--test") == 0) {
+	// If you want to run tests, pass "--tests" to the executable.
+    if (numberOfArguments == 2 && strcmp(arguments[1], "--tests") == 0) {
         if (!runTests()) {
             return 1;
         }
