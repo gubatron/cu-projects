@@ -68,6 +68,7 @@ const unsigned int GAME_OVER_USER_QUIT = 999;
 // UI VALID OPTIONS
 
 const std::string UI_INVALID_OPTION = "invalid";
+const std::string UI_OPTION_QUIT_0 = "0";
 const std::string UI_OPTION_QUIT_Q = "q";
 const std::string UI_OPTION_QUIT_QUIT = "quit";
 
@@ -75,11 +76,24 @@ const int UI_INVALID_INPUT = -1;
 const unsigned int UI_NO_LIMIT = 999999999;
 const unsigned int UI_QUIT_CODE = 999999999;
 
-const std::string UI_MILESTONE_OPTION_TRAVEL = "1";
-const std::string UI_MILESTONE_OPTION_REST = "2";
-const std::string UI_MILESTONE_OPTION_TAKE_PHOTOS = "3";
-const std::string UI_MILESTONE_OPTION_GO_TO_SERVO = "4";
-const std::string UI_MILESTONE_OPTION_ENTER_PLAYER = "5";
+const unsigned int UI_MILESTONE_OPTION_QUIT = 0;
+const unsigned int UI_MILESTONE_OPTION_TRAVEL = 1;
+const unsigned int UI_MILESTONE_OPTION_REST = 2;
+const unsigned int UI_MILESTONE_OPTION_TAKE_PHOTOS = 3;
+const unsigned int UI_MILESTONE_OPTION_CHECK_VAN = 4;
+const unsigned int UI_MILESTONE_OPTION_GO_TO_SERVO = 5;
+
+// UI SERVO MENU CHOICES
+const unsigned int UI_SERVO_MENU_EXIT = 0;
+const unsigned int UI_SERVO_MENU_FOOD = 1 + SUPPLY_FOOD;
+const unsigned int UI_SERVO_MENU_FUEL = 1 + SUPPLY_FUEL;
+const unsigned int UI_SERVO_MENU_ENGINE = 1 + SUPPLY_ENGINE;
+const unsigned int UI_SERVO_MENU_BATTERY = 1 + SUPPLY_BATTERY;
+const unsigned int UI_SERVO_MENU_BUMPER = 1 + SUPPLY_BUMPER;
+const unsigned int UI_SERVO_MENU_TIRE = 1 + SUPPLY_TIRE;
+const unsigned int UI_SERVO_MENU_PHOTOS = 1 + SUPPLY_PHOTOS;
+const unsigned int UI_SERVO_MENU_MEDICAL_KIT = 1 + SUPPLY_MEDICAL_KIT;
+
 
 inline bool randomEvent(int probability) {
 	return ((rand() % 100) + 1) <= probability; // covers [1 to 100]

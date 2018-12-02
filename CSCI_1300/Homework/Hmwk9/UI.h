@@ -7,11 +7,12 @@
 class UI {
 public:
     UI() : nullPlayer(Player(9999999,"Quiter"))  {}
-    void start();
+    void start(bool debug);
 private:
+	/** Prints the milestone screen and returns the game state */
     unsigned int milestoneScreen();
    
-	std::string askForValidMilestoneScreenOption(bool servoOptionShown, bool enterPlayerMenuOptionShown);
+	unsigned int askForValidMilestoneScreenOption(bool servoOptionShown);
 	
 	bool printFile(std::string filePath) const;
     
@@ -20,6 +21,16 @@ private:
 	void selectStartDate();
     
 	void servoScreen();
+
+	void printShoppingCart();
+
+    void printServoMenu();
+
+    void printVanSupplies();
+
+    void printPartyStatus();
+
+    void printBreakLine() const;
 
     void travel();
     
@@ -33,8 +44,6 @@ private:
 
     void showBasicMenuOptions();
     
-	void showEnterPlayerMenuOptions();
-    
 	void showServoMenuOptions();
     
 	void showQuitMenuOptions();
@@ -45,7 +54,7 @@ private:
      *  And it lets us know if these options were shown via the two boolean reference variables
      *  passed.
      * */
-    void showMilestoneMenuOptions(bool &servoOptionShown, bool &enterPlayerMenuOptionShown);
+    void showMilestoneMenuOptions(bool &servoOptionShown);
 
 	void gameOver(const unsigned int reason);
     

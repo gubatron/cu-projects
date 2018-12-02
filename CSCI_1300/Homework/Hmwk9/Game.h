@@ -14,7 +14,6 @@ public:
              playerQuit(false),
              lastVisitedMilestoneOffset(0),
              deadline(Calendar(2019, 12, 2)),
-             defaultStartDate(Calendar(2019, 9, 5)),
              startDate(Calendar(2019, 9, 5)),
              currentDate(Calendar(2019, 9, 1))
               {
@@ -75,11 +74,11 @@ public:
 
     unsigned int state();
 
-    Calendar getDefaultStartDate() const;
+    Calendar getStartDate();
 
-    Calendar &getStartDate();
+    Calendar getCurrentDate();
 
-    Calendar &getCurrentDate();
+    std::vector<Player> getParty() { return party; }
 private:
     bool playerQuit;
     unsigned int lastVisitedMilestoneOffset;
@@ -87,7 +86,6 @@ private:
     std::vector<Milestone> milestones;
     Servo store;
     Calendar deadline;
-    Calendar defaultStartDate; // suggested start
     Calendar startDate;
     Calendar currentDate;
     Van van;

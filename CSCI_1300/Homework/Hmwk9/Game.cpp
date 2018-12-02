@@ -25,7 +25,7 @@ int Game::readMilestonesFile(std::string filePath) {
 
 size_t Game::enterPlayer(const std::string &playerName) {
     size_t playerId = party.size();
-    party.emplace_back(Player(playerId, playerName));
+    party.push_back(Player(playerId, playerName));
     return playerId;
 }
 
@@ -67,7 +67,6 @@ void Game::addDays(int days) {
 
 void Game::addToStartDate(int nDays) {
 	startDate.addDays(nDays);
-	addDays(nDays);
 }
 
 // bool Game::timeIsUp() {
@@ -194,14 +193,10 @@ unsigned int Game::state() {
     return GAME_NOT_OVER;
 }
 
-Calendar Game::getDefaultStartDate() const {
-    return defaultStartDate;
-}
-
-Calendar &Game::getStartDate() {
+Calendar Game::getStartDate() {
     return startDate;
 }
 
-Calendar &Game::getCurrentDate() {
+Calendar Game::getCurrentDate() {
     return currentDate;
 }

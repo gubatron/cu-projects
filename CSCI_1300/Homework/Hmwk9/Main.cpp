@@ -21,8 +21,14 @@ int main(int numberOfArguments, char **arguments) {
         return 0;
     }
 
+    // added debug mode to skip player initialization
+    bool debug = false;
+    if (numberOfArguments == 2 && strcmp(arguments[1], "--debug") == 0) {
+        debug = true;
+    }
+
     UI ui;
-    ui.start();
+    ui.start(debug);
     return 0;
 }
 

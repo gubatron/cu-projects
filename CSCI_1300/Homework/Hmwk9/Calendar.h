@@ -8,12 +8,27 @@ public:
         // time saves the number of seconds since 1970 to a long (time_t)
         // mktime converts tm structure to long (time_t)
         // localtime converts a long (time_t) to a tm structure
-        time_t rawtime;
-        time(&rawtime);
-        my_tm = localtime(&rawtime); // properly initializes the struct tm
-        my_tm->tm_year = year - 1900;
-        my_tm->tm_mon = month - 1;
-        my_tm->tm_mday = day;
+        time_t rawtime = 0;
+        time(&rawtime); // currently set to seconds since 1970 jan 1st - epoch time
+
+        my_tm = new tm(*localtime(&rawtime)); // properly initializes the struct tm, it needs a pointer, so we pass &rawtime
+        // important: every time localtime is called, it will return a pointer to the same object,
+        // we use "new tm()" to allocate a new copy in memory of the struct.
+        // if we don't make a copy of this pointer with new tm(reference to that same pointer) all our Calendar
+        // objects will point to the same struct tm* and all our Calendar objects will look the same
+
+        // we now have a time structure set to the current moment in time
+        // we want it to be, what's been passed in the constructor (year, month, day)
+
+        // we rewrite the fields of the struct tm*
+        my_tm->tm_year = year - 1900; // struct tm years are not based in our current year, gotta subtract 1900
+        my_tm->tm_mon = month - 1; // months are zero based, so we subtract 1
+        my_tm->tm_mday = day; // days are fine, very inconsistent.
+
+        // now that we have a struct tm* with the values we want, we convert it to a time_t, aka, long
+        // and this is the number we use to perform time operations.
+        // we will add or subtract the seconds in a day (24*60*60) to move back and forth in time
+        // and then we'll convert back to a struct tm* to obtain the year, month, and date.
         date_as_long = mktime(my_tm);
     }
 
@@ -31,10 +46,13 @@ public:
 
     void addDays(int nDays) {
         date_as_long += nDays * (24*60*60);
-        my_tm = localtime(&date_as_long);
+        delete(my_tm); // avoid memory leaks
+        my_tm = new tm(*localtime(&date_as_long)); // get a new pointer every time
     }
 
     std::string to_string() {
+        // TODO: Put names of months in an array of std::string and return the actual month name instead
+        // MONTHS[getMonth()-1]
         return std::to_string(getYear()) + "/" + std::to_string(getMonth()) + "/" + std::to_string(getDay());
     }
 

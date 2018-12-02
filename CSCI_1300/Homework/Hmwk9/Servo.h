@@ -30,16 +30,19 @@ public:
 
     void addSupplyToCart(const Supply &productChoice, int productAmount);
 
+    void resetSupply(const Supply &productChoice);
+
     float getSupplyCost(const Supply &productChoice, unsigned int milestoneOffset) const;
 
     float getTotal(unsigned int milestonesOffset);
 
     /** Each milestone adds 25% surcharge */
-    float getSurchargePercent(unsigned int milestoneOffset);
+    float getSurchargePercent(unsigned int milestoneOffset) const;
 
     void checkout(Van &van, unsigned int milestonesOffset);
     // van.restock(cart,getTotal())
 
+    std::map<Supply, int> getShoppingCart();
 
 
 private:

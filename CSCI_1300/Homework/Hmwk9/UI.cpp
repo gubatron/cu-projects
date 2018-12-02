@@ -1,74 +1,70 @@
 #include "UI.h"
 #include <fstream>
 
-void UI::start() {
-    // initialize milestones.txt
-    // This screen will welcome the player, and will use the enterPlayer() method as needed
-    if (!printFile("welcome_screen.txt")) {
-        std::cout
-        << "error: UI::start: printFile(\"welcome_screen.txt\") failed. File \"welcome_screen.txt\" not found."
-        << std::endl;
-        return;
+void UI::start(bool debug) {
+    if (!debug) {
+        // initialize milestones.txt
+        // This screen will welcome the player, and will use the enterPlayers() method as needed
+        if (!printFile("welcome_screen.txt")) {
+            std::cout
+            << "error: UI::start: printFile(\"welcome_screen.txt\") failed. File \"welcome_screen.txt\" not found."
+            << std::endl;
+            return;
+        }
+
+        enterPlayer();
+        std::cout << "Good, now what's your mate's name?" << std::endl;
+        enterPlayer();
+
+        // to check if player quit already on the first enter player screen.
+        if (game.state() != GAME_NOT_OVER) {
+            gameOver(game.state());
+        }
+
+        // Greet the party
+        auto party = game.getParty();
+        // TODO FUTURE VERSION: Allow to enter many players, and print all the party, not just the two.
+        std::cout << std::endl << "Players in the party: " << party[0].getName() << " and " << party[1].getName()
+                  << std::endl;
+
+        // Date
+        printBreakLine();
+        printBreakLine();
+        selectStartDate();
+
+        if (game.state() != GAME_NOT_OVER) {
+            gameOver(game.state());
+        }
+
+        // Servo
+        // This screen tells player about the servo
+
+        printBreakLine();
+        printBreakLine();
+        printFile("servo_summary.txt");
+
+        servoScreen();
+        if (game.state() != GAME_NOT_OVER) {
+            gameOver(game.state());
+        }
     }
 
-    enterPlayer();
-
-    // to check if player quit already on the first enter player screen.
-    unsigned int state = game.state();
-    if (state != GAME_NOT_OVER) {
-        gameOver(state);
-    }
-
-    // Date
-    std::cout << "--------------------------------------------------------------------------------------------------------" << std::endl;
-    selectStartDate();
-
-    state = game.state();
-    if (state != GAME_NOT_OVER) {
-        gameOver(state);
-    }
-
-    // Servo
-    // This screen tells player about the servo
-
-    std::cout << "--------------------------------------------------------------------------------------------------------" << std::endl;
-    printFile("servo_summary.txt");
-
-    servoScreen();
+    printPartyStatus();
+    printVanSupplies();
 
     // Game Loop: While the game state is not over, we keep showing the milestone screen
     // which can take input or direct to other screens.
-    state = game.state();
-    while (state == GAME_NOT_OVER) {
-        state = milestoneScreen();
-    }
+    while (milestoneScreen() == GAME_NOT_OVER) {}
 
-    gameOver(state);
+    gameOver(game.state());
 }
 
 unsigned int UI::milestoneScreen() {
-    // TODOS:
-    // - Show the name of the current milestone (could be in transit, or at milestone, perhaps add a little
-    // flair if it's a servo, other than the extra option
-
-    // - Show current van stats and location
-    // - Show time transcured and time left and current date, and final date
-
-    // clear() the screen (TIP: research conio.h)
     bool servoOptionShown = false;
-    bool enterPlayerMenuOptionShown = false;
-    showMilestoneMenuOptions(servoOptionShown, enterPlayerMenuOptionShown);
+    showMilestoneMenuOptions(servoOptionShown);
 
     // Ask user for option
-    std::string option = UI_INVALID_OPTION;
-
-    while (option == UI_INVALID_OPTION) {
-        option = askForValidMilestoneScreenOption(servoOptionShown, enterPlayerMenuOptionShown);
-
-        if (option == UI_INVALID_OPTION) {
-            showMilestoneMenuOptions(servoOptionShown, enterPlayerMenuOptionShown);
-        }
-    }
+    int option = askForValidMilestoneScreenOption(servoOptionShown);
 
     // handle option action (switch)
     if (option == UI_MILESTONE_OPTION_TRAVEL) {
@@ -83,57 +79,33 @@ unsigned int UI::milestoneScreen() {
         takePhotos();
         //missfortunes();
         //pigs();
+    } else if (option == UI_MILESTONE_OPTION_CHECK_VAN) {
+        printVanSupplies();
     } else if (option == UI_MILESTONE_OPTION_GO_TO_SERVO) {
         servoScreen();
-    } else if (option == UI_MILESTONE_OPTION_ENTER_PLAYER) {
-        enterPlayer();
-    } else if (option == UI_OPTION_QUIT_Q || option == UI_OPTION_QUIT_QUIT) {
-        game.quit();
     }
     return game.state();
 }
 
-std::string UI::askForValidMilestoneScreenOption(bool servoOptionShown, bool enterPlayerMenuOptionShown) {
-    std::cout << std::endl;
-    std::cout << "Enter a valid option number: ";
-    std::string userOption;
-    getline(std::cin, userOption);
-    toLower(userOption);
-    trim(userOption);
-
-    // BASIC VALID OPTIONS FOR ALL MILESTONES:
-    // 1. TRAVEL
-    // 2. REST
-    // 3. TAKE PHOTOS
-    // 10. 'q', 'quit'
-    std::vector<std::string> validOptions = {
-    UI_MILESTONE_OPTION_TRAVEL,
-    UI_MILESTONE_OPTION_REST,
-    UI_MILESTONE_OPTION_TAKE_PHOTOS,
-    UI_OPTION_QUIT_Q,
-    UI_OPTION_QUIT_QUIT
-    };
-
-    // EXTRA VALID OPTION FOR MILESTONES WITH SERVOS
+unsigned int UI::askForValidMilestoneScreenOption(bool servoOptionShown) {
+    int maxValidOption = UI_MILESTONE_OPTION_CHECK_VAN;
     if (servoOptionShown) {
-        validOptions.push_back(UI_MILESTONE_OPTION_GO_TO_SERVO);
+        maxValidOption = UI_MILESTONE_OPTION_GO_TO_SERVO;
+    }
+    int userOption = askIntQuestion("Enter a valid option number", 0, maxValidOption);
+
+    if (userOption == UI_MILESTONE_OPTION_QUIT || userOption == UI_QUIT_CODE) {
+        game.quit();
+        exit(0);
     }
 
-    // EXTRA VALID OPTION TO ENTER PLAYER FOR FIRST MILESTONE WHILE NOT MAX PLAYER NUMBER HIT
-    if (enterPlayerMenuOptionShown) {
-        validOptions.push_back(UI_MILESTONE_OPTION_ENTER_PLAYER);
-    }
-
-    // now check that the user enter a valid option
-    // https://stackoverflow.com/questions/6277646/in-c-check-if-stdvectorstring-contains-a-certain-value
-
-    bool isValidOption = (validOptions.end() != std::find(validOptions.begin(), validOptions.end(), userOption));
-
-    if (!isValidOption) {
-        std::cout << std::endl << "Invalid Input [" << userOption << "] please enter a valid option";
-        return UI_INVALID_OPTION;
-    }
     return userOption;
+}
+
+void UI::printBreakLine() const {
+    std::cout
+    << "--------------------------------------------------------------------------------------------------------"
+    << std::endl;
 }
 
 bool UI::printFile(std::string filePath) const {
@@ -191,11 +163,11 @@ void UI::enterPlayer() {
 void UI::selectStartDate() {
     // This screen tells user current date and instructs to choose a start date.
     printFile("start_date_intro.txt");
-    Calendar defaultStartDate = game.getDefaultStartDate();
-    std::cout << "    The default start date is " << defaultStartDate.to_string() << std::endl << std::endl;
+    Calendar defaultStartDate = game.getStartDate();
+    std::cout << "        The default start date is " << defaultStartDate.to_string() << std::endl << std::endl;
 
     std::cout << std::endl;
-    int dateInput = askIntQuestion("Enter a day of September to start gandering", 1, 30);
+    int dateInput = askIntQuestion("Enter a day of September to start your gander", 1, 30);
 
     if (dateInput == UI_QUIT_CODE) {
         game.quit();
@@ -204,99 +176,199 @@ void UI::selectStartDate() {
 
     // Current date is set to Sept 1st.
     // User will enter a dateInput representing the day of the month to start.
-    int daysToAdd = dateInput - 1;
-    game.addToStartDate(daysToAdd);
+    int daysToAddToStartDate = dateInput - 5; // because start date is set to sep. 5th
+    int daysToAddToCurrentDate = dateInput - 1; // because current date is set to sep. 1st.
+
+    // e.g. Say you want to start on the 7th
+    // start date = sep 5 => 7 - 5 => Add 2 days to start date => 5 + 2 => 7th.
+    // current = sep 5 => 7 - 1 => Add 6 days to current date => 1 + 6  => 7th.
+
+    game.addToStartDate(daysToAddToStartDate);
+    game.addDays(daysToAddToCurrentDate);
 
     std::cout << std::endl << "    Your start date is " << game.getStartDate().to_string() << std::endl;
 }
 
 void UI::printServoMenu() {
+    //TODO: Print minimum units
+    std::cout << std::endl << std::endl << "    You can buy items or leave the store: " << std::endl << std::endl;
+    std::cout << "    1. Food............[90 kg per person].....$"
+              << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_FOOD], game.getLastVisitedMilestoneOffset())
+              << std::endl;
+    std::cout << "    2. Fuel............[40 L per tank]........$"
+              << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_FUEL], game.getLastVisitedMilestoneOffset())
+              << std::endl;
+    std::cout << "    3. Engine.................................$"
+              << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_ENGINE], game.getLastVisitedMilestoneOffset())
+              << std::endl;
+    std::cout << "    4. Battery................................$"
+              << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_BATTERY], game.getLastVisitedMilestoneOffset())
+              << std::endl;
+    std::cout << "    5. Bumper.................................$"
+              << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_BUMPER], game.getLastVisitedMilestoneOffset())
+              << std::endl;
+    std::cout << "    6. Tire...................................$"
+              << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_TIRE], game.getLastVisitedMilestoneOffset())
+              << std::endl;
+    std::cout << "    7. Photos..........[36 per package].......$"
+              << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_PHOTOS], game.getLastVisitedMilestoneOffset())
+              << std::endl;
+    std::cout << "    8. Medical Kit............................$"
+              << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_MEDICAL_KIT], game.getLastVisitedMilestoneOffset())
+              << std::endl << std::endl;
+    std::cout << "    0. Exit servo" << std::endl << std::endl;
 
-    std::cout << "    You can buy items or leave the store: " << std::endl;
+    float total = game.getServo().getTotal(game.getLastVisitedMilestoneOffset());
+    if (total > 0) {
+        printShoppingCart();
+        std::cout << std::endl << "Your current total is AUD $" << total << std::endl;
+    } else {
+        std::cout << std::endl << "Your cart is empty" << std::endl;
+    }
 
-    std::cout << "    1. Food............[90 kg per person].....$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_FOOD], game.getLastVisitedMilestoneOffset()) << std::endl;
-    std::cout << "    2. Fuel............[40 L per tank]........$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_FUEL], game.getLastVisitedMilestoneOffset()) << std::endl;
-    std::cout << "    3. Engine.................................$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_ENGINE], game.getLastVisitedMilestoneOffset()) << std::endl;
-    std::cout << "    4. Battery................................$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_BATTERY], game.getLastVisitedMilestoneOffset()) << std::endl;
-    std::cout << "    5. Bumper.................................$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_BUMPER], game.getLastVisitedMilestoneOffset()) << std::endl;
-    std::cout << "    6. Tire...................................$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_TIRE], game.getLastVisitedMilestoneOffset()) << std::endl;
-    std::cout << "    7. Photos..........[36 per package].......$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_PHOTOS], game.getLastVisitedMilestoneOffset()) << std::endl;
-    std::cout << "    8. Medical Kit............................$" << game.getServo().getSupplyCost(SUPPLY_CATALOG[SUPPLY_MEDICAL_KIT], game.getLastVisitedMilestoneOffset()) << std::endl;
+    std::cout << std::endl;
+}
 
-    std::cout << "    0. Exit servo" << << std::endl;
+void UI::printVanSupplies() {
+    std::cout << std::endl << "These are the items in your Van:" << std::endl << std::endl;
+    std::cout << std::endl << "Supply" << "\t\t" << "Amount" << std::endl;
+    std::cout << std::endl;
+    for (std::pair<Supply, int> keyValue : game.getVan().getSupplies()) {
+        Supply supply = keyValue.first;
+        int amount = keyValue.second;
 
+        std::string unitString = supply.unitName; // singular unit name
+        if (amount > 1 || amount == 0) {
+            unitString = supply.pluralUnitName;
+        }
+
+        std::cout << supply.name << "\t\t" << amount << " " << unitString << std::endl;
+    }
+    std::cout << std::endl << std::endl;
+}
+
+void UI::printPartyStatus() {
+    Calendar today = game.getCurrentDate();
+    Calendar startDate = game.getStartDate();
+
+    std::cout << "      Current Location: " << game.getLastVisitedMilestone().getName() << std::endl;
+    std::cout << "          Today's date: " << today.to_string() << std::endl;
+    std::cout << "            Start date: " << startDate.to_string() << std::endl;
+    std::cout << "           Days passed: " << game.daysTranscurred() << " days" << std::endl;
+    std::cout << "             Days left: " << game.daysLeft() << " days" << std::endl;
+    printBreakLine();
+    auto party = game.getParty();
+    Player player1 = party[0];
+    Player player2 = party[1];
+
+    std::cout << "                Health: " << player1.getName() << " " << player1.getHealth() << " %" << std::endl;
+    std::cout << "                        " << player2.getName() << " " << player2.getHealth() << " %" << std::endl;
+
+    std::cout << "                  Food: " << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << " kgs" << std::endl;
+    std::cout << "                  Fuel: " << game.getVan().getAmountOfSupply(SUPPLY_FUEL) << " liters" << std::endl;
+    std::cout << "               Balance: AUD $" << game.getVan().balance() << std::endl << std::endl;
+    std::cout << "        Next Milestone: " << game.distanceToNextMilestone() << " km" << std::endl;
+    std::cout << "     Distance Traveled: " << game.traveledDistance() << " km" << std::endl;
+    std::cout << "    Distance Remaining: " << game.remainingDistance() << " km" << std::endl;
+    std::cout << std::endl << std::endl;
+}
+
+void UI::printShoppingCart() {
+    auto cart = game.getServo().getShoppingCart();
+    std::cout << "Product" << "\t\t" << "Price" << "\t" << "Amount" << "\t" << "Sub-total" << std::endl;
+    std::cout << std::endl;
+    for (std::pair<Supply, int> keyValue : cart) {
+        Supply supply = keyValue.first;
+        int amount = keyValue.second;
+        float supplyTotal = supply.costPerUnit * amount;
+        if (amount > 0) {
+            std::cout << supply.name << "\t\t$" << supply.costPerUnit << "\t" << amount << "\t" << supplyTotal
+                      << std::endl;
+        }
+    }
+    std::cout << std::endl;
 }
 
 void UI::servoScreen() {
     std::cout << std::endl;
-    std::cout << "    Ow ya goin' mate! Welcome to the Servo. What can I get for ya?  " << std::endl;
+    std::cout << "Clerk:    Ow ya goin' mate! Welcome to the Servo. What can I get for ya?  " << std::endl;
 
     // call servo supply list and maybe put prices at the end of each line as it reads the file
     while (true) {
 
-
-
-        // Enter item
-        std::cout << "Enter an item number ";
-        if (game.partyAlive() == 0) {
-            std::cout << " ('q' or 'quit' to Exit the game)";
+        printServoMenu();
+        int itemNumber = askIntQuestion("Enter an item number", 0, 8);
+        if (itemNumber == UI_QUIT_CODE) {
+            game.quit();
+            return;
         }
-        std::cout << " : ";
-        std::string itemNumber;
-        getline(std::cin, itemNumber);
-        trim(itemNumber);
 
-        if (itemNumber != "") {
-            if (game.partyAlive() == 0 && (itemNumber == UI_OPTION_QUIT_Q || itemNumber == UI_OPTION_QUIT_QUIT)) {
-                game.quit();
-                return;
+        // Leave servo
+        if (itemNumber == UI_SERVO_MENU_EXIT) {
+            // if there are products in the cart, check out
+            float total = game.getServo().getTotal(game.getLastVisitedMilestoneOffset());
+            if (total > 0) {
+                // does the user have enough money?
+                float vanBalance = game.getVan().balance();
+                if (vanBalance < total) {
+                    std::cout << std::endl
+                              << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                              << std::endl;
+                    std::cout << "Clerk:    HOLD IT MATE!!! AUD $" << vanBalance
+                              << " is all you got, the total is AUD $" << total
+                              << std::endl;
+                    std::cout << std::endl
+                              << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                              << std::endl;
+                    std::cout << "Please remove some items from your cart" << std::endl << std::endl;
+                    continue;
+                } else {
+                    game.getServo().checkout(game.getVan(), game.getLastVisitedMilestoneOffset());
+                    std::cout << std::endl << "You've paid AUD $" << total << ", you have AUD $"
+                              << game.getVan().balance()
+                              << " left" << std::endl << std::endl;
+                    std::cout << "Clerk:    Thanks! Come again!" << std::endl << std::endl;
+                    return;
+                }
             }
+        }
 
-
+        if (itemNumber >= UI_SERVO_MENU_FOOD && itemNumber <= UI_SERVO_MENU_MEDICAL_KIT) {
             // Supply purchase = SUPPLY_CATALOG[toInt(itemNumber)];
             // Enter quantity
-            std::cout << "How many units do you want?: ";
-            std::string itemQuantity;
-            getline(std::cin, itemQuantity);
-            trim(itemQuantity);
+            Supply supply = SUPPLY_CATALOG[itemNumber - 1];
 
-            game.getServo().addSupplyToCart(SUPPLY_CATALOG[toInt(itemNumber) - 1], toInt(itemQuantity));
+            int itemQuantity = askIntQuestion(
+            "How many " + supply.pluralUnitName + " of " + supply.name + " do you want? (Enter 0 to remove product): ",
+            0, UI_NO_LIMIT);
 
-            // int UI::enterValidNumber(int *valid_numbers_array, size_of_that_array);
-            // int supplyId = toInt(itemNumber) - 1;
-            // int quantity = toInt(itemQuantity);
-            // game.getServo().addSupplyToCart(SUPPLY_CATALOG[supplyId], quantity);
-
-            // Total bill
-            // std::cout << "Do you wish to add more to your cart? (y/n)" << std::endl;
-            std::string yn;
-            getline(std::cin, yn);
-            toLower(yn);
-            trim(yn);
-            std::cout << std::endl;
-            // NOT SURE WHAT TO DO BELOW vvvv
-            if (yn == "y" || yn == "yes" || yn == "YES") {
-                //game.enterPlayer(playerName); **********************************************
-                return;
+            if (itemQuantity == 0) {
+                game.getServo().resetSupply(supply);
+                continue; //this breaks the while and starts over
             }
-            // y - LOOP
+            game.getServo().addSupplyToCart(supply, itemQuantity);
 
+            std::string unitString = supply.unitName; // singular unit name
+            if (itemQuantity > 1 || itemQuantity == 0) {
+                unitString = supply.pluralUnitName;
+            }
+
+            std::cout << "You've added " << itemQuantity << " " << unitString << " of " << supply.name << " for AUD $"
+                      << (supply.costPerUnit * itemQuantity *
+                          game.getServo().getSurchargePercent(game.getLastVisitedMilestoneOffset()));
         }
     }
+
 }
 
 void UI::travel() {
     game.travel();
-    std::cout
-    << "TODO: We actually traveled here (half ass implemented), you can print what changed (distance, food, fuel)"
-    << std::endl;
+    printPartyStatus();
 }
 
 void UI::rest() {
     game.rest();
-    std::cout
-    << "TODO: We actually rested here (half ass implemented), you can print what changed (distance, food, fuel)"
-    << std::endl;
+    printPartyStatus();
 }
 
 void UI::takePhotos() {
@@ -339,39 +411,31 @@ void UI::showBasicMenuOptions() {
     std::cout << "1. Travel" << std::endl;
     std::cout << "2. Rest" << std::endl;
     std::cout << "3. Take Photos" << std::endl;
+    std::cout << "4. Check Van" << std::endl;
 }
 
 void UI::showServoMenuOptions() {
-    std::cout << "4. Go to Servo" << std::endl;
-}
-
-void UI::showEnterPlayerMenuOptions() {
-    std::cout << "5. Enter another player" << std::endl;
+    std::cout << "5. Go to Servo" << std::endl;
 }
 
 void UI::showQuitMenuOptions() {
-    std::cout << "10. Quit (q/quit)" << std::endl;
+    std::cout << "0. Quit (q/quit)" << std::endl;
 }
 
-void UI::showMilestoneMenuOptions(bool &servoOptionShown, bool &enterPlayerMenuOptionShown) {
+void UI::showMilestoneMenuOptions(bool &servoOptionShown) {
     Milestone &milestone = game.getLastVisitedMilestone();
     // Show the basic options
     // 1. TRAVEL
     // 2. REST 
-    // 3. TAKE PHOTOS 
+    // 3. TAKE PHOTOS
+    // 4. CHECK VAN
     showBasicMenuOptions();
 
     // Show optional options
-    // [4. GO TO SERVO]
+    // [5. GO TO SERVO]
     if (milestone.isServo()) {
         showServoMenuOptions();
         servoOptionShown = true;
-    }
-
-    // [5. ENTER ANOTHER PLAYER]
-    if (game.getLastVisitedMilestoneOffset() == 0 &&
-        game.partyAlive() < MAX_NUMBER_OF_PLAYERS) {
-        showEnterPlayerMenuOptions();
     }
 
     // Show quit option
@@ -414,6 +478,9 @@ int UI::toInt(const std::string &str) {
     }
     catch (const std::invalid_argument &) {
         return UI_INVALID_INPUT;
+    }
+    catch (const std::out_of_range &) {
+        return UI_INVALID_INPUT; // In case input is a big number
     }
 }
 

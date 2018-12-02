@@ -76,6 +76,10 @@ public:
         distance += kilometers;
     }
 
+    std::map<Supply, int> getSupplies() {
+        return supplies;
+    }
+
 private:
     std::map<Supply, int> supplies; // map { supply -> amountInUnits }
     float money;

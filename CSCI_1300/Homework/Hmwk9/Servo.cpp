@@ -12,7 +12,9 @@ void Servo::addSupplyToCart(const Supply &productChoice, int productAmount) {
     cart[productChoice] += productAmount;
 }
 
-// TODO: ADD TOTAL BILL
+void Servo::resetSupply(const Supply &productChoice) {
+    cart[productChoice] = 0;
+}
 
 /** Used at all servos but the first one*/
 float Servo::getTotal(unsigned int milestonesOffset) {
@@ -26,7 +28,7 @@ float Servo::getTotal(unsigned int milestonesOffset) {
     return invoiceAmount * getSurchargePercent(milestonesOffset);
 }
 
-float Servo::getSurchargePercent(unsigned int milestoneOffset) {
+float Servo::getSurchargePercent(unsigned int milestoneOffset) const {
     return static_cast<float>(1 + (milestoneOffset * .25));
 }
 
@@ -36,5 +38,9 @@ void Servo::checkout(Van &van, unsigned int milestonesOffset) {
 }
 
 float Servo::getSupplyCost(const Supply &productChoice, unsigned int milestoneOffset) const {
-    return 0;
+    return productChoice.costPerUnit * getSurchargePercent(milestoneOffset);
+}
+
+std::map<Supply, int> Servo::getShoppingCart() {
+    return cart;
 }
