@@ -350,8 +350,7 @@ void UI::printShoppingCart() {
         float supplyTotal = supply.costPerUnit * amount;
         if (amount > 0) {
             std::cout << supply.name << "\t\tAUD $" << supply.costPerUnit << "\t" << amount << "\tAUD $"
-                      << std::setprecision(2) << supplyTotal
-                      << std::endl;
+                      << supplyTotal  << std::endl;
         }
     }
     std::cout << std::endl;
