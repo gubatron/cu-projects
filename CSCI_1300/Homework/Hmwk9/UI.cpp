@@ -1,6 +1,7 @@
 #include "UI.h"
 #include "VanMisfortune.h"
 #include <fstream>
+#include <cmath> // pow
 
 void UI::start(bool debug) {
     if (!debug) {
@@ -52,11 +53,13 @@ void UI::start(bool debug) {
         // debug mode initialization
         game.enterPlayer("Alice");
         game.enterPlayer("Bob");
-        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FOOD], 100);
-        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FUEL], 150);
-        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_BATTERY], 1);
-        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_TIRE], 1);
-        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_BUMPER], 2);
+        game.getVan().earn(40000);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FOOD], 1000);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FUEL], 1000);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_BATTERY], 10);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_TIRE], 10);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_BUMPER], 20);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_ENGINE], 3);
         game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_PHOTOS], 200);
         game.getServo().checkout(game.getVan(), 0);
         // Let's start on the second
@@ -96,21 +99,31 @@ unsigned int UI::milestoneScreen() {
         if (game.state() != GAME_NOT_OVER) {
             gameOver(game.state());
         }
-        //pigs();
+        pigs();
+        if (game.state() != GAME_NOT_OVER) {
+            gameOver(game.state());
+        }
     } else if (option == UI_MILESTONE_OPTION_REST) {
         rest();
         fortunes();
         if (game.state() != GAME_NOT_OVER) {
             gameOver(game.state());
         }
-        //pigs();
+        pigs();
+        if (game.state() != GAME_NOT_OVER) {
+            gameOver(game.state());
+        }
+
     } else if (option == UI_MILESTONE_OPTION_TAKE_PHOTOS) {
         takePhotos();
         fortunes();
         if (game.state() != GAME_NOT_OVER) {
             gameOver(game.state());
         }
-        //pigs();
+        pigs();
+        if (game.state() != GAME_NOT_OVER) {
+            gameOver(game.state());
+        }
     } else if (option == UI_MILESTONE_OPTION_CHECK_VAN) {
         printPartyStatus();
         printVanSupplies();
@@ -560,6 +573,7 @@ void UI::healthMisfortune() {
     }
 
     int option = askIntQuestion("Pick an option number", 1, maxValidOption) - 1;
+
     std::cout << std::endl << std::endl;
     std::cout << "You chose to ";
     if (option == UI_HEALTH_MENU_REST) {
@@ -619,6 +633,75 @@ void UI::vanMisfortune() {
     }
 }
 
+double UI::pigProbability(unsigned int distanceTraveled) const {
+    std::setprecision(10);
+    double M = pow((distanceTraveled / 100) - 4, 2);
+    return (((M + 72) / (M + 12)) - 1) / 10;
+}
+
+void UI::pigs() {
+    std::cout << std::endl << "(DEBUG) pigProbability(M=" << game.traveledDistance() << "): "
+              << pigProbability(game.traveledDistance()) << std::endl;
+
+    int pigProb = 100 * pigProbability(game.traveledDistance());
+    int r = randomBetween(1, 100);
+
+    std::cout << "(DEBUG) r (" << r << ") <= pigProb (" << pigProb << ") ? ";
+
+    if (r > pigProb) {
+        std::cout << "false - No pigs around" << std::endl;
+        return;
+    }
+
+    std::cout << "true - Pigs caught you" << std::endl;
+
+    std::cout << std::endl << std::endl;
+    printBreakLine();
+    std::cout << "    BUSTED! Pigs caught you speeding and they're spewing!" << std::endl;
+    printBreakLine();
+
+    std::cout << std::endl;
+
+    std::cout << "1. Step on it!" << std::endl;
+    std::cout << "2. Try to bribe them" << std::endl;
+    std::cout << "3. Surrender" << std::endl;
+    std::cout << std::endl;
+    int pigOption = askIntQuestion("What ya gon' do?", UI_PIGS_MENU_RUN + 1, UI_PIGS_MENU_SURRENDER + 1) - 1;
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    float lostCash = 0.0f;
+    if (pigOption == UI_PIGS_MENU_RUN) {
+        lostCash = 0;
+        game.getVan().modifySupplyAmount(SUPPLY_FOOD, -5);
+        int fuelLost = game.getVan().getAmountOfSupply(SUPPLY_FUEL) / 2;
+        game.getVan().modifySupplyAmount(SUPPLY_FUEL, fuelLost);
+        std::cout << "** You lost " << fuelLost << " liters of fuel in a wild chase and 5kgs of food" << std::endl;
+    } else if (pigOption == UI_PIGS_MENU_BRIBE) {
+
+        std::cout << "Pig: I'm thinking of a number between 1 to 10, if you guess it, you're free with a warning!"
+                  << std::endl << std::endl;
+        int r = randomBetween(1, 10);
+        int guess = askIntQuestion("Pick a number", 1, 10);
+        if (guess == r) {
+            lostCash = game.getVan().balance() / 8;
+            std::cout << "Nah yeh! You've got it!. Don't wanna see you speeding again, get ouf of here!" << std::endl;
+            std::cout << "** The Pig takes 1/8 of your cash only (- AUD $" << lostCash << ")" << std::endl;
+        } else {
+            lostCash = game.getVan().balance() / 4;
+            std::cout << "Yeh nah, the number was " << r << std::endl << std::endl;
+            std::cout << "** You've lost 1/4 of your cash (- AUD $" << lostCash << ")" << std::endl;
+        }
+
+    } else if (pigOption == UI_PIGS_MENU_SURRENDER) {
+        lostCash = game.getVan().balance() / 4;
+        std::cout << "You've surrendered and lost 1/4 of your cash (- AUD $" << lostCash << ")" << std::endl;
+    }
+    game.getVan().spend(lostCash);
+    printBreakLine();
+
+}
+
 void UI::showBasicMenuOptions() {
     std::cout << "1. Travel" << std::endl;
     std::cout << "2. Rest" << std::endl;
@@ -667,6 +750,8 @@ void UI::gameOver(const unsigned int reason) {
     std::cout << "Game Over, Ooroo Drongo!" << std::endl;
     printBreakLine();
     std::cout << std::endl << std::endl;
+    printPartyStatus();
+    printVanSupplies();
     std::exit(0); //https://en.cppreference.com/w/cpp/utility/program/exit
 }
 

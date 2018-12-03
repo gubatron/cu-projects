@@ -155,6 +155,11 @@ const unsigned int FORTUNE_GOT_FREE_40_LITERS_OF_GAS = 2;
 const unsigned int REST_PLAYER_HEALTH_RECOVERY_POINTS = 5;
 const unsigned int VEGEMITE_PLAYER_HEALTH_RECOVERY_POINTS = 2;
 
+const unsigned int UI_PIGS_MENU_RUN = 0;
+const unsigned int UI_PIGS_MENU_BRIBE = 1;
+const unsigned int UI_PIGS_MENU_SURRENDER = 2;
+
+
 inline bool randomEvent(int probability) {
 	return ((rand() % 100) + 1) <= probability; // covers [1 to 100]
 }

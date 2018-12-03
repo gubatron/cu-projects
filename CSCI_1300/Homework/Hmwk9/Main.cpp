@@ -33,8 +33,6 @@ int main(int numberOfArguments, char **arguments) {
 }
 
 
-
-
 //int main() {
 /* print Welcome statement: Welcome to Outback Ganders....
     insert introduction on what the game is about

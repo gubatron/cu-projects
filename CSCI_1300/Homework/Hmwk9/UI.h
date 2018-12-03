@@ -44,9 +44,9 @@ private:
 
 	void vanMisfortune();
 
-    //void selectStartDate();
+	void pigs();
 
-	//void pigs();
+    double pigProbability(unsigned int distanceTraveled) const;
 
     void showBasicMenuOptions();
     
