@@ -110,14 +110,18 @@ void Game::rest(bool gainHealth) {
 
     // gain health
     if (gainHealth) {
-        if (party[0].getHealth() < 100) {
-            unsigned int leftToRecover = 100 - party[0].getHealth();
-            party[0].affectHealth(std::min(REST_PLAYER_HEALTH_RECOVERY_POINTS, leftToRecover));
-        }
-        if (party[1].getHealth() < 100) {
-            unsigned int leftToRecover = 100 - party[1].getHealth();
-            party[1].affectHealth(std::min(REST_PLAYER_HEALTH_RECOVERY_POINTS, leftToRecover));
-        }
+        recoverBothPlayers(REST_PLAYER_HEALTH_RECOVERY_POINTS);
+    }
+}
+
+void Game::recoverBothPlayers(const unsigned int healthChange) {
+    if (party[0].getHealth() > 0 && party[0].getHealth() < 100) {
+        unsigned int leftToRecover = 100 - party[0].getHealth();
+        party[0].affectHealth(static_cast<int>(std::min(healthChange, leftToRecover)));
+    }
+    if (party[1].getHealth() > 0 && party[1].getHealth() < 100) {
+        unsigned int leftToRecover = 100 - party[1].getHealth();
+        party[1].affectHealth(static_cast<int>(std::min(healthChange, leftToRecover)));
     }
 }
 
@@ -182,7 +186,7 @@ Milestone &Game::getLastVisitedMilestone() {
         return lastVisitedMilestone;
     }
     // If not at a milestone, return special "In-Transit" milestone
-    Milestone inTransitMilestone = Milestone("In-Transit", traveledDistance(), false, 0.0f);
+    Milestone inTransitMilestone = Milestone("In-Transit", traveledDistance(), false, 0.0f, true);
     return inTransitMilestone;
 }
 

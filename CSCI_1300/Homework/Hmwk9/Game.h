@@ -57,6 +57,8 @@ public:
 
     void rest();
 
+    void recoverBothPlayers(const unsigned int healthChange);
+
     void travel();
 
     bool takePhotos(Photo photoSubjectChoice);

@@ -15,3 +15,7 @@ bool Milestone::isServo() {
 float Milestone::getDailyCostPerPlayer() {
     return dailyTollPerPerson;
 }
+
+bool Milestone::inTransit() const {
+    return inTransit_;
+}

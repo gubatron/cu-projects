@@ -10,10 +10,12 @@ public:
     Milestone(std::string milestoneName,
               unsigned int distance,
               bool isItAFort,
-              float costPerDay) : name(milestoneName),
+              float costPerDay,
+              bool inTransit=false) : name(milestoneName),
                                   distanceFromOrigin(distance),
                                   is_fort(isItAFort),
-                                  dailyTollPerPerson(costPerDay) {
+                                  dailyTollPerPerson(costPerDay),
+                                  inTransit_(inTransit) {
     }
 
     // Methods
@@ -27,12 +29,15 @@ public:
 
     float getDailyCostPerPlayer(); // can be zero if it's a fort or a special attraction
 
+    bool inTransit() const;
+
 // private to the class
 private:
     const std::string name;
     const unsigned int distanceFromOrigin; // in km
     const bool is_fort; // if not, it's an attraction.
     const float dailyTollPerPerson; // cost in AUD per person in party
+    const bool inTransit_;
 };
 
 #endif

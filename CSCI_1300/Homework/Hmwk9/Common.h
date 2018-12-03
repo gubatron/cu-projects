@@ -95,7 +95,13 @@ const std::string HEALTH_MISFORTUNE_NAMES[] =
  "dehydrated",
  "attacked by a drop bear",
  "bit by a snake",
- "motion sick"
+ "motion sickness"
+};
+
+const std::string FORTUNE_NAMES[] = {
+ "got free Vegemite",
+ "got towed 200km",
+ "got free 40 liters of gas"
 };
 
 // HEALTH MISFORTUNE MENU OPTIONS
@@ -142,7 +148,12 @@ const unsigned int UI_TAKE_PHOTOS_MENU_LANDMARK = 5;
 
 const unsigned int CHANCE_OF_GETTING_KIDNAPPED = 5;
 
-const unsigned int REST_PLAYER_HEALTH_RECOVERY_POINTS = 10;
+const unsigned int FORTUNE_VEGEMITE = 0;
+const unsigned int FORTUNE_GOT_TOWED_200_KM = 1;
+const unsigned int FORTUNE_GOT_FREE_40_LITERS_OF_GAS = 2;
+
+const unsigned int REST_PLAYER_HEALTH_RECOVERY_POINTS = 5;
+const unsigned int VEGEMITE_PLAYER_HEALTH_RECOVERY_POINTS = 2;
 
 inline bool randomEvent(int probability) {
 	return ((rand() % 100) + 1) <= probability; // covers [1 to 100]

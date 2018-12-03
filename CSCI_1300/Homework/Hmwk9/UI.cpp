@@ -479,7 +479,6 @@ void UI::takePhotos() {
 void UI::fortunes() {
     bool fortuneEventWillHappen = randomEvent(40);
     if (!fortuneEventWillHappen) {
-        std::cout << "(DEBUG) no fortunes nor misfortunes" << std::endl;
         return;
     }
 
@@ -493,21 +492,43 @@ void UI::fortunes() {
     // Either fortune or misfortune
     bool fortune = randomEvent(50);
 
-
     // MISFORTUNES
     if (!fortune) {
-        std::cout << "(DEBUG) misfortunes" << std::endl;
-        bool healthRelated = randomEvent(100); //50
+        bool healthRelated = randomEvent(50);
         if (healthRelated) {
             healthMisfortune();
         } else {
             vanMisfortune();
         }
-
     }
         // FORTUNES
     else {
+        std::cout << std::endl << std::endl;
+        printBreakLine();
+        std::cout << "    I WISH I HAD HALF YOUR LUCK!" << std::endl;
+        printBreakLine();
 
+        if (game.getLastVisitedMilestone().inTransit()) {
+            int fortuneIndex = randomBetween(0, 2);
+            if (fortuneIndex == FORTUNE_VEGEMITE) {
+                game.recoverBothPlayers(VEGEMITE_PLAYER_HEALTH_RECOVERY_POINTS);
+                std::cout << "    You found some VEGEMITE!!!! - Both player's health increased by "
+                          << VEGEMITE_PLAYER_HEALTH_RECOVERY_POINTS << "%" << std::endl;
+            } else if (fortuneIndex == FORTUNE_GOT_TOWED_200_KM) {
+                game.getVan().move(200); // does not spend gas
+                std::cout << "    You got towed 200kms!" << std::endl;
+            } else if (fortuneIndex == FORTUNE_GOT_FREE_40_LITERS_OF_GAS) {
+                game.getVan().modifySupplyAmount(SUPPLY_FUEL, 40);
+                std::cout << "    You got FREE 40 liters of gas!" << std::endl;
+            }
+        } else {
+            // All good fortune in non-transit milestones is vegemite
+            game.recoverBothPlayers(VEGEMITE_PLAYER_HEALTH_RECOVERY_POINTS);
+            std::cout << "    You found some VEGEMITE!!!! - Both player's health increased by "
+                      << VEGEMITE_PLAYER_HEALTH_RECOVERY_POINTS << "%" << std::endl;
+        }
+        printBreakLine();
+        std::cout << std::endl << std::endl;
     }
 }
 
@@ -516,11 +537,12 @@ void UI::healthMisfortune() {
     const std::string healhMisfortuneDescription = HEALTH_MISFORTUNE_NAMES[randomBetween(0, 3)];
 
     int affectedPlayerIndex = randomBetween(0, 1);
-    Player &player = game.getParty()[affectedPlayerIndex];
+    Player player = game.getParty()[affectedPlayerIndex];
 
     std::cout << std::endl << std::endl;
     printBreakLine();
-    std::cout << "    STREWTH! A health misfortune has happened to " << player.getName() << std::endl;
+    std::cout << "    STREWTH! " << player.getName() << " got " << healhMisfortuneDescription << std::endl;
+    std::cout << "    You have " << game.getVan().getAmountOfSupply(SUPPLY_FUEL) << " liters of fuel left" << std::endl;
     printBreakLine();
 
     int healthChange = 0;
@@ -548,9 +570,11 @@ void UI::healthMisfortune() {
         std::cout << "rest";
     } else if (option == UI_HEALTH_MENU_PRESS_ON) {
         healthChange = -70;
+        travel();
         std::cout << "press-on";
     } else if (gotMedKit && option == UI_HEALTH_MENU_MEDKIT) {
         healthChange = -50;
+        travel();
         game.getVan().modifySupplyAmount(SUPPLY_MEDICAL_KIT, -1);
         std::cout << "use MedKit";
     }
@@ -576,8 +600,9 @@ void UI::vanMisfortune() {
 
     int supplyAmountLeft = game.getVan().getAmountOfSupply(vanMisfortune.supplyId);
 
+    std::cout << std::endl << std::endl;
     printBreakLine();
-    std::cout << "    STREWTH! A a van misfortune has happened" << std::endl;
+    std::cout << "    STREWTH! A van misfortune has happened" << std::endl;
     printBreakLine();
     std::cout << vanMisfortune.eventDescription << std::endl;
 
@@ -586,6 +611,7 @@ void UI::vanMisfortune() {
               << std::endl;
 
     printBreakLine();
+    std::cout << std::endl << std::endl;
 
     if (vanMisfortune.minToSurvive > supplyAmountLeft) {
         gameOver(vanMisfortune.gameOverCode);
