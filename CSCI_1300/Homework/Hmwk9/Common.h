@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include <cstring> // strcmp
 #include <map>
 #include <sstream>
 #include <algorithm> // std::min

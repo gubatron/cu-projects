@@ -322,7 +322,7 @@ void UI::printPartyStatus() {
     } else {
         std::cout << "                        " << player2.getName() << " DEAD" << std::endl;
     }
-    
+
     printBreakLine();
     std::cout << "                  Food: " << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << " kgs" << std::endl;
     std::cout << "                  Fuel: " << game.getVan().getAmountOfSupply(SUPPLY_FUEL) << " liters" << std::endl;
