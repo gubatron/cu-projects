@@ -333,12 +333,15 @@ void UI::printShoppingCart() {
     std::cout << "Product" << "\t\t     " << "Price" << "\tAmount" << "\t" << "Sub-total" << std::endl;
     printBreakLine();
     std::cout << std::endl;
+
+
     for (std::pair<Supply, int> keyValue : cart) {
         Supply supply = keyValue.first;
         int amount = keyValue.second;
         float supplyTotal = supply.costPerUnit * amount;
         if (amount > 0) {
-            std::cout << supply.name << "\t\tAUD $" << supply.costPerUnit << "\t" << amount << "\tAUD $" << supplyTotal
+            std::cout << supply.name << "\t\tAUD $" << supply.costPerUnit << "\t" << amount << "\tAUD $"
+                      << std::setprecision(2) << supplyTotal
                       << std::endl;
         }
     }
