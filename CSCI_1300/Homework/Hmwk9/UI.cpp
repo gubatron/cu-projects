@@ -139,12 +139,6 @@ unsigned int UI::askForValidMilestoneScreenOption(bool servoOptionShown) {
         maxValidOption = UI_MILESTONE_OPTION_GO_TO_SERVO;
     }
     int userOption = askIntQuestion("Enter a valid option number", 0, maxValidOption);
-
-    if (userOption == UI_MILESTONE_OPTION_QUIT || userOption == UI_QUIT_CODE) {
-        game.quit();
-        exit(0);
-    }
-
     return userOption;
 }
 
@@ -212,11 +206,6 @@ void UI::selectStartDate() {
 
     std::cout << std::endl;
     int dateInput = askIntQuestion("Enter a day of September to start your gander", 1, 30);
-
-    if (dateInput == UI_QUIT_CODE) {
-        game.quit();
-        return;
-    }
 
     // Current date is set to Sept 1st.
     // User will enter a dateInput representing the day of the month to start.
@@ -365,10 +354,6 @@ void UI::servoScreen() {
 
         printServoMenu();
         int itemNumber = askIntQuestion("Enter an item number", 0, 8);
-        if (itemNumber == UI_QUIT_CODE) {
-            game.quit();
-            return;
-        }
 
         // Leave servo
         if (itemNumber == UI_SERVO_MENU_EXIT) {
@@ -455,11 +440,6 @@ void UI::takePhotos() {
     std::cout << std::endl;
 
     int photoOption = askIntQuestion("Pick a subject", UI_TAKE_PHOTOS_MENU_EXIT, UI_TAKE_PHOTOS_MENU_LANDMARK);
-
-    if (photoOption == UI_QUIT_CODE) {
-        game.quit();
-        return;
-    }
 
     if (photoOption == UI_TAKE_PHOTOS_MENU_EXIT) {
         return;
@@ -640,20 +620,12 @@ double UI::pigProbability(unsigned int distanceTraveled) const {
 }
 
 void UI::pigs() {
-    std::cout << std::endl << "(DEBUG) pigProbability(M=" << game.traveledDistance() << "): "
-              << pigProbability(game.traveledDistance()) << std::endl;
-
     int pigProb = 100 * pigProbability(game.traveledDistance());
     int r = randomBetween(1, 100);
 
-    std::cout << "(DEBUG) r (" << r << ") <= pigProb (" << pigProb << ") ? ";
-
     if (r > pigProb) {
-        std::cout << "false - No pigs around" << std::endl;
         return;
     }
-
-    std::cout << "true - Pigs caught you" << std::endl;
 
     std::cout << std::endl << std::endl;
     printBreakLine();
@@ -796,6 +768,8 @@ int UI::readInt() {
     trim(str);
 
     if ((str == UI_OPTION_QUIT_Q || str == UI_OPTION_QUIT_QUIT)) {
+        game.quit();
+        gameOver(game.state());
         return UI_QUIT_CODE;
     }
 
