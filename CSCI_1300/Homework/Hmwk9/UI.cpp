@@ -311,10 +311,19 @@ void UI::printPartyStatus() {
     auto party = game.getParty();
     Player player1 = party[0];
     Player player2 = party[1];
-    // TODO: Print dead instead of health 0
-    std::cout << "                Health: " << player1.getName() << " " << player1.getHealth() << " %" << std::endl;
-    std::cout << "                        " << player2.getName() << " " << player2.getHealth() << " %" << std::endl;
 
+    if (player1.getHealth() > 0) {
+        std::cout << "                Health: " << player1.getName() << " " << player1.getHealth() << " %" << std::endl;
+    } else {
+        std::cout << "                Health: " << player1.getName() << " DEAD" << std::endl;
+    }
+    if (player2.getHealth() > 0) {
+        std::cout << "                        " << player2.getName() << " " << player2.getHealth() << " %" << std::endl;
+    } else {
+        std::cout << "                        " << player2.getName() << " DEAD" << std::endl;
+    }
+    
+    printBreakLine();
     std::cout << "                  Food: " << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << " kgs" << std::endl;
     std::cout << "                  Fuel: " << game.getVan().getAmountOfSupply(SUPPLY_FUEL) << " liters" << std::endl;
     std::cout << "                 Money: AUD $" << game.getVan().balance() << std::endl << std::endl;
