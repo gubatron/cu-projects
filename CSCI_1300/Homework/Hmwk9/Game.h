@@ -53,6 +53,8 @@ public:
 
     bool partyStarved();
 
+    void rest(bool gainHealth);
+
     void rest();
 
     void travel();
@@ -77,6 +79,8 @@ public:
     Calendar getCurrentDate();
 
     std::vector<Player> getParty() { return party; }
+
+    int affectPlayerHealth(int playerNumber, int healthChange);
 private:
     bool playerQuit;
     unsigned int lastVisitedMilestoneOffset;

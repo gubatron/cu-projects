@@ -38,6 +38,12 @@ private:
     
 	void takePhotos();
 
+	void fortunes();
+
+	void healthMisfortune();
+
+	void vanMisfortune();
+
     //void selectStartDate();
 
 	//void pigs();
@@ -91,7 +97,6 @@ private:
 	 *  A valid int response
 	 * */
 	int askIntQuestion(std::string question, unsigned int validMin, unsigned int validMax);
-
     Game game;
     Player nullPlayer;
 };

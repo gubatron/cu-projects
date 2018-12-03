@@ -16,8 +16,6 @@ public:
 
     int affectHealth(int healthChange);
 
-    bool operator==(const Player &other) const;
-
 private:
     const size_t number;
     const std::string name;

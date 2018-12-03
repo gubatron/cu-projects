@@ -95,6 +95,10 @@ bool Game::partyStarved() {
 }
 
 void Game::rest() {
+    rest(true);
+}
+
+void Game::rest(bool gainHealth) {
     // time goes by
     addDays(1);
 
@@ -102,8 +106,19 @@ void Game::rest() {
     int numberOfPlayersAlive = partyAlive();
     int totalPoundsPerDay = numberOfPlayersAlive * 2;
     van.modifySupplyAmount(SUPPLY_FOOD, -totalPoundsPerDay);
-
     van.spend(getLastVisitedMilestone().getDailyCostPerPlayer() * party.size());
+
+    // gain health
+    if (gainHealth) {
+        if (party[0].getHealth() < 100) {
+            unsigned int leftToRecover = 100 - party[0].getHealth();
+            party[0].affectHealth(std::min(REST_PLAYER_HEALTH_RECOVERY_POINTS, leftToRecover));
+        }
+        if (party[1].getHealth() < 100) {
+            unsigned int leftToRecover = 100 - party[1].getHealth();
+            party[1].affectHealth(std::min(REST_PLAYER_HEALTH_RECOVERY_POINTS, leftToRecover));
+        }
+    }
 }
 
 void Game::travel() {
@@ -178,7 +193,9 @@ unsigned int Game::state() {
     if (van.getAmountOfSupply(SUPPLY_FUEL) <= 0) {
         return GAME_OVER_RUN_OUT_OF_FUEL;
     }
-    if (!partyAlive()) {
+
+    // if all players dead or player 1 has died
+    if (!partyAlive() || party[0].getHealth() <= 0) {
         return GAME_OVER_PARTY_DIED;
     }
     if (partyStarved()) {
@@ -206,4 +223,8 @@ Calendar Game::getStartDate() {
 
 Calendar Game::getCurrentDate() {
     return currentDate;
+}
+
+int Game::affectPlayerHealth(int playerNumber, int healthChange) {
+    return party[playerNumber].affectHealth(healthChange);
 }

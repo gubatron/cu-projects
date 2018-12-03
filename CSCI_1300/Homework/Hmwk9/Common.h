@@ -65,16 +65,43 @@ const unsigned int GAME_OVER_ARRIVED = 5;
 const unsigned int GAME_OVER_TIME_IS_UP = 6;
 const unsigned int GAME_OVER_USER_QUIT = 7;
 
+// PLAYER MISFORTUNE GAME OVER REASON CODES
+const unsigned int GAME_OVER_PLAYER_KIDNAPPED = 8;
+
+// VAN MISFORTUNE GAME OVER REASON CODES
+const unsigned int GAME_OVER_NO_SPARE_TIRES = 9;
+const unsigned int GAME_OVER_NO_BUMPER_CRASH = 10;
+const unsigned int GAME_OVER_BATTERY_BROKE = 11;
+const unsigned int GAME_OVER_ENGINE_BROKE = 12;
+
 const std::string GAME_OVER_REASONS[] = {
     "Game not over",
     "Ran out of fuel",
-    "Party died",
+    "Player in party died",
     "Party starved",
     "Party broke",
     "Arrived to destination, good on 'ya mate!",
     "Time is up",
-    "User quit game"
+    "User quit game",
+    "Greg McLean kidnapped 'ya and nobody paid your ransom, R.I.P.",
+    "Popped a tire and you don't have a spare",
+    "Hit a 'roo and didn't have a bumper, Van is totalled",
+    "Get a spare car battery next time, you got stranded for days and missed your flight home",
+    "Engine broke and you ain't got a spare, remember these are long trips. Plan ahead next time",
 };
+
+const std::string HEALTH_MISFORTUNE_NAMES[] =
+{
+ "dehydrated",
+ "attacked by a drop bear",
+ "bit by a snake",
+ "motion sick"
+};
+
+// HEALTH MISFORTUNE MENU OPTIONS
+const unsigned int UI_HEALTH_MENU_REST = 0;
+const unsigned int UI_HEALTH_MENU_PRESS_ON = 1;
+const unsigned int UI_HEALTH_MENU_MEDKIT = 2;
 
 // UI VALID OPTIONS
 
@@ -113,10 +140,15 @@ const unsigned int UI_TAKE_PHOTOS_MENU_TOWN = 3;
 const unsigned int UI_TAKE_PHOTOS_MENU_CITY = 4;
 const unsigned int UI_TAKE_PHOTOS_MENU_LANDMARK = 5;
 
+const unsigned int CHANCE_OF_GETTING_KIDNAPPED = 5;
+
+const unsigned int REST_PLAYER_HEALTH_RECOVERY_POINTS = 10;
+
 inline bool randomEvent(int probability) {
 	return ((rand() % 100) + 1) <= probability; // covers [1 to 100]
 }
 
+// (a,b] exclusive-inclusive, TODO: make it [a,b] fully inclusive
 inline unsigned int randomBetween(unsigned int a, unsigned int b) {
 	return static_cast<unsigned int>(rand()) % (b - a + 1) + a;
 }

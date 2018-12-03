@@ -19,7 +19,7 @@ set(SOURCE_FILES
         Milestone.cpp
         Player.cpp
         Servo.cpp
-        Tests.cpp UI.cpp UI.h)
+        Tests.cpp UI.cpp UI.h VanMisfortune.h)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
     add_compile_options(

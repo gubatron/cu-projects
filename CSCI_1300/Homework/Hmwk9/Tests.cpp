@@ -53,7 +53,8 @@ bool calendarTests() {
         return false;
     }
 
-    std::cout << "calendarTests() success - jan1_2020 - jan1 = " << daysDifference << " == " << daysDifference2 << std::endl;
+    std::cout << "calendarTests() success - jan1_2020 - jan1 = " << daysDifference << " == " << daysDifference2
+              << std::endl;
     return true;
 }
 
@@ -74,11 +75,38 @@ bool testRandomEvents() {
         }
     }
     std::cout << "randomBetween() succeeded " << std::endl;
+
+    // 0 based numbers?
+    int n_0s = 0;
+    int n_1s = 0;
+    for (int i = 0; i < 1000; i++) {
+        int n = randomBetween(0, 1);
+        if (n==0) {
+            n_0s++;
+        } else if (n==1) {
+            n_1s++;
+        }
+    }
+
+    if (n_0s == 0) {
+        std::cout << "randomBetween(0,1) failed, no 0s were generated" << std::endl;
+        return false;
+    }
+
+    if (n_1s == 0) {
+        std::cout << "randomBetween(0,1) failed, no 1s were generated" << std::endl;
+        return false;
+    }
+
+    std::cout << "randomBetween(0,1) sucess, 0s=" << n_0s << ", 1s=" << n_1s << " were generated" << std::endl;
+
     return true;
 }
 
 bool testRestTurn() {
     Game game;
+    game.enterPlayer("Alice");
+    game.enterPlayer("Bob");
     Van van = game.getVan();
     int daysLeftFromStart = game.daysLeft();
     van.modifySupplyAmount(SUPPLY_FOOD, 100);
@@ -104,13 +132,13 @@ bool testRestTurn() {
 
 
 bool testTravelTurn() {
-	// Test without misfortunes. Just travel method
-	srand(5); // this test always travels the same "random" distance
-	Game game;
-	game.enterPlayer("Nicole");
-	game.enterPlayer("Austin");
-	game.enterPlayer("Angel");
-	game.enterPlayer("Paulina");
+    // Test without misfortunes. Just travel method
+    srand(5); // this test always travels the same "random" distance
+    Game game;
+    game.enterPlayer("Nicole");
+    game.enterPlayer("Austin");
+    game.enterPlayer("Angel");
+    game.enterPlayer("Paulina");
     game.getVan().modifySupplyAmount(SUPPLY_FOOD, 100);
     game.getVan().modifySupplyAmount(SUPPLY_FUEL, 40);
 
@@ -123,14 +151,15 @@ bool testTravelTurn() {
     std::cout << "=====================================================================" << std::endl;
 
     game.travel();
-	std::cout << "testTravelTurn() - distance " << game.traveledDistance() << std::endl;
-	std::cout << "testTravelTurn() - food " << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << std::endl;
-	std::cout << "testTravelTurn() - fuel " << game.getVan().getAmountOfSupply(SUPPLY_FUEL) << std::endl;
-	std::cout << "testTravelTurn() - current milestone: " << game.getLastVisitedMilestone().getName() << std::endl;
+    std::cout << "testTravelTurn() - distance " << game.traveledDistance() << std::endl;
+    std::cout << "testTravelTurn() - food " << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << std::endl;
+    std::cout << "testTravelTurn() - fuel " << game.getVan().getAmountOfSupply(SUPPLY_FUEL) << std::endl;
+    std::cout << "testTravelTurn() - current milestone: " << game.getLastVisitedMilestone().getName() << std::endl;
     std::cout << "=====================================================================" << std::endl;
 
     if (game.getLastVisitedMilestoneOffset() != 0) {
-        std::cout << "testTravelTurn() failed - at this point the last visited milestone offset should be 0, not " << game.getLastVisitedMilestoneOffset() << std::endl;
+        std::cout << "testTravelTurn() failed - at this point the last visited milestone offset should be 0, not "
+                  << game.getLastVisitedMilestoneOffset() << std::endl;
         return false;
     }
 
@@ -145,7 +174,7 @@ bool testTravelTurn() {
     std::cout << "testTravelTurn() - food " << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << std::endl;
     std::cout << "testTravelTurn() - fuel " << game.getVan().getAmountOfSupply(SUPPLY_FUEL) << std::endl;
     std::cout << "testTravelTurn() - current milestone: " << game.getLastVisitedMilestone().getName() << std::endl;
-	return true;
+    return true;
 }
 
 bool testTakePhotosTurn() {
@@ -212,8 +241,8 @@ bool runTests() {
     passedAll = passedAll && testServoPurchase();
     passedAll = passedAll && calendarTests();
     passedAll = passedAll && testRestTurn();
-	passedAll = passedAll && testRandomEvents();
-	passedAll = passedAll && testTravelTurn();
+    passedAll = passedAll && testRandomEvents();
+    passedAll = passedAll && testTravelTurn();
     passedAll = passedAll && testTakePhotosTurn();
 
 

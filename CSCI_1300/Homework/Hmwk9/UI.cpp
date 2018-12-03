@@ -1,4 +1,5 @@
 #include "UI.h"
+#include "VanMisfortune.h"
 #include <fstream>
 
 void UI::start(bool debug) {
@@ -51,8 +52,12 @@ void UI::start(bool debug) {
         // debug mode initialization
         game.enterPlayer("Alice");
         game.enterPlayer("Bob");
-        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FOOD], 1);
-        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FUEL], 100);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FOOD], 100);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_FUEL], 150);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_BATTERY], 1);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_TIRE], 1);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_BUMPER], 2);
+        game.getServo().addSupplyToCart(SUPPLY_CATALOG[SUPPLY_PHOTOS], 200);
         game.getServo().checkout(game.getVan(), 0);
         // Let's start on the second
 
@@ -86,15 +91,25 @@ unsigned int UI::milestoneScreen() {
     // handle option action (switch)
     if (option == UI_MILESTONE_OPTION_TRAVEL) {
         travel();
-        //missfortunes();
+        fortunes();
+        //TODO refactor into checkGameOver();
+        if (game.state() != GAME_NOT_OVER) {
+            gameOver(game.state());
+        }
         //pigs();
     } else if (option == UI_MILESTONE_OPTION_REST) {
         rest();
-        //missfortunes();
+        fortunes();
+        if (game.state() != GAME_NOT_OVER) {
+            gameOver(game.state());
+        }
         //pigs();
     } else if (option == UI_MILESTONE_OPTION_TAKE_PHOTOS) {
         takePhotos();
-        //missfortunes();
+        fortunes();
+        if (game.state() != GAME_NOT_OVER) {
+            gameOver(game.state());
+        }
         //pigs();
     } else if (option == UI_MILESTONE_OPTION_CHECK_VAN) {
         printPartyStatus();
@@ -237,7 +252,24 @@ void UI::printServoMenu() {
     float total = game.getServo().getTotal(game.getLastVisitedMilestoneOffset());
     if (total > 0) {
         printShoppingCart();
-        std::cout << std::endl << "Your current total is AUD $" << total << std::endl;
+        printBreakLine();
+        std::cout << std::endl
+                  << "Your current total is AUD $" << total << std::endl;
+        printBreakLine();
+        std::cout
+        << "                                                        Your Wallet: AUD $" << game.getVan().balance()
+        << std::endl;
+        float wouldBeLeft = game.getVan().balance() - total;
+        if (wouldBeLeft > 0) {
+            std::cout
+            << "                                      At checkout you'd be left with AUD $" << wouldBeLeft << std::endl;
+        } else {
+            std::cout
+            << "                Remove items from the shopping cart, you can't afford that much" << std::endl
+            << "                    (To remove Product, add it again to the cart with amount 0)" << std::endl;
+
+        }
+        printBreakLine();
     } else {
         std::cout << std::endl << "Your cart is empty" << std::endl;
     }
@@ -277,13 +309,13 @@ void UI::printPartyStatus() {
     auto party = game.getParty();
     Player player1 = party[0];
     Player player2 = party[1];
-
+    // TODO: Print dead instead of health 0
     std::cout << "                Health: " << player1.getName() << " " << player1.getHealth() << " %" << std::endl;
     std::cout << "                        " << player2.getName() << " " << player2.getHealth() << " %" << std::endl;
 
     std::cout << "                  Food: " << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << " kgs" << std::endl;
     std::cout << "                  Fuel: " << game.getVan().getAmountOfSupply(SUPPLY_FUEL) << " liters" << std::endl;
-    std::cout << "               Balance: AUD $" << game.getVan().balance() << std::endl << std::endl;
+    std::cout << "                 Money: AUD $" << game.getVan().balance() << std::endl << std::endl;
     std::cout << "        Next Milestone: " << game.distanceToNextMilestone() << " km" << std::endl;
     std::cout << "     Distance Traveled: " << game.traveledDistance() << " km" << std::endl;
     std::cout << "    Distance Remaining: " << game.remainingDistance() << " km" << std::endl;
@@ -292,8 +324,12 @@ void UI::printPartyStatus() {
 
 void UI::printShoppingCart() {
     std::cout << std::endl;
+    printBreakLine();
+    std::cout << "YOUR SHOPPING CART:" << std::endl;
+    printBreakLine();
     auto cart = game.getServo().getShoppingCart();
-    std::cout << "Product" << "\t\t" << "Price" << "\t" << "Amount" << "\t" << "Sub-total" << std::endl;
+    std::cout << "Product" << "\t\t     " << "Price" << "\tAmount" << "\t" << "Sub-total" << std::endl;
+    printBreakLine();
     std::cout << std::endl;
     for (std::pair<Supply, int> keyValue : cart) {
         Supply supply = keyValue.first;
@@ -336,10 +372,8 @@ void UI::servoScreen() {
                               << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
                               << std::endl;
                     std::cout << "Clerk:    HOLD IT MATE!!! AUD $" << vanBalance
-                              << " is all you got, the total is AUD $" << total
-                              << std::endl;
-                    std::cout << std::endl
-                              << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                              << " is all you got, the total is AUD $" << total << std::endl;
+                    std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
                               << std::endl;
                     std::cout << "Please remove some items from your cart" << std::endl << std::endl;
                     continue;
@@ -355,10 +389,10 @@ void UI::servoScreen() {
         }
 
         if (itemNumber >= UI_SERVO_MENU_FOOD && itemNumber <= UI_SERVO_MENU_MEDICAL_KIT) {
+            std::cout << std::endl;
             // Supply purchase = SUPPLY_CATALOG[toInt(itemNumber)];
             // Enter quantity
             Supply supply = SUPPLY_CATALOG[itemNumber - 1];
-
             int itemQuantity = askIntQuestion(
             "How many " + supply.pluralUnitName + " of " + supply.name + " do you want? (Enter 0 to remove product): ",
             0, UI_NO_LIMIT);
@@ -374,7 +408,8 @@ void UI::servoScreen() {
                 unitString = supply.pluralUnitName;
             }
 
-            std::cout << "You've added " << itemQuantity << " " << unitString << " of " << supply.name << " for AUD $"
+            std::cout << std::endl <<
+                      "You've added " << itemQuantity << " " << unitString << " of " << supply.name << " for AUD $"
                       << (supply.costPerUnit * itemQuantity *
                           game.getServo().getSurchargePercent(game.getLastVisitedMilestoneOffset()));
         }
@@ -397,11 +432,11 @@ void UI::takePhotos() {
     printBreakLine();
     std::cout << "    Attempt to shoot a subject, pick one below:" << std::endl;
     std::cout << std::endl;
-    std::cout << "    1. Beach" << std::endl;
-    std::cout << "    2. Animal" << std::endl;
-    std::cout << "    3. Town" << std::endl;
-    std::cout << "    4. City" << std::endl;
-    std::cout << "    5. Landmark" << std::endl;
+    std::cout << "    1. Beach    $" << std::endl;
+    std::cout << "    2. Animal   $$" << std::endl;
+    std::cout << "    3. Town     $$$" << std::endl;
+    std::cout << "    4. City     $$$$" << std::endl;
+    std::cout << "    5. Landmark $" << std::endl;
     std::cout << std::endl;
     std::cout << "    0. Exit" << std::endl;
     std::cout << std::endl;
@@ -418,15 +453,17 @@ void UI::takePhotos() {
     }
 
     std::cout << std::endl << std::endl;
-    Photo chosenSubject = POSSIBLE_PHOTOS[photoOption];
+    Photo chosenSubject = POSSIBLE_PHOTOS[photoOption - 1];
 
     int photosLeft = game.getVan().getAmountOfSupply(SUPPLY_PHOTOS);
     if (photosLeft < chosenSubject.photosTaken) {
-        std::cout << "Blimey, " << photosLeft << " photos isn't enough to shoot that. Buy Photos at the nearest Servo" << std::endl << std::endl;
+        std::cout << "Blimey, " << photosLeft << " photos isn't enough to shoot that. Buy Photos at the nearest Servo"
+                  << std::endl << std::endl;
         return;
     }
 
-    std::cout << "You chose " << chosenSubject.name << ", you have a " << (chosenSubject.probability*100) << "% chance of taking good photos" << std::endl;
+    std::cout << "You chose " << chosenSubject.name << ", you have a " << (chosenSubject.probability * 100)
+              << "% chance of taking good photos" << std::endl;
     std::cout << std::endl << "Calculating odds..." << std::endl;
     if (game.takePhotos(chosenSubject)) {
         std::cout << "Success, you took " << chosenSubject.photosTaken << " pictures of " << chosenSubject.name
@@ -437,6 +474,123 @@ void UI::takePhotos() {
     }
 
     std::cout << std::endl << std::endl;
+}
+
+void UI::fortunes() {
+    bool fortuneEventWillHappen = randomEvent(40);
+    if (!fortuneEventWillHappen) {
+        std::cout << "(DEBUG) no fortunes nor misfortunes" << std::endl;
+        return;
+    }
+
+    // If Around Halls Creek (near 2368-100=2268 and 7271+100=7371) you have a 5% chance of getting kidnapped
+    if (2268 <= game.traveledDistance() && game.traveledDistance() <= 7371
+        && randomEvent(CHANCE_OF_GETTING_KIDNAPPED)) {
+        gameOver(GAME_OVER_PLAYER_KIDNAPPED);
+        return;
+    }
+
+    // Either fortune or misfortune
+    bool fortune = randomEvent(50);
+
+
+    // MISFORTUNES
+    if (!fortune) {
+        std::cout << "(DEBUG) misfortunes" << std::endl;
+        bool healthRelated = randomEvent(100); //50
+        if (healthRelated) {
+            healthMisfortune();
+        } else {
+            vanMisfortune();
+        }
+
+    }
+        // FORTUNES
+    else {
+
+    }
+}
+
+void UI::healthMisfortune() {
+    // HEALTH RELATED MISFORTUNES (Randomly display Dehyration or motion sickness or Drop Bear or Snake)
+    const std::string healhMisfortuneDescription = HEALTH_MISFORTUNE_NAMES[randomBetween(0, 3)];
+
+    int affectedPlayerIndex = randomBetween(0, 1);
+    Player &player = game.getParty()[affectedPlayerIndex];
+
+    std::cout << std::endl << std::endl;
+    printBreakLine();
+    std::cout << "    STREWTH! A health misfortune has happened to " << player.getName() << std::endl;
+    printBreakLine();
+
+    int healthChange = 0;
+    int maxValidOption = 2;
+
+    std::cout << std::endl << "What would you like to do?" << std::endl
+              << std::endl;
+    std::cout << "1. Rest (lose 3 days, 30% chance of dying)" << std::endl;
+    std::cout << "2. Press-On (lose 0 days, 70% chance of dying)" << std::endl;
+
+    bool gotMedKit = game.getVan().getAmountOfSupply(SUPPLY_MEDICAL_KIT) > 0;
+    if (gotMedKit) {
+        std::cout << "3. Use MedKit and press-on (lose 0 days, 50% chance of dying)" << std::endl;
+        maxValidOption++;
+    }
+
+    int option = askIntQuestion("Pick an option number", 1, maxValidOption) - 1;
+    std::cout << std::endl << std::endl;
+    std::cout << "You chose to ";
+    if (option == UI_HEALTH_MENU_REST) {
+        healthChange = -30;
+        game.rest(false);
+        game.rest(false);
+        game.rest(false);
+        std::cout << "rest";
+    } else if (option == UI_HEALTH_MENU_PRESS_ON) {
+        healthChange = -70;
+        std::cout << "press-on";
+    } else if (gotMedKit && option == UI_HEALTH_MENU_MEDKIT) {
+        healthChange = -50;
+        game.getVan().modifySupplyAmount(SUPPLY_MEDICAL_KIT, -1);
+        std::cout << "use MedKit";
+    }
+
+    int updatedHealth = game.affectPlayerHealth(affectedPlayerIndex, healthChange);
+
+    std::cout << std::endl
+              << std::endl
+              << player.getName() << "'s health is now at " << updatedHealth << "%"
+              << std::endl << std::endl;
+    printBreakLine();
+    std::cout << std::endl << std::endl;
+}
+
+void UI::vanMisfortune() {
+    // VAN RELATED MISFORTUNES
+    // they all have the same chance
+    int randomIndex = randomBetween(0, POSSIBLE_VAN_MISFORTUNES.size() - 1);
+
+    VanMisfortune vanMisfortune = POSSIBLE_VAN_MISFORTUNES[randomIndex];
+
+    game.getVan().modifySupplyAmount(vanMisfortune.supplyId, -1);
+
+    int supplyAmountLeft = game.getVan().getAmountOfSupply(vanMisfortune.supplyId);
+
+    printBreakLine();
+    std::cout << "    STREWTH! A a van misfortune has happened" << std::endl;
+    printBreakLine();
+    std::cout << vanMisfortune.eventDescription << std::endl;
+
+    Supply affectedSupply = SUPPLY_CATALOG[vanMisfortune.supplyId];
+    std::cout << supplyAmountLeft << " " << affectedSupply.name << " " << affectedSupply.pluralUnitName << " left"
+              << std::endl;
+
+    printBreakLine();
+
+    if (vanMisfortune.minToSurvive > supplyAmountLeft) {
+        gameOver(vanMisfortune.gameOverCode);
+        return;
+    }
 }
 
 void UI::showBasicMenuOptions() {
@@ -481,8 +635,12 @@ void UI::showMilestoneMenuOptions(bool &servoOptionShown) {
 }
 
 void UI::gameOver(const unsigned int reason) {
-    std::cout << "Game Over Galah, because of reason: " << GAME_OVER_REASONS[reason] << std::endl;
-    std::cout << "Come again!!!" << std::endl << std::endl;
+    std::cout << std::endl;
+    printBreakLine();
+    std::cout << GAME_OVER_REASONS[reason] << std::endl << std::endl;
+    std::cout << "Game Over, Ooroo Drongo!" << std::endl;
+    printBreakLine();
+    std::cout << std::endl << std::endl;
     std::exit(0); //https://en.cppreference.com/w/cpp/utility/program/exit
 }
 

@@ -16,7 +16,3 @@ int Player::affectHealth(int healthChange) {
     health += healthChange;
     return health;
 }
-
-bool Player::operator==(const Player &other) const {
-    return other.getPlayerNumber() == getPlayerNumber();
-}
