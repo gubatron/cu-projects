@@ -729,14 +729,32 @@ void UI::showMilestoneMenuOptions(bool &servoOptionShown) {
 void UI::gameOver(const unsigned int reason) {
     std::cout << std::endl;
     printBreakLine();
-    std::cout << GAME_OVER_REASONS[reason] << std::endl << std::endl;
+    std::cout << GAME_OVER_REASONS[reason] << std::endl ;
     std::cout << "Game Over, Ooroo Drongo!" << std::endl;
     printBreakLine();
     std::cout << std::endl << std::endl;
+    printBreakLine();
     printPartyStatus();
     printVanSupplies();
+    // Print final score to file
+	printFinalStatus("results.txt", "finalStatus", true); USE TO CALL FUNCTION
     std::exit(0); //https://en.cppreference.com/w/cpp/utility/program/exit
 }
+
+// https ://stackoverflow.com/questions/26084885/appending-to-a-file-with-ofstream
+void UI::printFinalStatus(const std::string& fileName, const std::string& finalStatus, bool append = false) {
+		std::ofstream outfile;
+		if (append) {
+			outfile.open(fileName, std::ios_base::app);
+		} else {
+			outfile.open(fileName);
+		}
+		outfile << player1.getName() << ": " << game.traveledDistance() << " km traveled; " 
+		        << player1.getHealth() << " % health; "
+		        << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << " kgs of food; " 
+		        << "AUD $" << game.getVan().balance() << std::endl;
+	}
+
 
 // taken and modified from https://stackoverflow.com/questions/48711502/how-to-convert-stdstring-to-upper-case
 void UI::toLower(std::string &str) {
