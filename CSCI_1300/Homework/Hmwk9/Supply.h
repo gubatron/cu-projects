@@ -45,7 +45,7 @@ public:
 
 // The Servo's supply catalog. These instances are defined here and nowhere else and they cannot change, therefore
 // they are declared as an array of const Supply objects.
-const Supply SUPPLY_CATALOG[] = {
+const std::array<Supply, 8> SUPPLY_CATALOG {
 Supply(SUPPLY_FOOD, "Food", 0.5, 1, 90, "kg", "kgs"),
 Supply(SUPPLY_FUEL, "Fuel", 1.5, 36, 40, "liter", "liters"),
 Supply(SUPPLY_ENGINE, "Engine", 40, 1, 1, "engine", "engines"),

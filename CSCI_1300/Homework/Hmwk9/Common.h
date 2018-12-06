@@ -10,6 +10,7 @@
 #include <map>
 #include <sstream>
 #include <algorithm> // std::min
+#include <array>
 
 // MAX NUMBER OF PLAYERS THAT CAN BE ADDED TO THE PARTY
 const int MAX_NUMBER_OF_PLAYERS = 2;
