@@ -63,6 +63,8 @@ private:
     void showMilestoneMenuOptions(bool &servoOptionShown);
 
 	void gameOver(const unsigned int reason);
+
+    void printFinalStatus(const std::string& fileName, const std::string& finalStatus, bool append = false);
     
 	/** converts string to lower case */
     void toLower(std::string &str);

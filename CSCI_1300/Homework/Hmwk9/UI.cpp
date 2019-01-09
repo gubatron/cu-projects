@@ -737,24 +737,25 @@ void UI::gameOver(const unsigned int reason) {
     printPartyStatus();
     printVanSupplies();
     // Print final score to file
-	printFinalStatus("results.txt", "finalStatus", true); USE TO CALL FUNCTION
+	printFinalStatus("results.txt", "finalStatus", true); // USE TO CALL FUNCTION
     std::exit(0); //https://en.cppreference.com/w/cpp/utility/program/exit
 }
 
 // https ://stackoverflow.com/questions/26084885/appending-to-a-file-with-ofstream
-void UI::printFinalStatus(const std::string& fileName, const std::string& finalStatus, bool append = false) {
+void UI::printFinalStatus(const std::string& fileName, const std::string& finalStatus, bool append) {
 		std::ofstream outfile;
 		if (append) {
 			outfile.open(fileName, std::ios_base::app);
 		} else {
 			outfile.open(fileName);
 		}
+		auto party = game.getParty();
+		auto player1 = party[0];
 		outfile << player1.getName() << ": " << game.traveledDistance() << " km traveled; " 
 		        << player1.getHealth() << " % health; "
 		        << game.getVan().getAmountOfSupply(SUPPLY_FOOD) << " kgs of food; " 
-		        << "AUD $" << game.getVan().balance() << std::endl;
-	}
-
+		        << "AUD $" << game.getVan().balance() << std::endl;2
+}
 
 // taken and modified from https://stackoverflow.com/questions/48711502/how-to-convert-stdstring-to-upper-case
 void UI::toLower(std::string &str) {
