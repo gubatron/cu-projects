@@ -53,25 +53,16 @@ int * doubleArray(int **arrayPtr, int *capacity) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void getStopWords(const char *ignoreWordFilename, std::string ignoreWords[]) {
-    int bad_capacity = 10;
+    int capacity = 50;
     int *bad_arrayPtr;
 
     // Dynamically allocate space here for the array
-    bad_arrayPtr = new int[bad_capacity];
+    bad_arrayPtr = new int[capacity];
 
-    int numOfElement = 0;
+    int element = 0;
     std::string tempword;
-    int *arrayPtrDoubled;
     while (getline(ignoreWordFilename, tempword)) { // todo why is getline not working
-        int insert_badwords = stoi(tempword); // convert to int to put words into array
-        if (numOfElement == bad_capacity) {
-            // double array if there is not enough room
-            arrayPtrDoubled = doubleArray(&ignoreWords, &bad_capacity); // todo why is doubleArray not working?
-            ignoreWords[numOfElement] = *arrayPtrDoubled;// I need to take what I find and put it in a value so I can work with it right?
-        }
-        ignoreWords[numOfElement] = insert_badwords;
-        numOfElement++;
-        }
+        ignoreWords[element++] = tempword;
     }
 
 
