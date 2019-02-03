@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstdlib>
+#include <iomanip>
 
 /*OBJECTIVE
  * Read file with unknown size and store its contents in a dynamic array (use a struct)
@@ -30,132 +32,156 @@ struct wordItem {
  *      - allocate the array dynamically and copy values from old array to new array
  *      * DON'T use std::vector class - write it yourself*/
 
-int * doubleArray(int **arrayPtr, int *capacity) {
-    //increase the capacity by two times
-    auto newCapacity = *capacity * 2;
-
+void doubleArray(wordItem* &arrayPtr, int &capacity) {
     // dynamically allocate an array of size newCapacity
-    int *newArray = new int[newCapacity];
+    auto *newArray = new wordItem[capacity * 2];
 
     // copy all data from oldArray to newArray
-    for (int i = 0; i < *capacity; i++) {
-        int *ptr = *arrayPtr; // dereference arrayPtr to transfer contents
-        newArray[i] = ptr[i];
+    for (int i = 0; i < capacity; i++) {
+        newArray[i] = arrayPtr[i];
     }
     // free the memory associated with oldArray
-    delete[] *arrayPtr; // delete old array
+    delete[] arrayPtr; // delete old array
 
-    *arrayPtr = newArray; // re-reference the de-reference
-    *capacity = newCapacity;
-
-    return *arrayPtr; // the doubled array!
+    arrayPtr = newArray; // re-reference the de-reference
+    capacity *= 2;
 }
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void getStopWords(const char *ignoreWordFilename, std::string ignoreWords[]) {
-    int capacity = 50;
-    int *bad_arrayPtr;
-
-    // Dynamically allocate space here for the array
-    bad_arrayPtr = new int[capacity];
+void getStopWords(const char *ignoreWordFileName, std::string ignoreWords[]) {
 
     int element = 0;
     std::string tempword;
-    while (getline(ignoreWordFilename, tempword)) { // todo why is getline not working
+    std::ifstream input(ignoreWordFileName);
+
+    if (!input.is_open()) {
+        std::cout << "Failed to open " << ignoreWordFileName << std::endl;
+        // idea: mark the function as failed with "failed" on first ignoreWords element.
+        return;
+    }
+
+    while (getline(input, tempword) && element < 50) {
         ignoreWords[element++] = tempword;
     }
 
-
-    // if word is in ignoreWords[] return true
-    // do I need pointers for that array??
-
-    // store found words in an array
-    // use doubleArray as needed if ignoreWords[] needs more room
+    input.close();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool isStopWord(std::string word, std::string ignoreWords[]) {
-
+bool isStopWord(const std::string &word, std::string ignoreWords[]) {
+    for (int i = 0; i < 50; i++) {
+        std::string w = ignoreWords[i];
+        if (w == word) {
+            return true;
+        }
+    }
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int getTotalNumberNonStopWords(wordItem uniqueWords[], int length) {
-
+    int total = 0;
+    for (int i = 0; i < length; i++) {
+        total += uniqueWords[i].count;
+    }
+    return total;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void arraySort(wordItem uniqueWords[], int length) {
+void swap(wordItem *a, wordItem *b) {
+    wordItem temp = *a;
+    *a = *b;
+    *b = temp;
+}
 
+// Bubble sort
+void arraySort(wordItem arr[], int length) {
+    int i, j;
+    for (i = 0; i < length-1; i++)
+        for (j = 0; j < length-i-1; j++)
+            if (arr[j].count < arr[j+1].count)
+                swap(&arr[j], &arr[j+1]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+float probOfOcc(wordItem item, int totalWords){
+    return (float) item.count/totalWords;
+}
+
 void printTopN(wordItem uniqueWords[], int topN, int totalNumWords) {
-
+    // assume array is already sorted
+    for(int i = 0; i < topN; i++){
+        std::cout << std::fixed << std::setprecision(4) << probOfOcc(uniqueWords[i], totalNumWords) << " - " << uniqueWords[i].word.c_str() << std::endl;
+    }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+int findWord(const std::string &word, wordItem* items, int size){
+    for (int i = 0; i < size; i++){
+        if (word == items[i].word) return i;
+    }
+    return -1; // found nothing
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char *argv[]) {
-    if (argc != 3) {
+    if (argc != 4) {
         std::cout << "Usage: Assignment2Solution <number of words> <inputfilename.txt> <ignoreWordsfilename.txt>"
                   << std::endl;
         return -1;
     }
 
+    int topN = std::stoi(argv[1]);
+
+    // open file with words to ignorefile (index 3 argument)
+    char *ignorewords_filename = argv[3];
+    std::string ignoreWords[50];
+    getStopWords(ignorewords_filename, ignoreWords);
+
+
     // open file with good words (index 2 argument)
-    std::string readwords = argv[2];
-    std::ifstream words;
-    words.open(readwords.c_str());
+    char *words_filename = argv[2];
+    std::ifstream wordsfile(words_filename);
 
-
-    int capacity = 10;
-    int *arrayPtr;
+    int capacity = 100;
 
     // Dynamically allocate space here for the array
-    arrayPtr = new int[capacity]; // todo - do I need a delete for this new even if I have the delete already in the function the ptr is being used in
+    auto *items = new wordItem[capacity];
 
-
-    if (words.is_open()) {
-        int numOfElement = 0;
-        std::string tempword;
-        int *arrayPtrDoubled;
-        while (getline(words, tempword)) {
-            int insertWord = stoi(tempword); // convert to int to put words into array?
-            if (numOfElement == capacity) {
-                // double array if there is not enough room
-                arrayPtrDoubled = doubleArray(&arrayPtr, &capacity); // todo should I store the doubled array in arrayPtrDoubled
-                arrayPtr[numOfElement] = *arrayPtrDoubled;// I need to take what I find and put it in a value so I can work with it right?
+    if (!wordsfile.is_open()) {
+        std::cout << "Failed to open " << words_filename<< std::endl;
+    }
+    int size = 0; // used words inside the array
+    int doublings = 0;
+    std::string tempword;
+    while (getline(wordsfile, tempword, ' ')) {
+        if (isStopWord(tempword, ignoreWords)) continue;
+        int wordIndex = findWord(tempword, items, size);
+        // if not in the array, add wordItem into array and increment size
+        if (wordIndex == -1) {
+            wordItem item;
+            item.count = 1;
+            item.word = tempword;
+            items[size++] = item;
+            if (size == capacity) {
+                doubleArray(items, capacity);
+                doublings++;
             }
-            arrayPtr[numOfElement] = insertWord;
-            numOfElement++;
         }
-        words.close();
-    }
-
-    // open file with words to ignore (index 3 argument) // todo - maybe open file later when I need it
-    std::string ignorewords = argv[3];
-    std::ifstream ignore;
-    ignore.open(ignorewords.c_str()); // todo - remember to close at logical place
-
-    std::string *ignoreWords; // todo - to use in getStopWords? Should I declare it inside the while?
-
-    if (ignore.is_open()) {
-        int numOfElement = 0;
-        std::string tempword;
-        while (getline(ignore, tempword)) {
-            int ignore_badwords[] = stoi(tempword); // convert to int to put words into array
-            getStopWords(&ignore, &ignoreWords);
-
-            // call isStopWord() and compare words from words file
+            // if wordItem already appears in array, increment count
+        else {
+            items[wordIndex].count++;
         }
-        ignore.close();
     }
-
-
-    // get stop-words from ignoreWords.txt and store words in an array
-    // getStopWords();
-
-    // read words from HarryPotter.txt and store all unique words NOT in ignore-words in an array of structs
-    // dynamic word Item array of size 100 dynamic
-    // add non-ignore words to array (double size if array is full)
-    // keep track of number of times wordItem array is doubled and the number of unique non-ignore words
+    wordsfile.close();
+    arraySort(items, size);
+    std::cout << "Array doubled: " << doublings << std::endl;
+    std::cout << "#" << std::endl;
+    std::cout << "Unique non-common words: " << size << std::endl;
+    std::cout << "#" << std::endl;
+    std::cout << "Total non-common words: " << getTotalNumberNonStopWords(items, size) << std::endl;
+    std::cout << "#" << std::endl;
+    std::cout << "Probabilities of top " <<  topN << " most frequent words " << std::endl;
+    std::cout << "---------------------------------------" << std::endl;
+    printTopN(items, topN, getTotalNumberNonStopWords(items, size));
+    delete []items;
 }
+
