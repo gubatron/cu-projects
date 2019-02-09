@@ -219,7 +219,7 @@ void CountryNetwork::printPath() {
         cout << "nothing in path" << endl;
     }
     while (temp != NULL) {
-        cout << temp->name << "->";
+        cout << temp->name << " -> ";
         temp = temp->next;
     }
     cout << "NULL" << endl;
