@@ -156,7 +156,6 @@ Country *CountryNetwork::searchNetwork(string countryName) {
     while (curr != nullptr) {
         if (curr->name == countryName) return curr;
         curr = curr->next;
-        return curr;
     }
     return nullptr;
 }
