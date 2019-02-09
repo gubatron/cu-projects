@@ -6,4 +6,4 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_BUILD_TYPE Debug)
 
 #indicate the entry point for the executable
-add_executable(CountryNetwork CountryNetwork.cpp CountryNetwork.hpp main.cpp)
+add_executable(CountryNetwork CountryNetwork.cpp main.cpp)
