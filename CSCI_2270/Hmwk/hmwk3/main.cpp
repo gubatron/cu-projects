@@ -13,7 +13,9 @@ void displayMenu();
 
 int main(int argc, char* argv[])
 {
-
+  CountryNetwork network;
+  network.insertCountry(NULL, "USA");
+  network.printPath();
 }
 
 /*

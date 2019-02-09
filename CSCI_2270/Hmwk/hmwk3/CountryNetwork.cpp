@@ -40,11 +40,34 @@ bool CountryNetwork::isEmpty() {
  * @return none
  */
 void CountryNetwork::insertCountry(Country* previous, std::string countryName) {
-    Country *newCountry = new Country();
+    auto newCountry = new Country();
     newCountry->name = countryName;
     newCountry->message = "";
     newCountry->numberMessages = 0;
-    previous->next = newCountry;
+    newCountry->next = NULL;
+    if (previous == NULL) {
+        std::cout << "adding: " << countryName << " (HEAD)" << std::endl;
+
+        // if we already had something in the list, let's not lose the list
+        if (head != NULL) { // list is not empty
+            // make a copy of the head pointer
+            Country *headCopy = head;
+            // our new country points to the old head (head's copy)
+            newCountry->next = headCopy;
+        }
+
+        // now make the head point to the new country
+        head = newCountry;
+    }
+    else {
+        std::cout << "adding: " << countryName << " (prev: " << previous->name << ")" << std::endl;
+        if (head == NULL) { // list is empty
+            head = previous;
+            head->next = newCountry;
+        } else {
+            previous->next = newCountry;
+        }
+    }
 }
 /****************************************************************/
 /****************************************************************/
