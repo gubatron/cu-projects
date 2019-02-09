@@ -39,17 +39,17 @@ bool CountryNetwork::isEmpty() {
  * @param countryName name of the new Country
  * @return none
  */
-void CountryNetwork::insertCountry(Country* previous, std::string countryName) {
+void CountryNetwork::insertCountry(Country *previous, std::string countryName) {
     auto newCountry = new Country();
     newCountry->name = countryName;
     newCountry->message = "";
     newCountry->numberMessages = 0;
-    newCountry->next = NULL;
-    if (previous == NULL) {
+    newCountry->next = nullptr;
+    if (previous == nullptr) {
         std::cout << "adding: " << countryName << " (HEAD)" << std::endl;
 
         // if we already had something in the list, let's not lose the list
-        if (head != NULL) { // list is not empty
+        if (head != nullptr) { // list is not empty
             // make a copy of the head pointer
             Country *headCopy = head;
             // our new country points to the old head (head's copy)
@@ -58,15 +58,14 @@ void CountryNetwork::insertCountry(Country* previous, std::string countryName) {
 
         // now make the head point to the new country
         head = newCountry;
-    }
-    else {
+    } else {
         std::cout << "adding: " << countryName << " (prev: " << previous->name << ")" << std::endl;
-        if (head == NULL) { // list is empty
+        if (head == nullptr) { // list is empty
             head = previous;
             head->next = newCountry;
         } else {
             // is previous the last one?
-            if (previous->next == NULL) {
+            if (previous->next == nullptr) {
                 // then we are the last one
                 previous->next = newCountry;
             } else {
@@ -87,55 +86,37 @@ void CountryNetwork::insertCountry(Country* previous, std::string countryName) {
  */
 void CountryNetwork::deleteCountry(string countryName) {
     // TRAVERSE list to find the node with name countryName then delete it
-    Country *head;
     Country *curr = head;
+    Country *prev = nullptr;
 
-    // if list is empty
-    isEmpty();
-
-    if (curr == nullptr) {
-        cout << "Country does not exist" << endl;
-        return;
-    }
     while (curr != nullptr) {
         if (curr->name == countryName) {
-            curr = curr->next;
-            // if at the head
-            if (head->name == countryName) {
-                Country *temp = head;
-                head = head->next;
-                delete temp;
+
+            if (prev == nullptr) {
+                // we're at the head, delete it and keep the rest of the list.
+                auto oldHead = curr; // keep it to delete it
+                head = curr->next; // move the head
+                delete oldHead; // delete old node pointed by head previously
+                return;
             }
-                // either tail or middle
-            else {
-                Country *prev = head;
-                curr = prev->next;
-                bool isFound = false;
-                while (curr != nullptr && !isFound) {
-                    if (curr->name == countryName) {
-                        if (curr->next == nullptr) {
-                            // tail node
-                            prev->next = nullptr;
-                            // tail = prev;
-                        } else {
-                            prev->next = curr->next;
-                        }
-                        delete curr;
-                        isFound = true;
-                    } else {
-                        prev = curr;
-                        curr = curr->next;
-                        delete prev; // todo where do I delete? time limit exceeded ERROR
-                    }
-                }
-            }
+
+            // Now, let's unlink the current one, and point
+            // the previous to the next of current
+            prev->next = curr->next;
+            delete curr;
         }
+        prev = curr;
+        curr = curr->next;
     }
+    cout << "Country does not exist." << endl;
 }
 /****************************************************************/
 /****************************************************************/
 /*
  * Purpose: populates the network with the predetermined countries
+ * First, delete whatever is in the linked list using the member function
+deleteEntireNetwork. Then add the following six countries, in order, to the network with
+insertCountry: "United States", "Canada", "Brazil", "India", "China", "Austraila"
  * @param none
  * @return none
  */
@@ -176,12 +157,21 @@ Country *CountryNetwork::searchNetwork(string countryName) {
  * @return none
  */
 void CountryNetwork::deleteEntireNetwork() {
-    // if list is empty, do nothing and return
-    // else, delete every node in linked list; set head to NULL
-    // print name of each node as you delete it
-    // cout << "deleting: " << node->name << endl;
-    // after entire linked list is delete, print:
-    // cout << "Deleted network" << endl;
+    Country *temp = head->next;
+    Country *prev = nullptr;
+    string countryName = head->name;
+
+    // delete every node in linked list and set head to nullptr
+    while(temp!=nullptr) {
+        head->next = temp->next;
+        temp->next =  nullptr;
+        free(temp);
+        cout << "deleting: " << head->name << endl;
+        temp = head->next;
+    }
+    head = nullptr;
+    // after entire linked list is deleted, print:
+    cout << "Deleted network" << endl;
 }
 /****************************************************************/
 /****************************************************************/
@@ -219,11 +209,11 @@ void CountryNetwork::transmitMsg(string receiver, string message) {
  * @param ptr head of list
  */
 void CountryNetwork::printPath() {
-    Country* temp = head;
+    Country *temp = head;
 
     cout << "== CURRENT PATH ==" << endl;
 
-    if (isEmpty()){
+    if (isEmpty()) {
         cout << "nothing in path" << endl;
     }
     while (temp != NULL) {
