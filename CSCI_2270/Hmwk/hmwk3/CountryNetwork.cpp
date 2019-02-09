@@ -211,7 +211,17 @@ void CountryNetwork::transmitMsg(string receiver, string message) {
  * @param ptr head of list
  */
 void CountryNetwork::printPath() {
-    // if network is empty, print "nothing in path"
+    Country* temp = head;
+
     cout << "== CURRENT PATH ==" << endl;
+
+    if (isEmpty()){
+        cout << "nothing in path" << endl;
+    }
+    while (temp != NULL) {
+        cout << temp->name << "->";
+        temp = temp->next;
+    }
+    cout << "NULL" << endl;
     cout << "===" << endl;
 }
