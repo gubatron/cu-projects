@@ -158,7 +158,6 @@ Country *CountryNetwork::searchNetwork(string countryName) {
  */
 void CountryNetwork::deleteEntireNetwork() {
     Country *temp = head->next;
-    Country *prev = nullptr;
     string countryName = head->name;
 
     // delete every node in linked list and set head to nullptr
@@ -176,13 +175,24 @@ void CountryNetwork::deleteEntireNetwork() {
 /****************************************************************/
 /****************************************************************/
 /*
- * Purpose: reverse the entire network t
+ * Purpose: reverse the entire network
  * @param ptr head of list
  */
 void CountryNetwork::reverseEntireNetwork() {
+    if (head == nullptr) return;
 
+    Country *prev = nullptr;
+    Country *curr = head;
+    Country *next = nullptr;
+    while (curr != nullptr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    head = prev; // point head at the last nod
 }
-/****************************************************************/
+/**e**************************************************************/
 /****************************************************************/
 /*
  * Purpose: Transmit a message across the network to the
