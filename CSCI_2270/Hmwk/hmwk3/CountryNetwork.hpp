@@ -26,7 +26,7 @@ class CountryNetwork {
         // See writeup for method descriptions
         CountryNetwork();
         bool isEmpty();
-        void insertCountry(Country* previous, Country *countryName);
+        void insertCountry(Country* previous, std::string countryName);
         void deleteCountry(std::string countryName);
         void loadDefaultSetup();
         Country* searchNetwork(std::string countryName);

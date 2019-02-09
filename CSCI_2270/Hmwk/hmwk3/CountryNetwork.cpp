@@ -39,8 +39,12 @@ bool CountryNetwork::isEmpty() {
  * @param countryName name of the new Country
  * @return none
  */
-void CountryNetwork::insertCountry(Country* previous, Country *countryName) {
-    previous->next = countryName;
+void CountryNetwork::insertCountry(Country* previous, std::string countryName) {
+    Country *newCountry = new Country();
+    newCountry->name = countryName;
+    newCountry->message = "";
+    newCountry->numberMessages = 0;
+    previous->next = newCountry;
 }
 /****************************************************************/
 /****************************************************************/
