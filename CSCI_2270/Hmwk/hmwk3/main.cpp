@@ -14,7 +14,20 @@ void displayMenu();
 int main(int argc, char* argv[])
 {
   CountryNetwork network;
-  network.insertCountry(NULL, "USA");
+  network.insertCountry(NULL, "United States");
+  Country *USA = network.searchNetwork("United States");
+  network.insertCountry(USA, "Canada");
+  Country *canada = network.searchNetwork("Canada");
+  network.insertCountry(canada, "Brazil");
+  Country *brazil = network.searchNetwork("Brazil");
+  network.insertCountry(brazil, "India");
+  Country *india = network.searchNetwork("India");
+  network.insertCountry(india, "China");
+  Country *china = network.searchNetwork("China");
+  network.insertCountry(china, "Australia");
+  network.printPath();
+
+  network.insertCountry(brazil, "Colombia");
   network.printPath();
 }
 

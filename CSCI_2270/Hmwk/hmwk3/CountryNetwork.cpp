@@ -65,7 +65,16 @@ void CountryNetwork::insertCountry(Country* previous, std::string countryName) {
             head = previous;
             head->next = newCountry;
         } else {
-            previous->next = newCountry;
+            // is previous the last one?
+            if (previous->next == NULL) {
+                // then we are the last one
+                previous->next = newCountry;
+            } else {
+                // previous is not the last one, we gotta go in between
+                auto tail = previous->next;
+                previous->next = newCountry;
+                newCountry->next = tail;
+            }
         }
     }
 }
