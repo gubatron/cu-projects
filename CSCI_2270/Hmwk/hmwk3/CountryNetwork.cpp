@@ -39,22 +39,8 @@ bool CountryNetwork::isEmpty() {
  * @param countryName name of the new Country
  * @return none
  */
-void CountryNetwork::insertCountry(Country *previous, Country countryName) {
-    previous->next = &countryName;
-//    auto prev = /*searchNetwork(countryName);*/previous; // apply search function??
-//    auto *value = new Country(std::move(countryName));
-//
-//    if (prev == nullptr) {
-//        value->next = head;
-//        head = value;
-//        if (prev == nullptr) prev = head;
-//    } else if (prev->next == nullptr) {
-//        prev->next = value;
-//        // tail = value;
-//    } else {
-//        value->next = prev->next;
-//        prev->next = value;
-//    }
+void CountryNetwork::insertCountry(Country* previous, Country *countryName) {
+    previous->next = countryName;
 }
 /****************************************************************/
 /****************************************************************/
