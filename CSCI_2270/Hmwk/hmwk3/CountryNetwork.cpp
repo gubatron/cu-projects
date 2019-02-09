@@ -27,9 +27,7 @@ CountryNetwork::CountryNetwork() {
  * @return true if empty; else false
  */
 bool CountryNetwork::isEmpty() {
-    if (head == nullptr) return true;
-    return false;
-    // todo is this the same as saying  return head == nullptr; ?
+    return head == nullptr;
 }
 /****************************************************************/
 /****************************************************************/
@@ -42,21 +40,21 @@ bool CountryNetwork::isEmpty() {
  * @return none
  */
 void CountryNetwork::insertCountry(Country *previous, Country countryName) {
-    Country *head = nullptr;
-    auto prev = /*searchNetwork(countryName);*/previous; // apply search function??
-    auto *value = new Country(std::move(countryName));
-
-    if (prev == nullptr) {
-        value->next = head;
-        head = value;
-        if (prev == nullptr) prev = head;
-    } else if (prev->next == nullptr) {
-        prev->next = value;
-        // tail = value;
-    } else {
-        value->next = prev->next;
-        prev->next = value;
-    }
+    previous->next = &countryName;
+//    auto prev = /*searchNetwork(countryName);*/previous; // apply search function??
+//    auto *value = new Country(std::move(countryName));
+//
+//    if (prev == nullptr) {
+//        value->next = head;
+//        head = value;
+//        if (prev == nullptr) prev = head;
+//    } else if (prev->next == nullptr) {
+//        prev->next = value;
+//        // tail = value;
+//    } else {
+//        value->next = prev->next;
+//        prev->next = value;
+//    }
 }
 /****************************************************************/
 /****************************************************************/
@@ -71,7 +69,7 @@ void CountryNetwork::deleteCountry(string countryName) {
     Country *curr = head;
 
     // if list is empty
-    if (head == nullptr) return;
+    isEmpty();
 
     if (curr == nullptr) {
         cout << "Country does not exist" << endl;
