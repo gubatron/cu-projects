@@ -201,17 +201,20 @@ void CountryNetwork::reverseEntireNetwork() {
  * @return none
  */
 void CountryNetwork::transmitMsg(string receiver, string message) {
-    // traverse list from head to node with name receiver
-    Country *prev = head;
-    Country *curr = nullptr;
-    // for each node in this path (including head) set node's message to msg
-    // and increment node's numberMessages field.
-    // at each node report the message received and the number of messages received
-    // cout << node->name << " [# messages received: " <<
-    // node->numberMessages << "] received: " << node->message << endl;
 
     // if empty, print "Empty list" and exit function
-
+    if (head == nullptr) {
+        std::cout << "Empty list" << std::endl;
+        return;
+    }
+    Country *curr = head;
+    while (curr != nullptr) {
+        curr->message = message;
+        curr->numberMessages++;
+        std::cout << curr->name << " [# messages received: " << curr->numberMessages << "] received: " << curr->message << std::endl;
+        if (curr->name == receiver) return;
+        curr = curr->next;
+    }
 }
 /****************************************************************/
 /****************************************************************/
