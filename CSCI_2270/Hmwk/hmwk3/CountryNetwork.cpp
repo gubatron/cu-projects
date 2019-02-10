@@ -173,32 +173,15 @@ Country *CountryNetwork::searchNetwork(string countryName) {
  * @return none
  */
 void CountryNetwork::deleteEntireNetwork() {
-    Country *temp = head;
-    while (temp != nullptr){
-        head = temp->next;
+    while (head != nullptr){
+        auto temp = head;
+        head = head->next;
+        cout << "deleting: " << temp->name << endl;
         delete temp;
-        cout << "deleting: " << head->name << endl;
-        temp = head;
     }
-    // head = nullptr;
-    delete head;
+    head = nullptr;
     // after entire linked list is delete, print:
     cout << "Deleted network" << endl;
-
-//    Country *temp = head->next;
-//    string countryName = head->name;
-//
-//// delete every node in linked list and set head to nullptr
-//    while(temp!=nullptr) {
-//        head->next = temp->next;
-//        temp->next =  nullptr;
-//        free(temp);
-//        cout << "deleting: " << head->name << endl;
-//        temp = head->next;
-//    }
-//    head = nullptr;
-//    // after entire linked list is delete, print:
-//    cout << "Deleted network" << endl;
 }
 /****************************************************************/
 /****************************************************************/
@@ -232,6 +215,8 @@ void CountryNetwork::reverseEntireNetwork() {
  */
 void CountryNetwork::transmitMsg(string receiver, string message) {
     // traverse list from head to node with name receiver
+    Country *prev = head;
+    Country *curr = nullptr;
     // for each node in this path (including head) set node's message to msg
     // and increment node's numberMessages field.
     // at each node report the message received and the number of messages received
