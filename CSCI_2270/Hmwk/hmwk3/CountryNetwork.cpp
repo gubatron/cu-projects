@@ -122,16 +122,19 @@ insertCountry: "United States", "Canada", "Brazil", "India", "China", "Austraila
  */
 void CountryNetwork::loadDefaultSetup() {
     // delete whatever is in the linked list using deleteEntireNetwork
-    string name; // why not Country name??
-    deleteCountry(name);
+    deleteEntireNetwork();
     // add the countries to network using insertCountry
-//    insertCountry("United States"); // what do I put as previous???
-//    insertCountry("Canada");
-//    insertCountry("Brazil");
-//    insertCountry("India");
-//    insertCountry("China");
-//    insertCountry("Australia")
-
+    insertCountry(nullptr, "United States");
+    Country *USA = searchNetwork("United States");
+    insertCountry(USA, "Canada");
+    Country *canada = searchNetwork("Canada");
+    insertCountry(canada, "Brazil");
+    Country *brazil = searchNetwork("Brazil");
+    insertCountry(brazil, "India");
+    Country *india = searchNetwork("India");
+    insertCountry(india, "China");
+    Country *china = searchNetwork("China");
+    insertCountry(china, "Australia");
 }
 /****************************************************************/
 /****************************************************************/
@@ -157,20 +160,32 @@ Country *CountryNetwork::searchNetwork(string countryName) {
  * @return none
  */
 void CountryNetwork::deleteEntireNetwork() {
-    Country *temp = head->next;
-    string countryName = head->name;
-
-    // delete every node in linked list and set head to nullptr
-    while(temp!=nullptr) {
-        head->next = temp->next;
-        temp->next =  nullptr;
-        free(temp);
+    Country *temp = head;
+    while (temp != nullptr){
+        head = temp->next;
+        delete temp;
         cout << "deleting: " << head->name << endl;
-        temp = head->next;
+        temp = head;
     }
-    head = nullptr;
-    // after entire linked list is deleted, print:
+    // head = nullptr;
+    delete head;
+    // after entire linked list is delete, print:
     cout << "Deleted network" << endl;
+
+//    Country *temp = head->next;
+//    string countryName = head->name;
+//
+//// delete every node in linked list and set head to nullptr
+//    while(temp!=nullptr) {
+//        head->next = temp->next;
+//        temp->next =  nullptr;
+//        free(temp);
+//        cout << "deleting: " << head->name << endl;
+//        temp = head->next;
+//    }
+//    head = nullptr;
+//    // after entire linked list is delete, print:
+//    cout << "Deleted network" << endl;
 }
 /****************************************************************/
 /****************************************************************/
@@ -190,9 +205,9 @@ void CountryNetwork::reverseEntireNetwork() {
         prev = curr;
         curr = next;
     }
-    head = prev; // point head at the last nod
+    head = prev; // point head at the last node
 }
-/**e**************************************************************/
+/****************************************************************/
 /****************************************************************/
 /*
  * Purpose: Transmit a message across the network to the
@@ -211,6 +226,7 @@ void CountryNetwork::transmitMsg(string receiver, string message) {
     // node->numberMessages << "] received: " << node->message << endl;
 
     // if empty, print "Empty list" and exit function
+
 }
 /****************************************************************/
 /****************************************************************/
@@ -226,7 +242,7 @@ void CountryNetwork::printPath() {
     if (isEmpty()) {
         cout << "nothing in path" << endl;
     }
-    while (temp != NULL) {
+    while (temp != nullptr) {
         cout << temp->name << " -> ";
         temp = temp->next;
     }

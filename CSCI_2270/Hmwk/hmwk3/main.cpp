@@ -14,7 +14,7 @@ void displayMenu();
 int main(int argc, char* argv[])
 {
   CountryNetwork network;
-  network.insertCountry(NULL, "United States");
+  network.insertCountry(nullptr, "United States");
   Country *USA = network.searchNetwork("United States");
   network.insertCountry(USA, "Canada");
   Country *canada = network.searchNetwork("Canada");
