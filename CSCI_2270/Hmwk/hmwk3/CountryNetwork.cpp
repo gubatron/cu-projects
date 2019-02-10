@@ -160,7 +160,7 @@ Country *CountryNetwork::searchNetwork(string countryName) {
  * @return none
  */
 void CountryNetwork::deleteEntireNetwork() {
-    while (head != nullptr){
+    while (head != nullptr) {
         auto temp = head;
         head = head->next;
         cout << "deleting: " << temp->name << endl;
@@ -182,7 +182,7 @@ void CountryNetwork::reverseEntireNetwork() {
     Country *prev = nullptr;
     Country *curr = head;
     Country *next = nullptr;
-    while (curr != nullptr) {
+    while (curr != nullptr) { // while not at the end
         next = curr->next;
         curr->next = prev;
         prev = curr;
@@ -211,7 +211,8 @@ void CountryNetwork::transmitMsg(string receiver, string message) {
     while (curr != nullptr) {
         curr->message = message;
         curr->numberMessages++;
-        std::cout << curr->name << " [# messages received: " << curr->numberMessages << "] received: " << curr->message << std::endl;
+        std::cout << curr->name << " [# messages received: " << curr->numberMessages << "] received: " << curr->message
+                  << std::endl;
         if (curr->name == receiver) return;
         curr = curr->next;
     }
