@@ -168,7 +168,7 @@ void CountryNetwork::deleteEntireNetwork() {
     }
     head = nullptr;
     // after entire linked list is delete, print:
-    cout << "Deleted network" << endl;
+    //cout << "Deleted network" << endl;
 }
 /****************************************************************/
 /****************************************************************/
@@ -234,7 +234,7 @@ void CountryNetwork::printPath() {
     while (temp != nullptr) {
         cout << temp->name << " -> ";
         temp = temp->next;
+        if (temp == nullptr) cout << "NULL" << endl;
     }
-    cout << "NULL" << endl;
     cout << "===" << endl;
 }
