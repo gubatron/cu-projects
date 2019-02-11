@@ -33,7 +33,6 @@ int main(int argc, char *argv[]) {
                 intChoice = stoi(choice);
             } catch (std::invalid_argument &e) {
                 intChoice = -1;
-                cout << "#> ";
             }
         }
 
