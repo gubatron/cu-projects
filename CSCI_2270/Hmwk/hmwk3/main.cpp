@@ -65,6 +65,9 @@ int main(int argc, char *argv[]) {
                 while (temp == nullptr) {
                     cout << "INVALID country...Please enter a VALID previous country name:" << endl;
                     getline(cin, previous);
+                    if (previous == "First") {
+                        break;
+                    }
                     temp = network.searchNetwork(previous);
                 }
                 cout << endl;
