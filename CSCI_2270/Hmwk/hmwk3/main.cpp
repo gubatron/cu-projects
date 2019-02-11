@@ -26,15 +26,11 @@ int main(int argc, char *argv[]) {
 
     while (intChoice != 8) {
         displayMenu();
-        intChoice = -1;
-        while (intChoice == -1) {
-            getline(cin, choice);
-            try {
-                intChoice = stoi(choice);
-            } catch (std::invalid_argument &e) {
-                intChoice = -1;
-                cout << "#> ";
-            }
+        getline(cin, choice);
+        try {
+            intChoice = stoi(choice);
+        } catch (std::invalid_argument &e) {
+            intChoice = -1;
         }
 
         switch (intChoice) {
