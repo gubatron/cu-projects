@@ -60,6 +60,7 @@ int main(int argc, char *argv[]) {
                 getline(cin, newCountry);
                 cout << "Enter the previous country name (or First):" << endl;
                 getline(cin, previous);
+                temp = nullptr;
                 if (previous != "First") {
                     temp = network.searchNetwork(previous);
                     // if previous not found in the list, print INVALID
