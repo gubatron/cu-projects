@@ -15,6 +15,7 @@ void displayMenu();
 int main(int argc, char *argv[]) {
     CountryNetwork network;
 
+    int intChoice=-1;
     string choice;
     string name;
     string message;
@@ -23,10 +24,20 @@ int main(int argc, char *argv[]) {
 
     Country *temp;     // for searchNetwork case 4
 
-    while (choice != "8") {
+    while (intChoice != 8) {
         displayMenu();
-        getline(cin, choice);
-        switch (stoi(choice)) {
+        intChoice = -1;
+        while (intChoice == -1) {
+            getline(cin, choice);
+            try {
+                intChoice = stoi(choice);
+            } catch (std::invalid_argument &e) {
+                intChoice = -1;
+                cout << "#> ";
+            }
+        }
+
+        switch (intChoice) {
             case 1: // Build Network
                 network.loadDefaultSetup();
                 network.printPath();
