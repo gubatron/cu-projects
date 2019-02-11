@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
                 getline(cin, previous);
                 temp = network.searchNetwork(previous);
                 // if previous not found in the list, print INVALID
-                while (temp != nullptr) {
+                while (temp == nullptr) {
                     cout << "INVALID country...Please enter a VALID previous country name:" << endl;
                     getline(cin, previous);
                     temp = network.searchNetwork(previous);
