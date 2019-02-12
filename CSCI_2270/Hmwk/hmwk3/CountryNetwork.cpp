@@ -108,7 +108,6 @@ void CountryNetwork::deleteCountry(string countryName) {
         prev = curr;
         curr = curr->next;
     }
-    cout << "Country does not exist." << endl;
 }
 /****************************************************************/
 /****************************************************************/
@@ -165,10 +164,10 @@ void CountryNetwork::deleteEntireNetwork() {
         head = head->next;
         cout << "deleting: " << temp->name << endl;
         delete temp;
+        if (isEmpty()) cout << "Deleted network" << endl;
     }
     head = nullptr;
     // after entire linked list is delete, print:
-    //cout << "Deleted network" << endl;
 }
 /****************************************************************/
 /****************************************************************/

@@ -26,14 +26,11 @@ int main(int argc, char *argv[]) {
 
     while (intChoice != 8) {
         displayMenu();
-        intChoice = -1;
-        while (intChoice == -1) {
-            getline(cin, choice);
-            try {
-                intChoice = stoi(choice);
-            } catch (std::invalid_argument &e) {
-                intChoice = -1;
-            }
+        getline(cin, choice);
+        try {
+            intChoice = stoi(choice);
+        } catch (std::invalid_argument &e) {
+            intChoice = -1;
         }
 
         switch (intChoice) {
@@ -63,12 +60,18 @@ int main(int argc, char *argv[]) {
                 getline(cin, newCountry);
                 cout << "Enter the previous country name (or First):" << endl;
                 getline(cin, previous);
-                temp = network.searchNetwork(previous);
-                // if previous not found in the list, print INVALID
-                while (temp == nullptr) {
-                    cout << "INVALID country...Please enter a VALID previous country name:" << endl;
-                    getline(cin, previous);
+                temp = nullptr;
+                if (previous != "First") {
                     temp = network.searchNetwork(previous);
+                    // if previous not found in the list, print INVALID
+                    while (temp == nullptr) {
+                        cout << "INVALID country...Please enter a VALID previous country name:" << endl;
+                        getline(cin, previous);
+                        if (previous == "First") {
+                            break;
+                        }
+                        temp = network.searchNetwork(previous);
+                    }
                 }
                 cout << endl;
                 network.insertCountry(temp, newCountry);
@@ -79,7 +82,14 @@ int main(int argc, char *argv[]) {
             case 5: // Delete Country
                 cout << "Enter a country name:" << endl;
                 getline(cin, name);
-                network.deleteCountry(name);
+                // if name is in list, delete it; else, not found
+                temp = network.searchNetwork(name);
+                if (temp == nullptr){
+                    cout << "Country does not exist." << endl;
+                }
+                else{
+                    network.deleteCountry(name);
+                }
                 network.printPath();
                 cout << endl;
                 break;
@@ -92,7 +102,6 @@ int main(int argc, char *argv[]) {
 
             case 7: // Clear Network
                 network.deleteEntireNetwork();
-                cout << "Deleted network" << endl;
                 cout << endl;
                 break;
 
@@ -100,7 +109,6 @@ int main(int argc, char *argv[]) {
                 cout << "Quitting... cleaning up path: " << endl;
                 network.printPath();
                 network.deleteEntireNetwork();
-                cout << "Deleted network" << endl;
 
                 if (network.isEmpty()) cout << "Path cleaned" << endl;
                 else cout << "Error: Path NOT cleaned" << endl;
