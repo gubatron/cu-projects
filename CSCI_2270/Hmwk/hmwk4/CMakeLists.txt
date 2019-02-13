@@ -10,7 +10,7 @@ set(SOURCE_FILES
     RPNCalculator.cpp
     RPNCalculatorDriver.cpp
     ProducerConsumer.cpp
-    ProducerCOnsumerDriver.cpp
+    ProducerConsumerDriver.cpp
     )
 
 add_executable(rpncalc ${SOURCE_FILES})
