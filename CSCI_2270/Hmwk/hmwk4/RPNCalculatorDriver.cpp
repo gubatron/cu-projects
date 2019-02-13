@@ -34,14 +34,15 @@ bool isNumber(string s)
 
 int main()
 {
-  // TODO - Declare a stack to hold the operands
-  
+  // $ Declare a stack to hold the operands
+  RPNCalculator Operand;
+
   cout << "Enter the operators and operands ('+', '*') in a postfix format" << endl;
 
   while(true)
   {
     cout << "#> ";
-    /* TODO
+    /* $ TODO
        1. Read input (operators and operands) until you encounter a "="
        2. Use the isNumber function to check if the input is an operand
        3. push all operands to the stack
@@ -51,7 +52,7 @@ int main()
 
   }
 
-  /* TODO - If the stack is empty then print "No operands: Nothing to evaluate" */
+  /* $ TODO - If the stack is empty then print "No operands: Nothing to evaluate" */
 
   /* TODO - Validate the expression
       1. If valid then print the result

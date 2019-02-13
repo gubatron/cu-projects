@@ -1,17 +1,15 @@
 #ifndef STACKLL_H
 #define STACKLL_H
 
-class StackLL
-{
+class StackLL {
 private:
-    struct Node
-    {
+    struct Node {
         char key;
         Node *next;
     };
 
     // pocharer to item to be popped next
-    Node* stackHead;
+    Node *stackHead;
 
 public:
     StackLL() {
