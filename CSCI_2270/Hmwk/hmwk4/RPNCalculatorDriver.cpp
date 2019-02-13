@@ -6,6 +6,7 @@
 
 //#include "RPNCalculator.hpp"
 #include <iostream>
+#include "RPNCalculator.hpp"
 // you may include more libraries as needed
 
 using namespace std;
@@ -35,7 +36,7 @@ bool isNumber(string s)
 int main()
 {
   // $ Declare a stack to hold the operands
-  RPNCalculator Operand;
+    RPNCalculator operand;
 
   cout << "Enter the operators and operands ('+', '*') in a postfix format" << endl;
 

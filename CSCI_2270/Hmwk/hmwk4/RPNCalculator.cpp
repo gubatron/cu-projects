@@ -1,6 +1,7 @@
 //
 // Created by Nicole Leon on 2/11/2019.
 //
+#include <iostream>
 #include "RPNCalculator.hpp"
 
 RPNCalculator::RPNCalculator() {
@@ -18,10 +19,10 @@ bool RPNCalculator::isEmpty() {
 }
 
 void RPNCalculator::push(float num) {
-    Operand *op = new Operand;
+    auto *op = new Operand;
     op->number = num;
     op->next = nullptr;
-    op->next = stackhead;
+    op->next = stackHead;
     stackHead = op;
 }
 
@@ -36,7 +37,7 @@ void RPNCalculator::pop() {
 }
 
 Operand *RPNCalculator::peek() {
-    if (!isEmpty()) return stackhead->number;
+    if (!isEmpty()) return stackHead;
     else {
         std::cout << "Stack empty, cannot peek." << std::endl;
         return nullptr;
@@ -45,7 +46,7 @@ Operand *RPNCalculator::peek() {
 
 
 /*
-➔Perform the arithmetic operation symbol, which will be either “+” or “*”, on the top 2
+Perform the arithmetic operation symbol, which will be either “+” or “*”, on the top 2
 numbers in the stack. The return value indicates whether the operation was carried out
 successfully
 ➔ If symbol is not “+” or “*”, print "err: invalid operation" and return false
@@ -58,17 +59,36 @@ successfully
 ➔ Perform the arithmetic operation symbol on those two elements and push the result to
 the stack*/
 bool RPNCalculator::compute(std::string symbol) {
-    int a, b, value;
-    cin >> symbol;
+    // Store the floats from the top two elements in the stack in local variables and pop them.
+    // TODO How do you store the float?
 
-    if (symbol == '+' || symbol == '*') {
+    Operand *a = stackHead = nullptr; // todo ??
+    Operand *b = a - 1; // to do how do I create these properly to assign them to float number
+                                // and point them to the the last two elements of the stack? I only have stackhead.
+                                // do a = stackHead = nullptr and b = a - 1???
+    Operand *value = nullptr;
 
-        return value;
+    std::cin >> symbol;
+
+    if (symbol == "+" || symbol == "*") {
+        if (isEmpty()) {
+            std::cout << "err: not enough operands" << std::endl;
+            return false;
+        }
+         //stack is not empty
+         // pop last value and assign to a
+             //if (isEmpty()) {
+             //    std::cout << "err: not enough operands" << std::endl;
+             //    return false;
+             //}
+             // if not empty, pop next value and assign to b
+             // do a <symbol> b and return value
+                // todo How? -- value = a (symbol) b; 
+
+        return value; // pop this into the stack
     }
-
+    // input something other than + or *
     std::cout << "err: invalid operation" << std::endl;
-    return false;
-
     return false;
 }
 
