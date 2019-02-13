@@ -83,7 +83,7 @@ bool RPNCalculator::compute(std::string symbol) {
              //}
              // if not empty, pop next value and assign to b
              // do a <symbol> b and return value
-                // todo How? -- value = a (symbol) b; 
+                // todo How? -- value = a (symbol) b;
 
         return value; // pop this into the stack
     }

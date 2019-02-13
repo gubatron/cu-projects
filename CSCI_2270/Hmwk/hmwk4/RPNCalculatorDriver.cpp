@@ -53,7 +53,8 @@ int main()
 
   }
 
-  /* $ TODO - If the stack is empty then print "No operands: Nothing to evaluate" */
+    /* $ TODO - If the stack is empty then print "No operands: Nothing to evaluate" */
+//    if (operand.isEmpty()) std::cout << "No operands: Nothing to evaluate" << std::cout;
 
   /* TODO - Validate the expression
       1. If valid then print the result
