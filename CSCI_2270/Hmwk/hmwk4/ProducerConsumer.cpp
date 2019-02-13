@@ -29,6 +29,6 @@ int ProducerConsumer::queueSize() {
 }
 
 std::string ProducerConsumer::peek() {
-    return std::__cxx11::string();
+    return std::string();
 }
 
