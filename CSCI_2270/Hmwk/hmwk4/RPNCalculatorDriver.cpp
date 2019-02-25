@@ -33,8 +33,42 @@ bool isNumber(string s)
     return true;
 }
 
+void test1(){
+    RPNCalculator calc;
+    Operand * node = calc.peek();
+    if(node == NULL) cout << "Correct!" << endl;
+    else cout << "head is not NULL, check constructor" << endl;
+}
+
+void test2(){
+    RPNCalculator calc;
+    calc.push(4.3);
+    Operand * stackTop = calc.peek();
+    cout << "Top of stack: " << stackTop->number << endl;
+}
+
+void test3() {
+    RPNCalculator calc;
+    calc.push(4.3);
+    calc.push(-17);
+    calc.push(1.1839);
+    calc.push(0.2);
+    Operand * temp = calc.peek();
+    cout << "Print stack from top to bottom:" << endl;
+    while(temp != NULL){
+        cout << temp->number << endl;
+        temp = temp->next;
+    }
+};
+
 int main()
 {
+    test1();
+    test2();
+    test3();
+    if (true) return 0;
+
+
   // $ Declare a stack to hold the operands
     RPNCalculator operand;
 

@@ -25,8 +25,11 @@ public:
     int queueSize();
 
     int getQueueFront() { return queueFront; } // no need to implement this
-    int getQueueEnd() { return queueEnd; } // no need to implement this
-    std::string *getQueue() { return queue; } // no need to implement this
+
+    int getQueueEnd() { return queueEnd; }     // no need to implement this
+
+    std::string *getQueue() { return queue; }  // no need to implement this
+
     std::string peek();
 
 private:

@@ -28,6 +28,7 @@ public:
     Operand *peek();
 
     Operand *getStackHead() { return stackHead; } // no need to implement this
+
     bool compute(std::string symbol);
 
 private:

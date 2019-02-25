@@ -1,0 +1,121 @@
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+POINTERS
+    $$$ Recitation 2 write up $$$
+    
+   a) Address-of Operator (&)
+   b) What are Pointers?
+   c) Dereferencing Operator (*)
+   d) Arrays and Pointers
+   e) Pass-by-value, Pass-by-pointer, Pass-by-reference, Pass-by-array
+   f) C++ basics: Structs and Classes
+
+1) What will happen in this code?
+    
+    Int a=100, b=200;
+    Int *p=&a, *q=&b;
+    p=q;
+        a) b is assigned to a
+        b) p now points to b
+        c) a is assigned to b
+        d) q now points to a
+        
+2) Consider the structure
+    struct Book {
+        string name;
+    };
+    Book* b = new Book;
+    b->name = "book1";
+    cout << b->name << endl;
+    cout << (*b).name << endl;
+    
+    Do we get the same output from the two cout statements?
+    
+3) You want pc to point to c, is this the correct way?
+    int c, *pc;
+    *pc=&c;
+    
+    
+4) What is the output of this program?
+    #include <iostream>
+    using namespace std;
+    void Sum(int a, int b, int & c)
+    {
+    a = b + c;
+    b = a + c;
+    c = a + b;
+    }
+    int main()
+    {
+    int x = 2, y =3;
+    Sum(x, y, y);
+    cout << x << " " << y;
+    return 0;
+    }
+        a) 2 3
+        b) 6 9
+        c) 2 15
+        d) compile time error
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+Dynamic Memory
+    $$$ Recitation 3 write up $$$
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+Linked Lists
+    $$$ Recitation 4 write up $$$
+    
+    - Single LL
+        Struct Node
+        {
+            int data;
+            Node* next;
+        }
+    
+    - Doubly linked List
+        - you have an extra pointer called previous
+        Struct Node
+        {
+            int data;
+            Node* next;
+            Node* prev;
+        }
+        
+    
+    
+    
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+Stacks and Queues
+    $$$ Recitation 5 write up $$$
+    
+    Circular Queues
+    
+    
+    
+    
+    
+    
+Complexity
+Time Complexity
+    Array
+    - insertion --> O(n)
+    - deletion  --> O(n)
+    - search    --> O(n)
+        O(1) to find an index
+        
+    Linked List
+    - insertion --> O(1) @ head; O(n) @ tail w/o ptr; O(1) @ tail with ptr
+    - deletion  --> O(1) @ head; O(n) @ tail
+    - search    --> O(n)
+    
+        Stack           Queue
+        
+LL      push O(1)        O(1)
+        pop O(1)
+
+Array     O(1)           O(1)

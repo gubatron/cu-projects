@@ -1,0 +1,8 @@
+Used format from the Trivedi's code but I am having trouble implementing the function.
+I realize now that I do not have a thorough understanding of the pointers and I do not now how
+to make the connections to the appropriate variables. The question is simple and I understand
+what is asks but I don't know  how to execute it. I have spent the two hours on this one problem and
+my code does not compile.
+
+My biggest issue has been the invalid conversion from ‘Node*’ to ‘int’
+I don't know how to plug in a data integer value into the search function without running into this issue.

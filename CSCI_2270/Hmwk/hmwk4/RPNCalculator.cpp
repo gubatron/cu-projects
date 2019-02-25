@@ -15,33 +15,55 @@ RPNCalculator::~RPNCalculator() {
 }
 
 bool RPNCalculator::isEmpty() {
-    return (stackHead == nullptr);
+    return stackHead == nullptr;
 }
 
 void RPNCalculator::push(float num) {
-    auto *op = new Operand;
-    op->number = num;
-    op->next = nullptr;
-    op->next = stackHead;
-    stackHead = op;
+    auto opptr = new Operand;
+    opptr->number = num;
+    opptr->next = nullptr;
+
+    if (isEmpty()){
+        stackHead = opptr;
+        return;
+    }
+    peek()->next = opptr;
+    // Operand *last = peek();
+    // last->next = opptr;
+
 }
 
 void RPNCalculator::pop() {
-    if (!isEmpty()) {
-        Operand *temp = stackHead;
-        stackHead = stackHead->next;
-        delete temp;
-    } else {
+    if (isEmpty()){
         std::cout << "Stack empty, cannot pop an item." << std::endl;
     }
+
+    // if it points to null
+    if (stackHead->next == nullptr){
+        delete stackHead;
+        stackHead = nullptr;
+        return;
+    }
+    auto stcopy = stackHead;
+    while (stcopy->next != nullptr) {
+        // while stops one before last
+        stcopy = stcopy->next;
+    }
+    delete stcopy->next;
+    return;
 }
 
 Operand *RPNCalculator::peek() {
-    if (!isEmpty()) return stackHead;
-    else {
+    if (isEmpty()) {
         std::cout << "Stack empty, cannot peek." << std::endl;
         return nullptr;
     }
+    auto stcopy = stackHead;
+    //traverse
+    while (stcopy->next != nullptr){
+        stcopy = stcopy->next;
+    }
+    return stcopy;
 }
 
 
@@ -59,36 +81,35 @@ successfully
 ➔ Perform the arithmetic operation symbol on those two elements and push the result to
 the stack*/
 bool RPNCalculator::compute(std::string symbol) {
-    // Store the floats from the top two elements in the stack in local variables and pop them.
-    // TODO How do you store the float?
-
-    Operand *a = stackHead = nullptr; // todo ??
-    Operand *b = a - 1; // to do how do I create these properly to assign them to float number
-                                // and point them to the the last two elements of the stack? I only have stackhead.
-                                // do a = stackHead = nullptr and b = a - 1???
-    Operand *value = nullptr;
 
     std::cin >> symbol;
-
-    if (symbol == "+" || symbol == "*") {
-        if (isEmpty()) {
-            std::cout << "err: not enough operands" << std::endl;
-            return false;
-        }
-         //stack is not empty
-         // pop last value and assign to a
-             //if (isEmpty()) {
-             //    std::cout << "err: not enough operands" << std::endl;
-             //    return false;
-             //}
-             // if not empty, pop next value and assign to b
-             // do a <symbol> b and return value
-                // todo How? -- value = a (symbol) b;
-
-        return value; // pop this into the stack
-    }
     // input something other than + or *
-    std::cout << "err: invalid operation" << std::endl;
-    return false;
+    if (!(symbol == "+" || symbol == "*")) {
+        std::cout << "err: invalid operation" << std::endl;
+        return false;
+    }
+    // if there is nothing in the stack
+    if (isEmpty()) {
+        std::cout << "err: not enough operands" << std::endl;
+        return false;
+    }
+    // if the stack is not empty
+    peek();
+    Operand *a = peek();
+    pop();
+    if (isEmpty()){
+        std::cout << "err: not enough operands" << std::endl;
+        push(a->number);
+        return false;
+    }
+    Operand *b = peek();
+    pop();
+    if (symbol == "+"){
+        push(a->number + b->number);
+    }
+    else if (symbol == "*"){
+        push(a->number * b->number);
+    }
+    return true;
 }
 
