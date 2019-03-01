@@ -1,0 +1,24 @@
+Traversal of a Tree
+
+    Tree Data Structure
+        - hierarchial
+        - Binary tree, each node can have max 2 branches
+        - general tree, can have as may ranches as it wants
+
+    Array & Linked List
+        - Linear
+        - have head pointer and move temp pointer linearly to access every value
+
+
+
+Preoder Traversal
+    - first traverse the root
+    - then ALL nodes in left sub tree
+    - then ALL nodes in right tree
+    - if within left sub tree there is another sub tree
+        keep traversing the left until there is no more and go right
+        as you go up to make it to the root so you can start
+        looking at the right sub tree
+
+        RECURSION
+            -

@@ -60,7 +60,7 @@ public:
             }
             /*curr is pointing to NULL*/
             /*prev is pointing to end of the tree, parent of temp, the node I'm trying to insert*/
-            if (val < prev->key){
+            if (val < prev->key) {
                 prev->left = tmp;
             } else {
                 prev->right = tmp;
@@ -85,13 +85,11 @@ public:
                 /*Yay we found the value*/
                 std::cout << "The value " << val << " is in the tree" << std::endl;
                 return;
-            }
-            else if(val < tmp->key) {
+            } else if (val < tmp->key) {
                 /*Val is not in the right sub-tree*/
                 /*if it is at all there, it must be in the left sub-tree*/
                 tmp = tmp->left;
-            }
-            else {
+            } else {
                 tmp = tmp->right;
             }
         }

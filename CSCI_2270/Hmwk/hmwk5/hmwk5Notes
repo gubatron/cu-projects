@@ -1,0 +1,14 @@
+1. file
+    movie name, rating, year, id
+
+2. construct a tree of MOVIES (BST)
+
+each node within tree has multiple fields
+    left points to one
+    right points to another
+    and parent/root points to another
+
+    the root, M1 points to null
+
+    M2 on the left
+        points to M4 and M5 AND back to M1
