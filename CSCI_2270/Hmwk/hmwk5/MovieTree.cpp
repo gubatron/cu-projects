@@ -15,21 +15,6 @@ MovieTree::~MovieTree() {
 }
 
 ////////////////////////////////////////////////////////////////
-// preorder to traverse tree and print
-void preorder(MovieNode *root) {
-    if (root != nullptr) {
-        print(root->title);
-        //print(root->rating);
-        preorder(root->leftChild);
-        preorder(root->rightChild);
-    }
-}
-
-// querypreorder
-void querypreorder(MovieNode *root) {
-
-
-}
 ////////////////////////////////////////////////////////////////
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 /*Print every node in the tree in alphabetical order of titles*/
@@ -56,29 +41,31 @@ void MovieTree::addMovieNode(int ranking, std::string title, int year, float rat
 //    m.year = _year;
 //    m.rating = _rating;
     MovieNode *tmp = new MovieNode(title);
+    tmp->ranking = ranking;
+    tmp->year = year;
+    tmp->rating = rating;
+
+    MovieNode *curr = root;
+    MovieNode *prev;
 
     if (root == 0) {
         root = tmp;
-        return
+        return;
     } else {
-        MovieNode *curr = root;
-        MovieNode *prev = nullptr;
         while (curr != 0) {
+            prev = curr;
             if (title < curr->parent) {
-                prev = curr;
                 curr = curr->leftChild;
-            } else {
-                prev = curr;
-                curr = curr->rightChild;
             }
+            else if (title == curr->parent) return;
+            else curr = curr->rightChild;
         }
         if (title < prev->parent) {
             prev->leftChild = tmp;
         } else {
             prev->rightChild = tmp;
         }
-    }
-    return; //TODO what about all the other parameters.... CHECK THIS FUNCTION
+    }//TODO what about all the other parameters.... CHECK THIS FUNCTION
 }
 
 void MovieTree::findMovie(std::string title) {
@@ -111,7 +98,7 @@ void MovieTree::findMovie(std::string title) {
 void MovieTree::queryMovies(float rating, int year) {
     MovieNode *m;
     std::cout << "Movies that came out after " << year << " with rating at least " << rating << ":" << std::endl;
-    if (preorder(m->title) == m->rating) {
+    if (preorder(m->title) >= m->rating && preorder(m->title) <= m->year ) {
         std::cout << m->title << "(" << m->year << ") " << m->rating << std::endl;
     }
 } // TODO not sure how to make this make sense with preorder(*root)
@@ -126,7 +113,7 @@ void MovieTree::averageRating() {
  * returns a pointer to the node with the given title
  * or nullptr if no such movie exists*/
 MovieNode *search(std::string title) {
-    MovieNode *tmp; // TODO what do I initialize it to if I can't do *tmp = root?
+    MovieNode *tmp = root;
 
     while (tmp->ranking != nullptr) {
         if (tmp == title) {
@@ -143,29 +130,21 @@ MovieNode *search(std::string title) {
     return nullptr;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// to split at ','
-int split(string str, char c, string array[]) {
-    if (str.length() == 0) {
-        return 0;
+// preorder to traverse tree and print
+void preorder(MovieNode *root) {
+    if (root != nullptr) {
+        std::cout << root->title << " ";
+        //std::cout << root->rating << " ";
+        preorder(root->leftChild);
+        preorder(root->rightChild);
     }
-    string word = "";
-    int count = 0;
-    str = str + c;
-    for (int i = 0; i < str.length(); i++) {
-        if (str[i] == c) {
-            if (word.length() == 0)
-                continue;
-            array[count++] = word;
-            word = "";
-        } else {
-            word = word + str[i];
-        }
-    }
-    return count;
 }
 
-///////////////////////////////////////////////////////////////////////////////
+// querypreorder
+void querypreorder(MovieNode *root) {
+
+}
+
 void menu() {
     cout << "======Main Menu======" << endl;
     cout << "1. Find a movie" << endl;
@@ -182,7 +161,7 @@ void main(int argc, char **argv) {
         std::cout << "Error: incorrect number of arguments" << std::endl;
     }
 
-    MovieTree tree[1000];
+    MovieTree T; // tree to store information to be read
 
     std::ifstream filein(argv[1]);
     if (filein.fail()) {
@@ -197,15 +176,35 @@ void main(int argc, char **argv) {
     float rating = 0.0;
     MovieTree movie;
 
-    std::string store[3]; // split stores all values read into store[3]
-
-    while (std::getline(filein, line)) {
+    while (filein >> title >> )) {
         if (line != "") {
-            split(line,',',store){
-                tree[] // TODO HOW TO USE SPLIT PROPERLY HERE?
-            }
+
         }
     }
+
+//
+//    void fillTree( BinarySearchTree b)
+//    {
+//        string name;
+//        int phonenumber;
+//        Person p;
+//        while(file >> name >> phonenumber)
+//        {
+//            p.setName(name);
+//            p.setPhonenumber(phonenumber);
+//            cout << p.getName() << "  " << p.getPhonenumber() << endl;
+//            b.insert(p);
+//        }
+//        file.close();
+//    }
+//
+
+
+
+
+
+
+
 
     // Once I read the file, display menu
     std::string choice;
@@ -242,6 +241,4 @@ void main(int argc, char **argv) {
                 std::cout << "invalid input\n\n";
         }
     }
-
-
 }

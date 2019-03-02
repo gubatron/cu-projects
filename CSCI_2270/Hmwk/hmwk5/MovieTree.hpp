@@ -27,6 +27,9 @@ struct MovieNode {
 
 // Class for storing and manipulating a tree of MovieNode's
 class MovieTree {
+private:
+    // Pointer to the root node
+    MovieNode *root;
 public:
     // Check writeup for detailed function descriptions
     MovieTree();
@@ -46,6 +49,9 @@ public:
 private:
     MovieNode *search(std::string title);
 
-    // Pointer to the root node
-    MovieNode *root;
+    void preorder(MovieNode *root);
+
+    void queryPreorder(MovieNode *root);
+
+    void menu();
 };

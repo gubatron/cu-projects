@@ -25,6 +25,7 @@ unsigned long sibonacci(int n) {
 }
 
 /* Fast Recursive Fibonacci: Complexity O(n) */
+// fast because the complexity is linear
 unsigned long fibonacci(int n) {
   if (memo[n] == -1) {
     // If we have not computed fibonacci(n) it yet then compute and memoize it in memo[n].
