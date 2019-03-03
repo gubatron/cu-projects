@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "MOVIETREE.HPP"
+#include "MovieTree.hpp"
 
 MovieTree::MovieTree() {
     // initialize any member variables of the class to default
@@ -26,12 +26,8 @@ void MovieTree::printMovieInventory() {
     */
 
     MovieNode *m;
-    //preorder(m); // traverses the tree
-    std::cout << "Movie: " << preorder(m) << " " << m->rating << std::endl;
-
-    // for every Movie node (m) in the tree
-    //std::cout << "Movie: " << m->title << " " << m->rating << std::endl;
-    // TODO CHECK THIS FUNCTION AND HELPER
+    preorder(m); // traverses the tree
+    std::cout << "Movie: " << m->title << " " << m->rating << std::endl;
 }
 
 void MovieTree::addMovieNode(int ranking, std::string title, int year, float rating) {
@@ -131,12 +127,13 @@ MovieNode *search(std::string title) {
 }
 
 // preorder to traverse tree and print
-void preorder(MovieNode *root) {
+void preorder(MovieNode *root, float base_rating, int base_year) {
     if (root != nullptr) {
-        std::cout << root->title << " ";
-        //std::cout << root->rating << " ";
-        preorder(root->leftChild);
-        preorder(root->rightChild);
+      if (root->rating >= base_rating && root->year > base_year) {
+        std::cout << root->title << "(" << root->year << ") " << root->rating << std::endl;
+      }
+      preorder(root->leftChild, base_rating, base_year);
+      preorder(root->rightChild, base_rating, base_year);
     }
 }
 
