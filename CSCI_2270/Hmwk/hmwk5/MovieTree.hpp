@@ -48,10 +48,4 @@ public:
 
 private:
     MovieNode *search(std::string title);
-
-    void preorder(MovieNode *root);
-
-    void queryPreorder(MovieNode *root);
-
-    void menu();
 };
