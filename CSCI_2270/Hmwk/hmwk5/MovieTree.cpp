@@ -251,10 +251,10 @@ int main(int argc, char **argv) {
                 break;
             case 2:
                 std::cout << "Enter minimum rating: " << std::endl;
-                int rating;
+                float rating;
                 getline(std::cin, input);
                 try {
-                    rating = stoi(input);
+                    rating = stof(input);
                 } catch (std::invalid_argument &e) {
                     std::cout << "Error: invalid rating '" << input << "'" << std::endl;
                     break;
