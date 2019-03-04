@@ -84,6 +84,16 @@ void menu() {
     std::cout << "5. Quit" << std::endl;
 }
 
+std::string lowercase(std::string s) {
+    char char_array[s.size()];
+    auto s_char_array = s.c_str();
+    for (int i=0; i < s.size(); i++) {
+        char_array[i] = static_cast<char>(tolower(s_char_array[i]));
+    }
+    std::string result(char_array);
+    return result;
+}
+
 ////////////////////////////////////////////////////////////////
 // Class functions
 ////////////////////////////////////////////////////////////////
@@ -147,8 +157,8 @@ void MovieTree::findMovie(std::string title) {
         // make a copy of the strings to make a lowercase comparison without altering the original strings
         // of the MovieNode*'s
 
-        std::string tmp_title_lowercase = tmp->title;
-        std::string title_lowercase = title;
+        std::string tmp_title_lowercase = lowercase(tmp->title);
+        std::string title_lowercase = lowercase(title);
 
         if (tmp_title_lowercase == title_lowercase) {
             std::cout << "Movie Info:" << std::endl;
