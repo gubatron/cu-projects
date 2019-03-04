@@ -13,32 +13,30 @@
 ////////////////////////////////////////////////////////////////
 
 // preorder to traverse tree and print if conditions are met.
-// printSimple - if true, prints the way printMovieInventory() otherwise prints for movie query
-void preorder(MovieNode *root, float base_rating, int base_year, bool printSimple) {
+void preorder(MovieNode *root, float base_rating, int base_year) {
     if (root != nullptr) {
         if (root->rating >= base_rating && root->year > base_year) {
-            if (printSimple) {
-                std::cout << "Movie: " << root->title << " " << root->rating << std::endl;
-            } else {
-                std::cout << root->title << "(" << root->year << ") " << root->rating << std::endl;
-            }
+            std::cout << root->title << "(" << root->year << ") " << root->rating << std::endl;
         }
-        preorder(root->leftChild, base_rating, base_year, printSimple);
-        preorder(root->rightChild, base_rating, base_year, printSimple);
+        preorder(root->leftChild, base_rating, base_year);
+        preorder(root->rightChild, base_rating, base_year);
     }
 }
 
-void inorder(MovieNode *root, float base_rating, int base_year, bool printSimple) {
+void inorder(MovieNode *root) {
     if (root != nullptr) {
-        inorder(root->leftChild, base_rating, base_year, printSimple);
-        if (root->rating >= base_rating && root->year > base_year) {
-            if (printSimple) {
-                std::cout << "Movie: " << root->title << " " << root->rating << std::endl;
-            } else {
-                std::cout << root->title << "(" << root->year << ") " << root->rating << std::endl;
-            }
-        }
-        inorder(root->rightChild, base_rating, base_year, printSimple);
+        inorder(root->leftChild);
+        std::cout << "Movie: " << root->title << " " << root->rating << std::endl;
+        inorder(root->rightChild);
+    }
+}
+
+void postorder_average(MovieNode *node, int &count, float &avg_rating) {
+    if (node != nullptr) {
+        postorder_average(node->leftChild, count, avg_rating);
+        postorder_average(node->rightChild, count, avg_rating);
+        avg_rating += node->rating;
+        count++;
     }
 }
 
@@ -105,7 +103,7 @@ MovieTree::~MovieTree() {
  * Print every node in the tree in alphabetical order of titles
  */
 void MovieTree::printMovieInventory() {
-    inorder(root, 0, 0, true);
+    inorder(root);
 }
 
 void MovieTree::addMovieNode(int ranking, std::string title, int year, float rating) {
@@ -177,11 +175,17 @@ void MovieTree::findMovie(std::string title) {
  that are newer than year in the preorder fashion*/
 void MovieTree::queryMovies(float rating, int year) {
     std::cout << "Movies that came out after " << year << " with rating at least " << rating << ":" << std::endl;
-    preorder(root, rating, year, false);
+    preorder(root, rating, year);
 }
 
 void MovieTree::averageRating() {
-
+    int count = 1;
+    float average = 0.0;
+    if (root != nullptr) {
+      postorder_average(root, count, average);
+      average = average / count;
+    }
+    std::cout << "Average rating:" << average << std::endl;
 }
 ///////////////////////////////////////////////////////////////////////////////
 /*HELPER FUNCTIONS*/
