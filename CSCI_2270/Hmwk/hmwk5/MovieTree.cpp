@@ -2,7 +2,6 @@
 // Created by Nicole Leon on 2/25/2019.
 //
 
-#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -151,9 +150,6 @@ void MovieTree::findMovie(std::string title) {
         std::string tmp_title_lowercase = tmp->title;
         std::string title_lowercase = title;
 
-        std::transform(tmp_title_lowercase.begin(), tmp_title_lowercase.end(), tmp_title_lowercase.begin(), ::tolower);
-        std::transform(title_lowercase.begin(), title_lowercase.end(), title_lowercase.begin(), ::tolower);
-
         if (tmp_title_lowercase == title_lowercase) {
             std::cout << "Movie Info:" << std::endl;
             std::cout << "==================" << std::endl;
@@ -179,7 +175,7 @@ void MovieTree::queryMovies(float rating, int year) {
 }
 
 void MovieTree::averageRating() {
-    int count = 1;
+    int count = 0;
     float average = 0.0;
     if (root != nullptr) {
       postorder_average(root, count, average);
