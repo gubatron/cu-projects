@@ -40,8 +40,9 @@ void loadFile(MovieTree *movieTree, char *filepath) {
         getline(linestream, ratingString, ',');
         rating = stof(ratingString);
 
-        /*TODO code addMovie to linked lists based on character letter*/
+        std::cout << "addMovie (title=" << title << ")" << std::endl;
         movieTree->addMovie(ranking, title, year, rating);
+
     }
 
     filein.close();
@@ -83,6 +84,55 @@ void inorder(TreeNode *root) {
 }
 
 
+void insertSorted(TreeNode *treeNode, LLMovieNode *movieNode) {
+  // When list is empty.
+  if (treeNode->head == nullptr) {
+      treeNode->head = movieNode;
+      return;
+  }
+
+  auto prev = treeNode->head; //LLMovieNode.
+  auto current = treeNode->head; //LLMovieNode.
+
+  while (current->next != nullptr) {
+    // insert in front
+    if (movieNode->title < current->title) {
+       movieNode->next = current;
+       prev->next = movieNode;
+       return;
+    }
+    prev = current;
+    current = current->next;
+  }
+
+  // we have a one element list
+  if (current == treeNode->head) {
+     // is element smaller or bigger?
+     // BIGGER
+     if (movieNode->title > current->title) {
+         current->next = movieNode;
+         return;
+     }
+     // SMALLER, new node becomes the head!
+     else {
+         movieNode->next = current;
+         treeNode->head = movieNode;
+     }
+  }
+  // current moved to the end of the list
+  else {
+      // add bigger at the end
+      if (movieNode->title > current->title) {
+          current->next = movieNode;
+      }
+      // add smaller second to last
+      else {
+          prev->next = movieNode;
+          movieNode->next = current;
+      }
+  }
+}
+
 ////////////////////////////////////////////////////////////////
 // Class functions
 ////////////////////////////////////////////////////////////////
@@ -99,6 +149,7 @@ void MovieTree::printMovieInventory() {
 // adds movies to linked lists
 // sort into alpha as they enter their respective linked lists
 void MovieTree::addMovie(int ranking, std::string title, int year, float rating) {
+    char titleChar = title[0];
     auto newMovieNode = new LLMovieNode();
     newMovieNode->ranking = ranking;
     newMovieNode->title = std::move(title);
@@ -106,57 +157,60 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
     newMovieNode->rating = rating;
     newMovieNode->next = nullptr;
 
-    char titleChar = title[0];
+     // we don't use title, because we moved it
     // Add node to the TREE based on titleChar of the movie - TreeNode
     TreeNode *curr = root;
     TreeNode *prev = nullptr;
 
     if (root == nullptr) {
-        root = ;
+        root = new TreeNode();
+        root->titleChar = titleChar;
+        insertSorted(root, newMovieNode);
         return;
     } else {
         while (curr != nullptr) {
             prev = curr;
+
+            if (titleChar == curr->titleChar) {
+                // we found a node that already has a list of movies
+                break;
+            }
+
             if (titleChar < curr->titleChar) {
                 curr = curr->leftChild;
-            } else if (titleChar == curr->titleChar) return;
-            else curr = curr->rightChild;
+            } else {
+                curr = curr->rightChild;
+            }
         }
 
         // found last element in the correct direction, let's insert
         // the new TreeNode POINTER (tmp) based on it's tilteChar left or right
         if (prev != nullptr) {
-            if (titleChar < prev->titleChar) {
-                prev->leftChild = tmp;
-                // insert sorted linked list
-
-            } else {
-                prev->rightChild = tmp;
-                // insert sorted linked list
+            // There's already a node with a list of movies for this letter
+            if (titleChar == prev->titleChar) {
+                insertSorted(prev, newMovieNode);
             }
-            tmp->parent = prev;
+            // We have to add a new node, either left or right
+            else {
+                // create the new TREE node
+                auto tmp = new TreeNode();
+                tmp->titleChar = titleChar;
+                tmp->parent = prev;
+                tmp->leftChild = nullptr;
+                tmp->rightChild = nullptr;
+
+                // attach new TREE node to the end either left or right
+                // depending on the letter
+                if (titleChar < prev->titleChar) {
+                    prev->leftChild = tmp;
+                } else if (titleChar > prev->titleChar){
+                    prev->rightChild = tmp;
+                }
+
+                insertSorted(tmp, newMovieNode);
+            }
         }
     }
-    // Add LINKED LIST of movie titles alphabetically to the TREE NODE - LLMovieNode (head?)
-
-    // found last element in the correct direction, let's insert
-    // the new MovieNode POINTER (tmp) based on it's title left or right
-    if (prev != nullptr) {
-        if (title < prev->title) {
-            prev->leftChild = tmp;
-        } else {
-            prev->rightChild = tmp;
-        }
-        tmp->parent = prev;
-    }
-
-//    If there is no tree node corresponding to the first letter of title, create it and insert
-//    it in the tree in the alphabetically correct position
-//    ◆ Create a linked list node with ranking, title, year and rating, and insert it in the
-//    linked list associated with the tree node associated with the first letter of title. The
-//    linked list must also be in alphabetical order, such that for each node,
-//            node->title < node->next->title
-//
 }
 
 void MovieTree::deleteMovie(std::string title) {
