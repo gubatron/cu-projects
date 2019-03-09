@@ -1,3 +1,5 @@
+#include <utility>
+
 /****************************************************************/
 /*                  MovieTree Definition                   */
 /****************************************************************/
@@ -21,18 +23,18 @@ struct LLMovieNode {
     LLMovieNode() {} // default constructor
 
     // Parametrized constructor
-    LLMovieNode(int r, std::string t, int y, float q) : ranking(r), title(t),
-                                                        year(y), rating(q), next(NULL) {}
+    LLMovieNode(int r, std::string t, int y, float q) : ranking(r), title(std::move(t)),
+                                                        year(y), rating(q), next(nullptr) {}
 };
 
 /* Node struct that will be stored in the MovieTree BST */
 
 struct TreeNode {
-    LLMovieNode *head = NULL;    // Pointer to the head node of a LL
-    char titleChar;              // Starting character of the titles stored in the linked list
-    TreeNode *parent = NULL;     // Pointer to its parent node in BST
-    TreeNode *leftChild = NULL;  // Pointer to its leftChild in BST
-    TreeNode *rightChild = NULL; // Pointer to its rightChild in BST
+    LLMovieNode *head = nullptr;    // Pointer to the head node of a LL
+    char titleChar;                 // Starting character of the titles stored in the linked list
+    TreeNode *parent = nullptr;     // Pointer to its parent node in BST
+    TreeNode *leftChild = nullptr;  // Pointer to its leftChild in BST
+    TreeNode *rightChild = nullptr; // Pointer to its rightChild in BST
 };
 
 /* Class for storing and manipulating the TreeNode's of BST*/

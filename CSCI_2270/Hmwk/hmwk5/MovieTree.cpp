@@ -84,7 +84,7 @@ void menu() {
     std::cout << "5. Quit" << std::endl;
 }
 
-std::string lowercase(std::string s) {
+std::string lowercase(const std::string &s) {
     char char_array[s.size()];
     auto s_char_array = s.c_str();
     for (int i=0; i < s.size(); i++) {

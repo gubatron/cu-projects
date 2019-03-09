@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(movietree)
+project(movietreehw6)
 
 #version number
 set(CMAKE_CXX_STANDARD 11)
@@ -10,4 +10,4 @@ set(SOURCE_FILES
     MovieTree.cpp
     )
 
-add_executable(movietree ${SOURCE_FILES})
+add_executable(movietreehw6 ${SOURCE_FILES})
