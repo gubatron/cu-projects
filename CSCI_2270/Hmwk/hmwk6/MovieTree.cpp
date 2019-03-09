@@ -66,20 +66,22 @@ void menu() {
 
 
 void inorder(TreeNode *root) {
+    auto tmp = root;
     if (root != nullptr) {
-        inorder(root->leftChild);
+        inorder(tmp->leftChild);
 
-        std::cout << "Movies starting with letter: " << root->titleChar << std::endl;
+        std::cout << "Movies starting with letter: " << tmp->titleChar << std::endl;
         // root->head is an LLMovieNode
-        while (root->head != nullptr) {
+        while (tmp->head != nullptr) {
             // print linked list
-            std::cout << "Movie: " << root->head->title << " " << root->head->rating << std::endl;
-            root->head = root->head->next;
+            std::cout << "Movie: " << tmp->head->title << " " << tmp->head->rating << std::endl;
+            tmp->head = tmp->head->next;
         }
 
-        inorder(root->rightChild);
+        inorder(tmp->rightChild);
     }
 }
+
 
 ////////////////////////////////////////////////////////////////
 // Class functions
@@ -97,22 +99,20 @@ void MovieTree::printMovieInventory() {
 // adds movies to linked lists
 // sort into alpha as they enter their respective linked lists
 void MovieTree::addMovie(int ranking, std::string title, int year, float rating) {
-    auto *tmp = new TreeNode();
-    // head is my LLMovieNode with ranking, title, year, and rating in it's bag.
-    tmp->head->ranking = ranking;
-    tmp->head->title = std::move(title);
-    tmp->head->year = year;
-    tmp->head->rating = rating;
+    auto newMovieNode = new LLMovieNode();
+    newMovieNode->ranking = ranking;
+    newMovieNode->title = std::move(title);
+    newMovieNode->year = year;
+    newMovieNode->rating = rating;
+    newMovieNode->next = nullptr;
 
-    // titleChar TODO need a tilteChar for TreeNodes to start with the letter.
-
-
+    char titleChar = title[0];
     // Add node to the TREE based on titleChar of the movie - TreeNode
     TreeNode *curr = root;
     TreeNode *prev = nullptr;
 
     if (root == nullptr) {
-        root = tmp;
+        root = ;
         return;
     } else {
         while (curr != nullptr) {
@@ -148,7 +148,7 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
             prev->rightChild = tmp;
         }
         tmp->parent = prev;
-
+    }
 
 //    If there is no tree node corresponding to the first letter of title, create it and insert
 //    it in the tree in the alphabetically correct position
@@ -156,24 +156,8 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
 //    linked list associated with the tree node associated with the first letter of title. The
 //    linked list must also be in alphabetical order, such that for each node,
 //            node->title < node->next->title
-//    Hint: you can compare strings with <, >, ==, etc. Also, you may assume that no
-//    two movies have the same title
-//}
-/////////////////
-/////////////////
-// irrelevant code -- trying things out
-void MovieTree::addMovie(int ranking, std::string title, int year, float rating) {
-    auto newMovieNode = new LLMovieNode();
-    newMovieNode->ranking = ranking;
-    newMovieNode->title = std::move(title);
-    newMovieNode->year = year;
-    newMovieNode->rating = rating;
-    newMovieNode->next = nullptr;
-
-    if ();
+//
 }
-/////////////////
-/////////////////
 
 void MovieTree::deleteMovie(std::string title) {
     // search through tree for the first letter, search through list in alpha for movie
