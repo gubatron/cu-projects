@@ -10,6 +10,39 @@
 ////////////////////////////////////////////////////////////////
 // Helper functions
 ////////////////////////////////////////////////////////////////
+std::istream &safeGetline(std::istream &is, std::string &t) {
+    t.clear();
+
+    // The characters in the stream are read one-by-one using a std::streambuf.
+    // That is faster than reading them one-by-one using the std::istream.
+    // Code that uses streambuf this way must be guarded by a sentry object.
+    // The sentry object performs various tasks,
+    // such as thread synchronization and updating the stream state.
+
+    std::istream::sentry se(is, true);
+    std::streambuf *sb = is.rdbuf();
+
+    for (;;) {
+        int c = sb->sbumpc();
+        switch (c) {
+            case '\n':
+                return is;
+            case '\r':
+                if (sb->sgetc() == '\n')
+                    sb->sbumpc();
+                return is;
+            case std::streambuf::traits_type::eof():
+                // Also handle the case when the last line has no line ending
+                if (t.empty())
+                    is.setstate(std::ios::eofbit);
+                return is;
+            default:
+                t += (char) c;
+        }
+    }
+}
+
+
 void loadFile(MovieTree *movieTree, char *filepath) {
     std::ifstream filein(filepath);
     if (filein.fail()) {
@@ -23,26 +56,48 @@ void loadFile(MovieTree *movieTree, char *filepath) {
     int year = 0;
     float rating = 0.0;
 
-    while (getline(filein, line)) {
+    while (safeGetline(filein, line)) {
+        std::cout << "loadFile, just read a new line\n" << line << std::endl << std::endl;
         std::stringstream linestream(line);
 
         std::string rankingString;
         getline(linestream, rankingString, ',');
-        ranking = stoi(rankingString);
+
+	try {
+          ranking = stoi(rankingString);
+	} catch (std::invalid_argument &e) {
+	  std::cout << "invalid ranking argument: " << rankingString << std::endl;
+	  break;
+	}
+	std::cout << "loadFile, just read a new ranking " << ranking << std::endl;
 
         getline(linestream, title, ',');
 
         std::string yearString;
         getline(linestream, yearString, ',');
-        year = stoi(yearString);
+
+	try {
+          year = stoi(yearString);
+	} catch (std::invalid_argument &e) {
+	  std::cout << "invalid year argument: " << yearString << std::endl;
+	  break;
+	}
+	std::cout << "loadFile, just read a new year " << year << std::endl;
 
         std::string ratingString;
         getline(linestream, ratingString, ',');
-        rating = stof(ratingString);
+	try {
+          rating = stof(ratingString);
+	} catch (std::invalid_argument &e) {
+	  std::cout << "invalid rating argument: " << ratingString << std::endl;
+	  break;
+	}
+	
+	std::cout << "loadFile, just read a new rating " << rating << std::endl;
+
 
         std::cout << "addMovie (title=" << title << ")" << std::endl;
         movieTree->addMovie(ranking, title, year, rating);
-
     }
 
     filein.close();
@@ -91,17 +146,18 @@ void insertSorted(TreeNode *treeNode, LLMovieNode *movieNode) {
       return;
   }
 
-  auto prev = treeNode->head; //LLMovieNode.
+  LLMovieNode* prev = nullptr; //LLMovieNode.
   auto current = treeNode->head; //LLMovieNode.
 
-  while (current->next != nullptr) {
+  while (current != nullptr) {
+    prev = current;    
     // insert in front
     if (movieNode->title < current->title) {
        movieNode->next = current;
        prev->next = movieNode;
        return;
     }
-    prev = current;
+    std::cout << movieNode->title << " < " << current->title << " (move current)" << std::endl;
     current = current->next;
   }
 
@@ -166,6 +222,7 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
         root = new TreeNode();
         root->titleChar = titleChar;
         insertSorted(root, newMovieNode);
+	std::cout << "deleteMe: addMovie ended, new node" << std::endl;
         return;
     } else {
         while (curr != nullptr) {
@@ -181,6 +238,7 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
             } else {
                 curr = curr->rightChild;
             }
+	    std::cout << "scanning tree..." << std::endl;
         }
 
         // found last element in the correct direction, let's insert
@@ -189,6 +247,7 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
             // There's already a node with a list of movies for this letter
             if (titleChar == prev->titleChar) {
                 insertSorted(prev, newMovieNode);
+      	        std::cout << "deleteMe: addMovie ended, added movie at end of existing list" << std::endl;		
             }
             // We have to add a new node, either left or right
             else {
@@ -208,7 +267,9 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
                 }
 
                 insertSorted(tmp, newMovieNode);
+      	        std::cout << "deleteMe: addMovie ended, added first movie in a list" << std::endl;		
             }
+
         }
     }
 }
