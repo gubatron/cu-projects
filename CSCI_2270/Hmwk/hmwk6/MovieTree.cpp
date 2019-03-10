@@ -1,7 +1,5 @@
 #include <utility>
 
-#include <utility>
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -57,60 +55,43 @@ void loadFile(MovieTree *movieTree, char *filepath) {
     float rating = 0.0;
 
     while (safeGetline(filein, line)) {
-        std::cout << "loadFile, just read a new line\n" << line << std::endl << std::endl;
-        std::stringstream linestream(line);
+       std::stringstream linestream(line);
 
         std::string rankingString;
         getline(linestream, rankingString, ',');
 
-	try {
-          ranking = stoi(rankingString);
-	} catch (std::invalid_argument &e) {
-	  std::cout << "invalid ranking argument: " << rankingString << std::endl;
-	  break;
-	}
-	std::cout << "loadFile, just read a new ranking " << ranking << std::endl;
+        try {
+            ranking = stoi(rankingString);
+        } catch (std::invalid_argument &e) {
+            std::cout << "invalid ranking argument: " << rankingString << std::endl;
+            break;
+        }
 
         getline(linestream, title, ',');
 
         std::string yearString;
         getline(linestream, yearString, ',');
 
-	try {
-          year = stoi(yearString);
-	} catch (std::invalid_argument &e) {
-	  std::cout << "invalid year argument: " << yearString << std::endl;
-	  break;
-	}
-	std::cout << "loadFile, just read a new year " << year << std::endl;
+        try {
+            year = stoi(yearString);
+        } catch (std::invalid_argument &e) {
+            std::cout << "invalid year argument: " << yearString << std::endl;
+            break;
+        }
 
         std::string ratingString;
         getline(linestream, ratingString, ',');
-	try {
-          rating = stof(ratingString);
-	} catch (std::invalid_argument &e) {
-	  std::cout << "invalid rating argument: " << ratingString << std::endl;
-	  break;
-	}
-	
-	std::cout << "loadFile, just read a new rating " << rating << std::endl;
+        try {
+            rating = stof(ratingString);
+        } catch (std::invalid_argument &e) {
+            std::cout << "invalid rating argument: " << ratingString << std::endl;
+            break;
+        }
 
-
-        std::cout << "addMovie (title=" << title << ")" << std::endl;
         movieTree->addMovie(ranking, title, year, rating);
     }
 
     filein.close();
-}
-
-std::string lowercase(const std::string &s) {
-    char char_array[s.size()];
-    auto s_char_array = s.c_str();
-    for (int i=0; i < s.size(); i++) {
-        char_array[i] = static_cast<char>(tolower(s_char_array[i]));
-    }
-    std::string result(char_array);
-    return result;
 }
 
 void menu() {
@@ -130,7 +111,7 @@ void inorder(TreeNode *root) {
         // root->head is an LLMovieNode
         while (tmp->head != nullptr) {
             // print linked list
-            std::cout << "Movie: " << tmp->head->title << " " << tmp->head->rating << std::endl;
+            std::cout << " >> " << tmp->head->title << " " << tmp->head->rating << std::endl;
             tmp->head = tmp->head->next;
         }
 
@@ -140,59 +121,59 @@ void inorder(TreeNode *root) {
 
 
 void insertSorted(TreeNode *treeNode, LLMovieNode *movieNode) {
-  // When list is empty.
-  if (treeNode->head == nullptr) {
-      treeNode->head = movieNode;
-      return;
-  }
-
-  LLMovieNode* prev = nullptr; //LLMovieNode.
-  auto current = treeNode->head; //LLMovieNode.
-
-  while (current != nullptr) {
-    prev = current;    
-    // insert in front
-    if (movieNode->title < current->title) {
-       movieNode->next = current;
-       prev->next = movieNode;
-       return;
+    // When list is empty, add a new node.
+    if (treeNode->head == nullptr) {
+        treeNode->head = movieNode;
+        return;
     }
-    std::cout << movieNode->title << " < " << current->title << " (move current)" << std::endl;
-    current = current->next;
-  }
 
-  // we have a one element list
-  if (current == treeNode->head) {
-     // is element smaller or bigger?
-     // BIGGER
-     if (movieNode->title > current->title) {
-         current->next = movieNode;
-         return;
-     }
-     // SMALLER, new node becomes the head!
-     else {
-         movieNode->next = current;
-         treeNode->head = movieNode;
-     }
-  }
-  // current moved to the end of the list
-  else {
-      // add bigger at the end
-      if (movieNode->title > current->title) {
-          current->next = movieNode;
-      }
-      // add smaller second to last
-      else {
-          prev->next = movieNode;
-          movieNode->next = current;
-      }
-  }
+    auto current = treeNode->head; //LLMovieNode.
+    LLMovieNode *prev = nullptr; //LLMovieNode.
+
+    // while not the last one
+    while (current->next != nullptr) {
+        prev = current;
+        // insert in front
+        if (current->next->title < movieNode->title) {
+            current = current->next;
+        }
+        movieNode->next = current->next;
+        prev->next = movieNode; // maybe current->next = movieNode??
+        return;
+    }
+    // we have a one element list
+    if (current == treeNode->head) {
+        // is element smaller or bigger?
+        // BIGGER
+        if (movieNode->title > current->title) {
+            current->next = movieNode;
+            return;
+        }
+            // SMALLER, new node becomes the head!
+        else {
+            treeNode->head = movieNode;
+            movieNode->next = current;
+            current->next = nullptr;
+        }
+    }
+        // current moved to the end of the list
+    else {
+        // add bigger at the end
+        if (movieNode->title > current->title) {
+            current->next = movieNode;
+        }
+            // add smaller second to last
+        else {
+            prev->next = movieNode; // prev may be null...
+            movieNode->next = current;
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////
 // Class functions
 ////////////////////////////////////////////////////////////////
-MovieTree::MovieTree() {root = nullptr;}
+MovieTree::MovieTree() { root = nullptr; }
 
 MovieTree::~MovieTree() = default;
 
@@ -213,7 +194,7 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
     newMovieNode->rating = rating;
     newMovieNode->next = nullptr;
 
-     // we don't use title, because we moved it
+    // we don't use title, because we moved it
     // Add node to the TREE based on titleChar of the movie - TreeNode
     TreeNode *curr = root;
     TreeNode *prev = nullptr;
@@ -222,7 +203,6 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
         root = new TreeNode();
         root->titleChar = titleChar;
         insertSorted(root, newMovieNode);
-	std::cout << "deleteMe: addMovie ended, new node" << std::endl;
         return;
     } else {
         while (curr != nullptr) {
@@ -238,7 +218,6 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
             } else {
                 curr = curr->rightChild;
             }
-	    std::cout << "scanning tree..." << std::endl;
         }
 
         // found last element in the correct direction, let's insert
@@ -247,9 +226,8 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
             // There's already a node with a list of movies for this letter
             if (titleChar == prev->titleChar) {
                 insertSorted(prev, newMovieNode);
-      	        std::cout << "deleteMe: addMovie ended, added movie at end of existing list" << std::endl;		
             }
-            // We have to add a new node, either left or right
+                // We have to add a new node, either left or right
             else {
                 // create the new TREE node
                 auto tmp = new TreeNode();
@@ -262,12 +240,11 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
                 // depending on the letter
                 if (titleChar < prev->titleChar) {
                     prev->leftChild = tmp;
-                } else if (titleChar > prev->titleChar){
+                } else if (titleChar > prev->titleChar) {
                     prev->rightChild = tmp;
                 }
 
                 insertSorted(tmp, newMovieNode);
-      	        std::cout << "deleteMe: addMovie ended, added first movie in a list" << std::endl;		
             }
 
         }
@@ -277,6 +254,8 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
 void MovieTree::deleteMovie(std::string title) {
     // search through tree for the first letter, search through list in alpha for movie
     // if found, delete
+    // if movie does not exist, print:
+    std::cout << "Movie: " << title << " not found, cannot delete." << std::endl;
 }
 
 
