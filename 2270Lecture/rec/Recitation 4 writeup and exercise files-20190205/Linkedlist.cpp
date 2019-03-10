@@ -72,8 +72,7 @@ void LinkedList::insert_end(int newKey) {
     temp->next = newNode;
     return;
 }
-
-
+///////////////////////////////////////////////////////////////////
 int LinkedList::negativeSum() {
     if (head == NULL)
         return 0;

@@ -55,11 +55,10 @@ void loadFile(MovieTree *movieTree, char *filepath) {
     float rating = 0.0;
 
     while (safeGetline(filein, line)) {
-       std::stringstream linestream(line);
+        std::stringstream linestream(line);
 
         std::string rankingString;
         getline(linestream, rankingString, ',');
-
         try {
             ranking = stoi(rankingString);
         } catch (std::invalid_argument &e) {
@@ -71,7 +70,6 @@ void loadFile(MovieTree *movieTree, char *filepath) {
 
         std::string yearString;
         getline(linestream, yearString, ',');
-
         try {
             year = stoi(yearString);
         } catch (std::invalid_argument &e) {
@@ -114,7 +112,6 @@ void inorder(TreeNode *root) {
             std::cout << " >> " << tmp->head->title << " " << tmp->head->rating << std::endl;
             tmp->head = tmp->head->next;
         }
-
         inorder(tmp->rightChild);
     }
 }
@@ -127,8 +124,8 @@ void insertSorted(TreeNode *treeNode, LLMovieNode *movieNode) {
         return;
     }
 
-    auto current = treeNode->head; //LLMovieNode.
-    LLMovieNode *prev = nullptr; //LLMovieNode.
+    auto current = treeNode->head;
+    LLMovieNode *prev = nullptr;
 
     // while not the last one
     while (current->next != nullptr) {
@@ -164,18 +161,43 @@ void insertSorted(TreeNode *treeNode, LLMovieNode *movieNode) {
         }
             // add smaller second to last
         else {
-            prev->next = movieNode; // prev may be null...
             movieNode->next = current;
+            prev->next = movieNode; // prev may be null...
         }
     }
 }
+
+void deleteLLNode(TreeNode *treeNode, LLMovieNode *movieNode) {
+    auto curr = treeNode->head;
+    TreeNode *prev = nullptr; // for 1st node, there is no previous
+
+
+    // visit each node maintaining a ptr to prev node we just visited
+    for (curr = treeNode->head; curr != nullptr; curr = curr->next) {
+        if (curr->title == movieNode->title) {
+            // found it
+            // fix beginning pointer
+            movieNode = curr->next;
+        } else {
+            // fix previous node's next to skip over removed node
+            prev->head->next = curr->next;
+        }
+        // deallocate node
+        delete curr;
+        return;
+    }
+
+}
+
 
 ////////////////////////////////////////////////////////////////
 // Class functions
 ////////////////////////////////////////////////////////////////
 MovieTree::MovieTree() { root = nullptr; }
 
-MovieTree::~MovieTree() = default;
+MovieTree::~MovieTree() {
+    // TODO build destructor
+}
 
 // print in alphabetical order of titles
 void MovieTree::printMovieInventory() {
@@ -252,7 +274,42 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
 }
 
 void MovieTree::deleteMovie(std::string title) {
-    // search through tree for the first letter, search through list in alpha for movie
+    TreeNode *treeNode = nullptr;
+    auto curr = treeNode->head;
+
+    // at the end of the list?
+    if (curr == nullptr) return;
+
+    // is current node the one to be deleted?
+    if (curr->title == title) {
+        LLMovieNode *tmp;
+        tmp = curr->next; // save next pointer in the tmp
+        delete curr;
+        return;
+    }
+    // check rest of list, fixing next pointer in case the next node is the one removed
+    return;
+
+//    // search through tree for the first letter, search through list in alpha for movie
+//    TreeNode *curr = root;
+//    TreeNode *prev = nullptr;
+//
+//    // if List under titleChar ends up empty, delete treeNode
+//    // treeNode is empty, delete treeNode
+//    if (root == nullptr) {
+//        TreeNode *tmp = root;
+//        tmp->parent = prev; // is this necessary?
+//        root = root->parent; // my new root is the parent of tmp, now I can delete tmp
+//        delete tmp;
+//    }// not sure if ^^^^ makes sense...
+//
+//    /*delete head of LL*/
+//    LLMovieNode *left = LLsearch(title);
+//    else { /*either tail node or middle node*/
+//
+//    }
+//
+
     // if found, delete
     // if movie does not exist, print:
     std::cout << "Movie: " << title << " not found, cannot delete." << std::endl;
