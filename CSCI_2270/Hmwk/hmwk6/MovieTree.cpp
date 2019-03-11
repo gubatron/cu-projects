@@ -52,10 +52,15 @@ void loadFile(MovieTree *movieTree, char *filepath) {
     int ranking = 0;
     std::string title;
     int year = 0;
-    float rating = 0.0;
+    float rating;
 
+    int lineNum=1;
     while (safeGetline(filein, line)) {
         std::stringstream linestream(line);
+
+        if (line == "") {
+            continue;
+        }
 
         std::string rankingString;
         getline(linestream, rankingString, ',');
@@ -87,6 +92,7 @@ void loadFile(MovieTree *movieTree, char *filepath) {
         }
 
         movieTree->addMovie(ranking, title, year, rating);
+        lineNum++;
     }
 
     filein.close();
