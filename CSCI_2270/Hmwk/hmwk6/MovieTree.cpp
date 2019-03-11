@@ -137,7 +137,7 @@ void insertSorted(TreeNode *treeNode, LLMovieNode *movieNode) {
 
   // we scan either until the end of the list
   // or when we find a node smaller than the new one
-  while (next != nullptr && next->title > movieNode->title) {
+  while (next != nullptr && next->title < movieNode->title) {
     current = current->next;
     next = current->next;
   }
