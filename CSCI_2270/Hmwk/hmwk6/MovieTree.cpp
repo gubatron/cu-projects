@@ -54,7 +54,7 @@ void loadFile(MovieTree *movieTree, char *filepath) {
     int year = 0;
     float rating;
 
-    int lineNum=1;
+    int lineNum = 1;
     while (safeGetline(filein, line)) {
         std::stringstream linestream(line);
 
@@ -112,76 +112,192 @@ void inorder(TreeNode *root) {
         inorder(tmp->leftChild);
 
         std::cout << "Movies starting with letter: " << tmp->titleChar << std::endl;
+
         // root->head is an LLMovieNode
-        while (tmp->head != nullptr) {
+        auto movie = tmp->head;
+        while (movie != nullptr) {
             // print linked list
-            std::cout << " >> " << tmp->head->title << " " << tmp->head->rating << std::endl;
-            tmp->head = tmp->head->next;
+            std::cout << " >> " << movie->title << " " << movie->rating << std::endl;
+            movie = movie->next;
         }
         inorder(tmp->rightChild);
     }
 }
 
 void insertSorted(TreeNode *treeNode, LLMovieNode *movieNode) {
-  // if list is empty, this becomes the head
-  if (treeNode->head == nullptr) {
-    treeNode->head = movieNode;
-    return;
-  }
-
-  // if it's smaller than the head,
-  // new node becomes head and points next to the old head
-  if (movieNode->title < treeNode->head->title) {
-    auto oldHead = treeNode->head;
-    treeNode->head = movieNode;
-    movieNode->next = oldHead;
-    return;
-  }
-
-  auto current = treeNode->head;
-  auto next = treeNode->head->next;
-
-  // we scan either until the end of the list
-  // or when we find a node smaller than the new one
-  while (next != nullptr && next->title < movieNode->title) {
-    current = current->next;
-    next = current->next;
-  }
-
-  current->next = movieNode;
-  movieNode->next = next;
-}
-
-void deleteLLNode(TreeNode *treeNode, LLMovieNode *movieNode) {
-    auto curr = treeNode->head;
-    TreeNode *prev = nullptr; // for 1st node, there is no previous
-
-
-    // visit each node maintaining a ptr to prev node we just visited
-    for (curr = treeNode->head; curr != nullptr; curr = curr->next) {
-        if (curr->title == movieNode->title) {
-            // found it
-            // fix beginning pointer
-            movieNode = curr->next;
-        } else {
-            // fix previous node's next to skip over removed node
-            prev->head->next = curr->next;
-        }
-        // deallocate node
-        delete curr;
+    // if list is empty, this becomes the head
+    if (treeNode->head == nullptr) {
+        treeNode->head = movieNode;
         return;
     }
 
+    // if it's smaller than the head,
+    // new node becomes head and points next to the old head
+    if (movieNode->title < treeNode->head->title) {
+        auto oldHead = treeNode->head;
+        treeNode->head = movieNode;
+        movieNode->next = oldHead;
+        return;
+    }
+
+    auto current = treeNode->head;
+    auto next = treeNode->head->next;
+
+    // we scan either until the end of the list
+    // or when we find a node smaller than the new one
+    while (next != nullptr && next->title < movieNode->title) {
+        current = current->next;
+        next = current->next;
+    }
+
+    current->next = movieNode;
+    movieNode->next = next;
+}
+
+// This function is called because we know the node's list of movies is empty, no movie deletion needed here.
+void tryDeleteTreeNodeIfEmpty(TreeNode *root, TreeNode *movieNode) {
+    if (movieNode->head != nullptr) {
+        // movieNode has elements on the list, we don't need to re-arrange the tree
+        return;
+    }
+    if (movieNode->leftChild == nullptr && movieNode->rightChild == nullptr) {
+        if (movieNode->parent != nullptr) {
+            auto parent = movieNode->parent;
+            if (parent->leftChild == movieNode) {
+                parent->leftChild = nullptr;
+            } else if (parent->rightChild == movieNode) {
+                parent->rightChild = nullptr;
+            }
+        }
+        delete movieNode;
+        return;
+    }
+
+    // If we have a left child
+    if (movieNode->leftChild != nullptr && movieNode->rightChild == nullptr) {
+        auto parent = movieNode->parent;
+
+        if (parent != nullptr) {
+            // I'm my dad's left child, point my dad's left to my left child
+            if (parent->leftChild == movieNode) {
+                parent->leftChild = movieNode->leftChild;
+            } else if (parent->rightChild == movieNode) {
+                parent->rightChild = movieNode->leftChild;
+            }
+        }
+
+        // left child should know who is his new parent
+        movieNode->leftChild->parent = parent;
+        delete movieNode;
+    }
+        // if we have a right child
+    else if (movieNode->rightChild != nullptr && movieNode->leftChild == nullptr) {
+        auto parent = movieNode->parent;
+
+        if (parent != nullptr) {
+            if (parent->leftChild == movieNode) {
+                parent->leftChild = movieNode->rightChild;
+            } else if (parent->rightChild == movieNode) {
+                parent->rightChild = movieNode->rightChild;
+            }
+        }
+
+        // right child should know who is his new parent!
+        movieNode->rightChild->parent = parent;
+        delete movieNode;
+    }
+        // got two kids
+    else if (movieNode->leftChild != nullptr && movieNode->rightChild != nullptr) {
+        // By convention, we'll make left child the master, right the slave
+        auto masterChild = movieNode->leftChild;
+        auto slaveChild = movieNode->rightChild;
+
+
+        // let's decide where the right child will be as a child of the left.
+        if (slaveChild->titleChar < masterChild->titleChar) {
+            masterChild->leftChild = slaveChild;
+        } else {
+            masterChild->rightChild = slaveChild;
+        }
+
+        masterChild->parent = movieNode->parent;
+
+
+        if (masterChild->parent != nullptr) {
+            if (masterChild->parent->leftChild == movieNode) {
+                masterChild->parent->leftChild = masterChild;
+            } else {
+                masterChild->parent->rightChild = masterChild;
+            }
+        }
+
+        delete movieNode;
+    }
+}
+
+TreeNode *getMin(TreeNode *T) {
+    if (T == nullptr) return nullptr;
+    else {
+        if (T->leftChild == nullptr) return T;
+        else return getMin(T->leftChild);
+    }
+}
+
+void tryDeleteTreeNodeIfEmptyMovies(TreeNode *root, TreeNode *movieNode) {
+    if (root == 0) return;
+    else {
+        if (movieNode->titleChar < root->titleChar) return tryDeleteTreeNodeIfEmptyMovies(root->leftChild, movieNode);
+        else if (movieNode->titleChar > root->titleChar)
+            return tryDeleteTreeNodeIfEmptyMovies(root->rightChild, movieNode);
+        else {
+            // remove value that is equal to the key
+            // 4 cases
+            // 1. Have no leftChild or rightChild child
+            if (root->leftChild == nullptr && root->rightChild == nullptr) {
+                delete root;
+            }
+                // 2. Only have a leftChild child
+            else if (root->leftChild != nullptr && root->rightChild == nullptr) {
+                TreeNode *tmp = root;
+                delete tmp;
+            }
+                // 3. Only have a rightChild child
+            else if (root->leftChild == nullptr && root->rightChild != nullptr) {
+                TreeNode *tmp = root;
+                delete tmp;
+            }
+                // 4. Have both left and right children
+            else {
+                TreeNode *to_replace = getMin(root->rightChild);
+                root = to_replace;
+                tryDeleteTreeNodeIfEmptyMovies(root->rightChild, to_replace);
+            }
+        }
+    }
 }
 
 
 ////////////////////////////////////////////////////////////////
 // Class functions
 ////////////////////////////////////////////////////////////////
-MovieTree::MovieTree() { root = nullptr; }
+MovieTree::MovieTree() {
+    root = nullptr;
+}
 
 MovieTree::~MovieTree() {
-    // TODO build destructor
+    if (root != nullptr && root->head != nullptr) {
+        auto current = root->head;
+        while (current != nullptr) {
+            auto toDelete = current;
+            current = current->next;
+            if (toDelete != nullptr) {
+                delete toDelete;
+            }
+        }
+    }
+    if (root != nullptr) {
+        delete root;
+    }
 }
 
 // print in alphabetical order of titles
@@ -259,45 +375,55 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
 }
 
 void MovieTree::deleteMovie(std::string title) {
-    TreeNode *treeNode = nullptr;
-    auto curr = treeNode->head;
+    // find node with first letter of title
+    char titleChar = title[0];
 
-    // at the end of the list?
-    if (curr == nullptr) return;
+    auto movieNode = root;
 
-    // is current node the one to be deleted?
-    if (curr->title == title) {
-        LLMovieNode *tmp;
-        tmp = curr->next; // save next pointer in the tmp
-        delete curr;
+    // scan the tree for the right TreeNode
+    while (movieNode != nullptr && movieNode->titleChar != titleChar) {
+        if (titleChar < movieNode->titleChar) {
+            movieNode = movieNode->leftChild;
+        } else {
+            movieNode = movieNode->rightChild;
+        }
+    }
+
+    // could not find a TreeNode with that letter
+    if (movieNode == nullptr || movieNode->head == nullptr) {
+        std::cout << "Movie: " << title << " not found, cannot delete." << std::endl;
         return;
     }
-    // check rest of list, fixing next pointer in case the next node is the one removed
-    return;
 
-//    // search through tree for the first letter, search through list in alpha for movie
-//    TreeNode *curr = root;
-//    TreeNode *prev = nullptr;
-//
-//    // if List under titleChar ends up empty, delete treeNode
-//    // treeNode is empty, delete treeNode
-//    if (root == nullptr) {
-//        TreeNode *tmp = root;
-//        tmp->parent = prev; // is this necessary?
-//        root = root->parent; // my new root is the parent of tmp, now I can delete tmp
-//        delete tmp;
-//    }// not sure if ^^^^ makes sense...
-//
-//    /*delete head of LL*/
-//    LLMovieNode *left = LLsearch(title);
-//    else { /*either tail node or middle node*/
-//
-//    }
-//
+    auto current = movieNode->head;
+    auto next = movieNode->head->next;
 
-    // if found, delete
-    // if movie does not exist, print:
-    std::cout << "Movie: " << title << " not found, cannot delete." << std::endl;
+    // the movie we're looking for is at the head
+    if (current->title == title) {
+        //delete and relink
+        delete current;
+        movieNode->head = movieNode->head->next;
+        tryDeleteTreeNodeIfEmptyMovies(root, movieNode);
+        return;
+    }
+
+    // look for the movie along the list
+    while (next != nullptr && next->title != title) {
+        current = current->next;
+        next = current->next;
+    }
+
+    // got to the end of the list and didn't find the movie
+    if (next == nullptr) {
+        std::cout << "Movie: " << title << " not found, cannot delete." << std::endl;
+        return;
+    }
+
+    // we found it, and it's the next one
+    current->next = next->next;
+    delete next;
+
+    tryDeleteTreeNodeIfEmptyMovies(root, movieNode);
 }
 
 
