@@ -116,55 +116,34 @@ void inorder(TreeNode *root) {
     }
 }
 
-
 void insertSorted(TreeNode *treeNode, LLMovieNode *movieNode) {
-    // When list is empty, add a new node.
-    if (treeNode->head == nullptr) {
-        treeNode->head = movieNode;
-        return;
-    }
+  // if list is empty, this becomes the head
+  if (treeNode->head == nullptr) {
+    treeNode->head = movieNode;
+    return;
+  }
 
-    auto current = treeNode->head;
-    LLMovieNode *prev = nullptr;
+  // if it's smaller than the head,
+  // new node becomes head and points next to the old head
+  if (movieNode->title < treeNode->head->title) {
+    auto oldHead = treeNode->head;
+    treeNode->head = movieNode;
+    movieNode->next = oldHead;
+    return;
+  }
 
-    // while not the last one
-    while (current->next != nullptr) {
-        prev = current;
-        // insert in front
-        if (current->next->title < movieNode->title) {
-            current = current->next;
-        }
-        movieNode->next = current->next;
-        prev->next = movieNode; // maybe current->next = movieNode??
-        return;
-    }
-    // we have a one element list
-    if (current == treeNode->head) {
-        // is element smaller or bigger?
-        // BIGGER
-        if (movieNode->title > current->title) {
-            current->next = movieNode;
-            return;
-        }
-            // SMALLER, new node becomes the head!
-        else {
-            treeNode->head = movieNode;
-            movieNode->next = current;
-            current->next = nullptr;
-        }
-    }
-        // current moved to the end of the list
-    else {
-        // add bigger at the end
-        if (movieNode->title > current->title) {
-            current->next = movieNode;
-        }
-            // add smaller second to last
-        else {
-            movieNode->next = current;
-            prev->next = movieNode; // prev may be null...
-        }
-    }
+  auto current = treeNode->head;
+  auto next = treeNode->head->next;
+
+  // we scan either until the end of the list
+  // or when we find a node smaller than the new one
+  while (next != nullptr && next->title > movieNode->title) {
+    current = current->next;
+    next = current->next;
+  }
+
+  current->next = movieNode;
+  movieNode->next = next;
 }
 
 void deleteLLNode(TreeNode *treeNode, LLMovieNode *movieNode) {
