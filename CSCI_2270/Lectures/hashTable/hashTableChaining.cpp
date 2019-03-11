@@ -157,6 +157,9 @@ public:
         //
     }
 
+/*
+ * How big should your hash table be?
+ * How many elements are you expecting and how many collisions are acceptable to you?*/
 
     int hashCode(string k, int table_size) {
         int hash = 0;
@@ -252,9 +255,6 @@ int main(int argc, char *argv[]) {
 //    HT.remove("Prathyusha Gayam");
 //    HT.remove("Andrew Altomare");
 //    HT.remove("Maciej J Zagrodzki");
-
-
-
 
     HT.printHashTable();
 
