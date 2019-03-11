@@ -222,7 +222,7 @@ void MovieTree::addMovie(int ranking, std::string title, int year, float rating)
         }
 
         // found last element in the correct direction, let's insert
-        // the new TreeNode POINTER (tmp) based on it's tilteChar left or right
+        // the new TreeNode POINTER (tmp) based on it's titleChar left or right
         if (prev != nullptr) {
             // There's already a node with a list of movies for this letter
             if (titleChar == prev->titleChar) {
