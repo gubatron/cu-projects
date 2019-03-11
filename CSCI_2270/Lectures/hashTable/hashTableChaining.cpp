@@ -1,5 +1,6 @@
+#include <utility>
+
 #include<iostream>
-#include<string>
 #include<fstream>
 #include<sstream>
 #include <math.h>       /* modf */
@@ -9,20 +10,20 @@
 using namespace std;
 
 struct HashNode {
-    string key;       // student id, name or whatver
+    string key;       // student id, name or whatever
     string value;     // value assigned to it
     HashNode *next;
 
     HashNode() {
         key = "";
         value = "";
-        next = 0;
+        next = nullptr;
     }
 
     HashNode(string k, string v) {
-        key = k;
-        value = v;
-        next = 0;
+        key = std::move(k);
+        value = std::move(v);
+        next = nullptr;
     }
 
     ~HashNode() {}
@@ -31,25 +32,26 @@ struct HashNode {
 class HashTable {
     HashNode **table; // double pointer bc it's a pointer to a pointer that contains a HashNode
     // table is an array but double pointer keeps it dynamic
+    // table is an array of hash pointers
     int size;
 
 public:
     HashTable() {
         size = 10;
         table = new HashNode *[10]; // allocating HashNode pointers in the heap -- remember to delete with destructor
-        for (int i = 0; i < size; i++) table[i] = 0; // initializing all ptrs to 0 to be safe
+        for (int i = 0; i < size; i++) table[i] = nullptr; // initializing all ptrs to 0 to be safe
     }
 
-    HashTable(int s) {
+    explicit HashTable(int s) {
         size = s;
         table = new HashNode *[s];
-        for (int i = 0; i < size; i++) table[i] = 0; // initializing all ptrs to 0 to be safe
+        for (int i = 0; i < size; i++) table[i] = nullptr; // initializing all ptrs to 0 to be safe
     }
 
     ~HashTable() {
         for (int i = 0; i < size; i++) {
             HashNode *tmp = table[i];
-            while (tmp != 0) {
+            while (tmp != nullptr) {
                 HashNode *curr = tmp;
                 tmp = tmp->next;
                 delete curr;
@@ -74,6 +76,7 @@ public:
         // LAZY GENERAL IMPLEMENTATION BELOW
 
         int index = hashCode(key, size);
+
         HashNode *tmp = new HashNode(key, value); // allocating a new HashNode on heap and getting a pointer into tmp
 
         if (table[index] == nullptr) {
@@ -83,22 +86,18 @@ public:
             HashNode *curr = table[index];
             HashNode *prev = nullptr;
 
-            while (curr != nullptr) {
+            while (curr != nullptr) {            /*scan list from left to right*/
                 if (curr->key == key) {
-                    if (curr->value == value){
-                        cout << "Error: Entry already exists in the hashtable!\n"
-                    } else {
-                        cout << "Error: Duplicate key!\n";
-                    }
+                    if (curr->value == value) cout << "Error: Entry already exists in the hashtable!\n";
+                    else cout << "Error: Duplicate key!\n";
                     return;
                 }
-
                 prev = curr;
                 curr = curr->next;
             }
 
             // insert node I'm trying to insert right now after the current
-            prev->next = tmp;
+            prev->next = tmp; // will never reach this part while prev == nullptr
 
             return;
         }
@@ -109,18 +108,53 @@ public:
      * the node. Otherwise, return null pointer (0).
      *****************************************************************************/
 
-    HashNode *search(string key) {
-        // With the key, get the hash. If you find the value when you traverse, return pointer,
-        // if not, return null
-        return 0;
+    // With the key, get the hash. If you find the value when you traverse, return pointer,
+    // if not, return null
+
+    HashNode *search(const string &key) {
+        int index = hashCode(key, size);
+
+        HashNode *tmp = table[index];
+
+        while (tmp != nullptr) {
+            /*tmp's key matches my key?*/
+            if (tmp->key == key) /*I have found the key, give it to me*/ return tmp;
+            /*otherwise move on to the next node*/
+            tmp = tmp->next;
+        }
+        /*if it's empty or there is no key*/
+        return nullptr;
     }
 
     /******************************************************************************
      *  E6. Remove a key from the hash-table implemented using chaining.
      *****************************************************************************/
 
-    void remove(string key) {
+    void remove(const string &key) {
         // go through to remove. Find if it's there
+        int index = hashCode(key, size);
+
+        HashNode *tmp = table[index];
+        HashNode *prev = nullptr;
+
+        while (tmp != nullptr) {
+            if (tmp->key == key) break; /*if key matches, exit loop*/
+            prev = tmp; /*otherwise keep going*/
+            tmp = tmp->next;
+        }
+
+        if (tmp == nullptr) return; /*if empty, return without doing anything; key not found*/
+
+        else if (prev == nullptr) { /*table is matching and previous is null. if so, previous goes away*/
+            table[index] = tmp->next; // no one is pointing to tmp now
+            delete tmp;
+            tmp = nullptr; // when deleting a value pointing to an address, reallocate that pointer to null
+        } else { /*when previous is not equal to null, don't touch anything at the head, delete temp. */
+            prev->next = tmp->next;
+            delete tmp;
+            tmp = nullptr;
+        }
+        //
     }
 
 
@@ -145,7 +179,7 @@ public:
 
     int hashCode2(string k, int table_size) {
         int hash = 0;
-        double A = 13 / 32;
+        double A = 13.0 / 32.0;
         double hA;
         int m = 1024;
 
@@ -200,18 +234,26 @@ int main(int argc, char *argv[]) {
         HT.insert(key, value);
     }
 
+    HT.printHashTable();
 
-    //  HT.remove("Ashutosh Trivedi");
+    /*SEARCH*/
+//    string name1 = "Prathyusha Gayam";
+//    /* call the function with her name. If you find it, print the value of her key*/
+//    if (HT.search(name1) == nullptr) cout << name1 << ": Key not found" << endl;
+//    else cout << "Key: " << name1 << " has value:" << HT.search(name1)->value;
+//
+//    name1 = "Ashutosh Trivedi";
+//
+//    if (HT.search(name1) == nullptr) cout << name1 << "key not found" << endl;
+//    else cout << "Key: " << name1 << " has value:" << HT.search(name1)->value << endl;
 
-    string name1 = "Prathyusha Gayam";
+    /*REMOVE*/
+    HT.remove("Ashutosh Trivedi");
+//    HT.remove("Prathyusha Gayam");
+//    HT.remove("Andrew Altomare");
+//    HT.remove("Maciej J Zagrodzki");
 
-    if (HT.search(name1) == nullptr) cout << name1 << ": Key not found" << endl;
-    else cout << "Key: " << name1 << " has value:" << HT.search(name1)->value;
 
-    name1 = "Ashutosh Trivedi";
-
-    if (HT.search(name1) == nullptr) cout << name1 << "key not found" << endl;
-    else cout << "Key: " << name1 << " has value:" << HT.search(name1)->value << endl;
 
 
     HT.printHashTable();
