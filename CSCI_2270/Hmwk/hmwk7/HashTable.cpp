@@ -52,24 +52,47 @@ void getStopWords(char *ignoreWordFileName, HashTable &stopWordsTable) {
 
     while (safeGetline(input,tempword) && element < 50) {
         stopWordsTable[element++] = tempword;
+        // TODO How do I implement HT correctly?
     }
 
     input.close();
 }
 
 /* check table to see if a word is a stopword or not */
-bool isStopWord(std::string word, HashTable &stopWordsTable);
+bool isStopWord(std::string word, HashTable &stopWordsTable){
+    for (int i = 0; i < 50; i++) {
+        std::string w = stopWordsTable[i];
+        // TODO How do I implement HT correctly?
+        if (w == word) {
+            return true;
+        }
+    }
+    return false;
+
+}
 
 
 ////////////////////////////////////////////////////////////////////
 /*CLASS FUNCTIONS*/
 ////////////////////////////////////////////////////////////////////
 HashTable::HashTable(int hashTableSize) {
-
+    this->hashTableSize = hashTableSize; //todo My goal is to connect it to the instance varialbe hashTableSize in .hpp
+    hashTable = new wordItem *[hashTableSize];
+    for (int i = 0; i < hashTableSize; i++) hashTable[i] = nullptr; // initializing all pointers to NULL to be safe
+    int numItems = 0;
+    int numCollisions = 0;
 }
 
 HashTable::~HashTable() {
-
+    for (int i = 0; i < hashTableSize; i++) {
+        wordItem *tmp = hashTable[i];
+        while (tmp != nullptr) {
+            wordItem *curr = tmp;
+            tmp = tmp->next;
+            delete curr;
+        }
+    }
+    delete[] hashTable;
 }
 
 void HashTable::addWord(std::string word) {
@@ -84,8 +107,13 @@ void HashTable::incrementCount(std::string word) {
 
 }
 
+// probability of occurrence up to 4 decimal places.
 void HashTable::printTopN(int n) {
-
+//    for (int i = 0; i < n; i++) {
+//    /* for each wordItem, w, in the top n most frequent words
+//        totalNumberofWords - total number of non-stop words */
+//    std::cout << (float)w->count/totalNumberofWords << " - " << w->word << std::endl;
+//    }
 }
 
 int HashTable::getNumCollisions() {
@@ -101,11 +129,23 @@ int HashTable::getTotalNumWords() {
 }
 
 unsigned int HashTable::getHash(std::string word) {
-    
-    return 0;
+    int hash = 0;
+    for (char i : word) hash = hash + i;
+    return static_cast<unsigned int>(hash % hashTableSize);
 }
 
 wordItem *HashTable::searchTable(std::string word) {
+    int index = getHash(word);
+
+    // search list a that specific index and return the node if found
+    wordItem *tmp = hashTable[index];
+
+    while(tmp!= nullptr) {
+        // does tmp's word match my word?
+        if (tmp->word == word) return tmp; // found it!
+        tmp = tmp->next; // nope, keep searching
+    }
+    // if empty or no key, 
     return nullptr;
 }
 
@@ -122,8 +162,9 @@ int main(int argc, char *argv[]) {
 
     // open file with words to ignore file (index 3)
     char *ignorewords_filename = argv[3];
-    std::string ignoreWords[50];
-    getstopWords(ignorewords_filename, ignoreWords);
+//    HashTable **ignoreWords[50];
+//    getStopWords(ignorewords_filename, ignoreWords);
+// TODO How do I do this with HTs?
 
     // open file with good words (index 2)
     char *words_filename = argv[2];

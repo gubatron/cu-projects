@@ -4,11 +4,10 @@
 #include <string>
 
 // struct to store word + count combinations
-struct wordItem
-{
+struct wordItem {
     std::string word;
     int count;
-    wordItem* next;
+    wordItem *next;
 };
 
 
@@ -21,27 +20,36 @@ struct wordItem
  *   a word is a stopword before adding it to the second.
  */
 class HashTable {
-  public:
+public:
     explicit HashTable(int hashTableSize);
+
     ~HashTable();
+
     void addWord(std::string word);
+
     bool isInTable(std::string word);
+
     void incrementCount(std::string word);
+
     void printTopN(int n);
+
     int getNumCollisions();
+
     int getNumItems();
+
     int getTotalNumWords();
 
-  private:
+private:
     /* member functions */
     unsigned int getHash(std::string word);
-    wordItem* searchTable(std::string word);
+
+    wordItem *searchTable(std::string word);
 
     /* instance variables */
-    wordItem** hashTable;
+    wordItem **hashTable; // array of hash pointers
     int hashTableSize;
-    int numItems;
-    int numCollisions;
+    int numItems;   // number of unique words
+    int numCollisions;  //
 };
 
 
@@ -51,11 +59,12 @@ const int STOPWORD_TABLE_SIZE = 50;
 /* Required functions for use in main.
  *   you are free to also define your own helper functions
  *   for your driver in your .cpp files if you wish.
- * These are the same functions from hw2, but use a
+ *  These are the same functions from hw2, but use a
  *   hashtable instead of an array. */
 
 /* load stopwords into the stopwords hash table */
 void getStopWords(char *ignoreWordFileName, HashTable &stopWordsTable);
+
 /* check table to see if a word is a stopword or not */
 bool isStopWord(std::string word, HashTable &stopWordsTable);
 
