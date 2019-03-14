@@ -118,9 +118,10 @@ public:
 
         while (tmp != nullptr) {
             /*tmp's key matches my key?*/
-            if (tmp->key == key) /*I have found the key, give it to me*/ return tmp;
+            if (tmp->key == key) /*I have found the key, give it to me*/
+                return tmp;
             /*otherwise move on to the next node*/
-            tmp = tmp->next;
+            else tmp = tmp->next;
         }
         /*if it's empty or there is no key*/
         return nullptr;
@@ -202,10 +203,10 @@ public:
 
     void printHashTable() {
         for (int i = 0; i < size; i++) {
-            if (table[i] != 0) {
+            if (table[i] != nullptr) {
                 cout << "[" << i << "] ";
                 HashNode *curr = table[i];
-                while (curr != 0) {
+                while (curr != nullptr) {
                     cout << "-> Key: " << curr->key << " (#" << hashCode(curr->key, size) << ") Value: " << curr->value;
                     curr = curr->next;
                 }
