@@ -71,6 +71,43 @@ bool isStopWord(std::string word, HashTable &stopWordsTable) {
 
 }
 
+int countWords(wordItem* first) {
+    if (first == nullptr) {
+        return 0;
+    }
+    int count = 1;
+    while (first->next != nullptr) {
+        count++;
+        first = first->next;
+    }
+    return count;
+}
+
+void swap(wordItem *a, wordItem *b) {
+    wordItem temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void sort(wordItem* first) { // function to sort through the list. Using a bubble sort variation.
+    wordItem *current, *bcurrent;
+    current = first;
+    bcurrent = first->next;
+    int count = countWords(first);
+
+    for (int i = count - 1; i >= 0; i--) {
+        current = first;
+        bcurrent = first->next;
+        for (int j = 0; j < count - 1; j++) {
+            if (current->count > bcurrent->count) {
+                swap(current, bcurrent);
+            }
+            current = bcurrent;
+            bcurrent = bcurrent->next;
+        }
+    }
+
+}
 
 ////////////////////////////////////////////////////////////////////
 /*CLASS FUNCTIONS*/
@@ -96,15 +133,98 @@ HashTable::~HashTable() {
 }
 
 void HashTable::addWord(std::string word) {
+    int index = getHash(word);
+
+    // no collision, new word
+    if (hashTable[index] == nullptr) {
+        auto w = new wordItem;
+        w->next = nullptr;
+        w->word = word;
+        w->count = 1;
+        hashTable[index] = w;
+        numItems++;
+        return;
+    }
+
+    // could be existing word or new word with hash collision.
+    wordItem* head = hashTable[index];
+
+
+    while (head->next != nullptr) {
+        if  (head->word == word) {
+            head->count++;
+            auto headCopy = hashTable[index];
+            sort(headCopy);
+            return;
+        }
+        head = head->next;
+
+    }
+
+
+    if (head->word == word) {
+        head->count++;
+        auto headCopy = hashTable[index];
+        sort(headCopy);
+        return;
+    }
+
+    // if we get here, it's a new word with this hash, and it's a collision
+
+    auto w = new wordItem;
+    w->next = nullptr;
+    w->word = word;
+    w->count = 1;
+
+    head->next = w;
+
+    auto headCopy = hashTable[index];
+    sort(headCopy);
+
+    numItems++;
+    numCollisions++;
 
 }
 
 bool HashTable::isInTable(std::string word) {
-    return false;
+    int index = getHash(word);
+    if (hashTable[index] == nullptr) {
+        return false;
+    }
+    // could be existing word or new word with hash collision.
+    wordItem* head = hashTable[index];
+
+    while (head->next != nullptr) {
+        if  (head->word == word) {
+            return true;
+        }
+        head = head->next;
+    }
+
+    // does the last word match? if not, it's not in the table.
+    return head->word == word;
 }
 
 void HashTable::incrementCount(std::string word) {
+    int index = getHash(word);
+    if (hashTable[index] == nullptr) {
+        return;
+    }
+    // could be existing word or new word with hash collision.
+    wordItem* head = hashTable[index];
 
+    while (head->next != nullptr) {
+        if  (head->word == word) {
+            head->count++;
+            return;
+        }
+        head = head->next;
+    }
+
+    // does the last word match? if not, it's not in the table.
+    if (head->word == word) {
+        head->count++;
+    }
 }
 
 // probability of occurrence up to 4 decimal places.
@@ -152,11 +272,43 @@ wordItem *HashTable::searchTable(std::string word) {
 ////////////////////////////////////////////////////////////////////
 /*DRIVER FUNCTION*/
 ////////////////////////////////////////////////////////////////////
+
+void setupTests(HashTable &ht) {
+    ht.addWord("angel");
+    ht.addWord("legna");
+    ht.addWord("nicole");
+    ht.addWord("nicole");
+    ht.addWord("paulina");
+    ht.addWord("angel");
+    ht.addWord("sarah");
+    ht.addWord("asrha");
+    ht.addWord("angel");
+    ht.addWord("desmond");
+    ht.addWord("sarah");
+}
+
+void isInTableTests(HashTable &ht) {
+    std::cout << ht.isInTable("desmond") << std::endl;
+    std::cout << ht.isInTable("angel") << std::endl;
+    std::cout << ht.isInTable("lange") << std::endl;
+    std::cout << ht.isInTable("neny") << std::endl;
+}
+
+void incrementTest(HashTable &ht) {
+    ht.incrementCount("paulina");
+}
+
 int main(int argc, char *argv[]) {
-    if (argc != 5) {
-        std::cout << "Usage: Assignment7 <number of common words> <text file> <stop words file> <size of HT>\n";
-        return -1;
-    }
+//    if (argc != 5) {
+//        std::cout << "Usage: Assignment7 <number of common words> <text file> <stop words file> <size of HT>\n";
+//        return -1;
+//    }
+
+    HashTable ht(3);
+    setupTests(ht);
+    isInTableTests(ht);
+    incrementTest(ht);
+
 
     int topN = std::stoi(argv[1]);
 
