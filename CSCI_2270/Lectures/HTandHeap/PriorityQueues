@@ -1,0 +1,53 @@
+Priority Queues + Heaps
+    - Heaps are Binary Trees - BT more or less complete
+    - Min heap vs Max heap
+
+Priority Queues
+    - DS where elements have a priority field attached to them
+    - every efficient PQ has a heap
+    - elements with high priority are served before the elements with low priority
+    - the order among elements with equal priority follows the order they were enqueued
+    - stacks and queues can be modeled as PQs where in a stack priority is monotonically increasing,
+    and in a queue priority of each inserted element is monotonically decreasing.
+    - queue is our FIFO
+    * Adding (push)  - unsorted: O(1) // sorted: O(n)
+    * Deleting (pop) - unsorted: O(n) // sorted: O(1)
+        [similar to sorted/unsorted LL]
+        IMPROVE WITH BINARY HEAPS!
+
+Binary Heaps
+    - DS with a complete binary tree
+    Min Heap
+        - a complete binary tree - difference in height between two branches is at most 1
+        - if x is a node and y is its (either left or right) child then
+                    x.priority <= y.priority        (of the nodes, not key values!)
+        - bt small to large
+        - every node is smaller than it's children
+        - min element is the root
+    Max Heap
+        - a complete binary tree - difference in height between two branches is at most 1
+        - if x is a node and y is its (either left or right) child then
+                    x.priority >= y.priority        (of the nodes, not key values!)
+        - bt large to small
+        - every node is greater than it's children
+        - max element is the root
+
+    - BH into ARRAYS
+         - represent in an array as reading from left to right from the top per level
+                    - to see parents/children of nodes,
+                    - LEFT CHILD mapped at index 2i + 1
+                    - RIGHT CHILD mapped at index 2i + 2
+                    - for PARENT, floor((i-1)/2)
+
+
+ Inserting to Min Heap
+    push
+        if parent is not smaller than number im inserting, swap the two
+        you do max of log(n) comparisons before you insert values in the right place
+            - you do as many comparisons as the height of the tree only. No need to check all branches
+ Deleting from Min Heap
+    pop
+        remove element from element of lowest priority - @ root          [for Max heap @ leaf]
+        move element at end of array to the first index and shuffle array to make sure it's a min heap
+            from root, check which one L/R is the minimum and so on. Keep checking all the way down till large element
+            makes it to the bottom. Take the Minimum up and the element down that side of the branch.

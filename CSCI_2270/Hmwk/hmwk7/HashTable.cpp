@@ -145,7 +145,7 @@ wordItem *HashTable::searchTable(std::string word) {
         if (tmp->word == word) return tmp; // found it!
         tmp = tmp->next; // nope, keep searching
     }
-    // if empty or no key, 
+    // if empty or no key,
     return nullptr;
 }
 
