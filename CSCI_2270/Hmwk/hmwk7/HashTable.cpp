@@ -49,64 +49,16 @@ void getStopWords(char *ignoreWordFileName, HashTable &stopWordsTable) {
         std::cout << "Failed to open " << ignoreWordFileName << std::endl;
         return;
     }
-
     while (safeGetline(input, tempword) && element < 50) {
-        //stopWordsTable[element++] = tempword;
-        // TODO How do I implement HT correctly?
+        stopWordsTable.addWord(tempword);
+        element++; // TODO: double check it's adding 50 and not 49.
     }
-
     input.close();
 }
 
 /* check table to see if a word is a stopword or not */
 bool isStopWord(std::string word, HashTable &stopWordsTable) {
-    for (int i = 0; i < 50; i++) {
-        //std::string w = stopWordsTable[i];
-        // TODO How do I implement HT correctly?
-//        if (w == word) {
-//            return true;
-//        }
-    }
-    return false;
-
-}
-
-int countWords(wordItem* first) {
-    if (first == nullptr) {
-        return 0;
-    }
-    int count = 1;
-    while (first->next != nullptr) {
-        count++;
-        first = first->next;
-    }
-    return count;
-}
-
-void swap(wordItem *a, wordItem *b) {
-    wordItem temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-void sort(wordItem* first) { // function to sort through the list. Using a bubble sort variation.
-    wordItem *current, *bcurrent;
-    current = first;
-    bcurrent = first->next;
-    int count = countWords(first);
-
-    for (int i = count - 1; i >= 0; i--) {
-        current = first;
-        bcurrent = first->next;
-        for (int j = 0; j < count - 1; j++) {
-            if (current->count > bcurrent->count) {
-                swap(current, bcurrent);
-            }
-            current = bcurrent;
-            bcurrent = bcurrent->next;
-        }
-    }
-
+    return stopWordsTable.isInTable(word);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -149,23 +101,16 @@ void HashTable::addWord(std::string word) {
     // could be existing word or new word with hash collision.
     wordItem* head = hashTable[index];
 
-
     while (head->next != nullptr) {
         if  (head->word == word) {
             head->count++;
-            auto headCopy = hashTable[index];
-            sort(headCopy);
             return;
         }
         head = head->next;
-
     }
-
 
     if (head->word == word) {
         head->count++;
-        auto headCopy = hashTable[index];
-        sort(headCopy);
         return;
     }
 
@@ -175,11 +120,7 @@ void HashTable::addWord(std::string word) {
     w->next = nullptr;
     w->word = word;
     w->count = 1;
-
     head->next = w;
-
-    auto headCopy = hashTable[index];
-    sort(headCopy);
 
     numItems++;
     numCollisions++;
@@ -237,21 +178,32 @@ void HashTable::printTopN(int n) {
 }
 
 int HashTable::getNumCollisions() {
-    return 0;
+    return numCollisions;
 }
 
 int HashTable::getNumItems() {
-    return 0;
+    return numItems;
 }
 
 int HashTable::getTotalNumWords() {
-    return 0;
+    int total = 0;
+    for (int i=0; i < hashTableSize; i++) {
+        auto head = hashTable[i];
+        while (head != nullptr) {
+            total += head->count;
+            head = head->next;
+        }
+    }
+    return total;
 }
 
 unsigned int HashTable::getHash(std::string word) {
-    int hash = 0;
-    for (char i : word) hash = hash + i;
-    return static_cast<unsigned int>(hash % hashTableSize);
+    unsigned int hash = 5381;
+    int length = word.size();
+    for (int i=0; i < length; i++) {
+        hash = ((hash << 5) + hash) + (int) word[i];
+    }
+    return hash % hashTableSize;
 }
 
 wordItem *HashTable::searchTable(std::string word) {
@@ -307,8 +259,13 @@ int main(int argc, char *argv[]) {
     HashTable ht(3);
     setupTests(ht);
     isInTableTests(ht);
+    std::cout << "total words: " << ht.getTotalNumWords() << std::endl;
     incrementTest(ht);
+    std::cout << "total words: " << ht.getTotalNumWords() << std::endl;
 
+    if (true) {
+        return 0;
+    }
 
     int topN = std::stoi(argv[1]);
 
