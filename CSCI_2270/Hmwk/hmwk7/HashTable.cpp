@@ -45,13 +45,13 @@ void getStopWords(char *ignoreWordFileName, HashTable &stopWordsTable) {
     std::string tempword;
     std::ifstream input(ignoreWordFileName);
 
-    if (!input.is_open()){
+    if (!input.is_open()) {
         std::cout << "Failed to open " << ignoreWordFileName << std::endl;
         return;
     }
 
-    while (safeGetline(input,tempword) && element < 50) {
-        stopWordsTable[element++] = tempword;
+    while (safeGetline(input, tempword) && element < 50) {
+        //stopWordsTable[element++] = tempword;
         // TODO How do I implement HT correctly?
     }
 
@@ -59,13 +59,13 @@ void getStopWords(char *ignoreWordFileName, HashTable &stopWordsTable) {
 }
 
 /* check table to see if a word is a stopword or not */
-bool isStopWord(std::string word, HashTable &stopWordsTable){
+bool isStopWord(std::string word, HashTable &stopWordsTable) {
     for (int i = 0; i < 50; i++) {
-        std::string w = stopWordsTable[i];
+        //std::string w = stopWordsTable[i];
         // TODO How do I implement HT correctly?
-        if (w == word) {
-            return true;
-        }
+//        if (w == word) {
+//            return true;
+//        }
     }
     return false;
 
@@ -75,12 +75,12 @@ bool isStopWord(std::string word, HashTable &stopWordsTable){
 ////////////////////////////////////////////////////////////////////
 /*CLASS FUNCTIONS*/
 ////////////////////////////////////////////////////////////////////
-HashTable::HashTable(int hashTableSize) {
-    this->hashTableSize = hashTableSize; //todo My goal is to connect it to the instance varialbe hashTableSize in .hpp
+HashTable::HashTable(int size) {
+    hashTableSize = size;
     hashTable = new wordItem *[hashTableSize];
     for (int i = 0; i < hashTableSize; i++) hashTable[i] = nullptr; // initializing all pointers to NULL to be safe
-    int numItems = 0;
-    int numCollisions = 0;
+    numItems = 0;
+    numCollisions = 0;
 }
 
 HashTable::~HashTable() {
@@ -140,7 +140,7 @@ wordItem *HashTable::searchTable(std::string word) {
     // search list a that specific index and return the node if found
     wordItem *tmp = hashTable[index];
 
-    while(tmp!= nullptr) {
+    while (tmp != nullptr) {
         // does tmp's word match my word?
         if (tmp->word == word) return tmp; // found it!
         tmp = tmp->next; // nope, keep searching
