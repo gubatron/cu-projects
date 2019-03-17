@@ -54,13 +54,12 @@ bool loadStopWords(std::string ignoreWordFileName, HashTable &hashTable) {
         hashTable.addWord(tempword);
         element++;
     }
-    std::cout << "Loaded " << element << " words" << std::endl;
     input.close();
     return true;
 }
 
 /* load stopwords into the stopwords hash table */
-bool loadTextfile(std::string textFile, HashTable &hashtable) {
+bool loadTextfile(std::string textFile, HashTable &text_ht, HashTable &stopwords_ht) {
 
     std::string tempword;
     std::ifstream input(textFile);
@@ -69,9 +68,9 @@ bool loadTextfile(std::string textFile, HashTable &hashtable) {
         std::cout << "Failed to open " << textFile << std::endl;
         return false;
     }
-    while (safeGetline(input, tempword)) {
-        if (!isStopWord(tempword, hashtable)) {
-            hashtable.addWord(tempword);
+    while (getline(input, tempword, ' ')) {
+        if (!isStopWord(tempword, stopwords_ht)) {
+            text_ht.addWord(tempword);
         }
     }
     input.close();
@@ -395,31 +394,32 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    HashTable ht(htSize);
-    if (!loadStopWords(stopWordsFile, ht)) {
+    HashTable stopwords_ht(htSize);
+    if (!loadStopWords(stopWordsFile, stopwords_ht)) {
         std::cout << "Error, could not load stop words from " << stopWordsFile << std::endl;
         return -1;
     }
 
-    if (!loadTextfile(textFile, ht)) {
+    HashTable text_ht(htSize);
+    if (!loadTextfile(textFile, text_ht, stopwords_ht)) {
         std::cout << "Error, could not load textfile from " << textFile << std::endl;
         return -1;
 
     }
 
-    ht.printTopN(topN);
+    text_ht.printTopN(topN);
 
     std::cout << "#" << std::endl;
 
-    std::cout << "Number of collisions: " << ht.getNumCollisions() << std::endl;
+    std::cout << "Number of collisions: " << text_ht.getNumCollisions() << std::endl;
 
     std::cout << "#" << std::endl;
 
-    std::cout << "Unique non-stop words: " << ht.getNumItems() << std::endl;
+    std::cout << "Unique non-stop words: " << text_ht.getNumItems() << std::endl;
 
     std::cout << "#" << std::endl;
 
-    std::cout << "Total non-stop words: " << ht.getTotalNumWords() << std::endl;
+    std::cout << "Total non-stop words: " << text_ht.getTotalNumWords() << std::endl;
 
     return 0;
 }
