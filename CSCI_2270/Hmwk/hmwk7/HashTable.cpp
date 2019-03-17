@@ -41,20 +41,41 @@ std::istream &safeGetline(std::istream &is, std::string &t) {
 
 
 /* load stopwords into the stopwords hash table */
-void getStopWords(char *ignoreWordFileName, HashTable &stopWordsTable) {
+bool loadStopWords(std::string ignoreWordFileName, HashTable &hashTable) {
     int element = 0;
     std::string tempword;
     std::ifstream input(ignoreWordFileName);
 
     if (!input.is_open()) {
         std::cout << "Failed to open " << ignoreWordFileName << std::endl;
-        return;
+        return false;
     }
     while (safeGetline(input, tempword) && element < 50) {
-        stopWordsTable.addWord(tempword);
-        element++; // TODO: double check it's adding 50 and not 49.
+        hashTable.addWord(tempword);
+        element++;
+    }
+    std::cout << "Loaded " << element << " words" << std::endl;
+    input.close();
+    return true;
+}
+
+/* load stopwords into the stopwords hash table */
+bool loadTextfile(std::string textFile, HashTable &hashtable) {
+
+    std::string tempword;
+    std::ifstream input(textFile);
+
+    if (!input.is_open()) {
+        std::cout << "Failed to open " << textFile << std::endl;
+        return false;
+    }
+    while (safeGetline(input, tempword)) {
+        if (!isStopWord(tempword, hashtable)) {
+            hashtable.addWord(tempword);
+        }
     }
     input.close();
+    return true;
 }
 
 /* check table to see if a word is a stopword or not */
@@ -152,10 +173,10 @@ void HashTable::addWord(std::string word) {
     }
 
     // could be existing word or new word with hash collision.
-    wordItem* head = hashTable[index];
+    wordItem *head = hashTable[index];
 
     while (head->next != nullptr) {
-        if  (head->word == word) {
+        if (head->word == word) {
             head->count++;
             return;
         }
@@ -186,10 +207,10 @@ bool HashTable::isInTable(std::string word) {
         return false;
     }
     // could be existing word or new word with hash collision.
-    wordItem* head = hashTable[index];
+    wordItem *head = hashTable[index];
 
     while (head->next != nullptr) {
-        if  (head->word == word) {
+        if (head->word == word) {
             return true;
         }
         head = head->next;
@@ -205,10 +226,10 @@ void HashTable::incrementCount(std::string word) {
         return;
     }
     // could be existing word or new word with hash collision.
-    wordItem* head = hashTable[index];
+    wordItem *head = hashTable[index];
 
     while (head->next != nullptr) {
-        if  (head->word == word) {
+        if (head->word == word) {
             head->count++;
             return;
         }
@@ -223,8 +244,10 @@ void HashTable::incrementCount(std::string word) {
 
 // probability of occurrence up to 4 decimal places.
 void HashTable::printTopN(int n) {
+    // as we go through each word, sum all counts so we can
+    // calculate probability of words when printing them
     int totalCountWords = 0;
-    wordItem arr[numItems];
+    wordItem arr[numItems]; // array of wordItems to be sorted by wordItem.count
 
     // copy all the words in all the lists
     int j = 0;
@@ -234,13 +257,14 @@ void HashTable::printTopN(int n) {
             totalCountWords += headCopy->count;
             arr[j].word = headCopy->word;
             arr[j].count = headCopy->count;
-            j++;
             headCopy = headCopy->next;
+            j++;
         }
     }
     quickSort(arr, numItems, true);
-    for (int i = 0; i <= n; i++) {
-        std::cout << std::fixed << std::setprecision(4) << (float)arr[i].count/totalCountWords << " - " << arr[i].word << std::endl;
+    for (int i = 0; i < n; i++) {
+        std::cout << std::fixed << std::setprecision(4) << (float) arr[i].count / totalCountWords << " - "
+                  << arr[i].word << std::endl;
     }
 }
 
@@ -254,7 +278,7 @@ int HashTable::getNumItems() {
 
 int HashTable::getTotalNumWords() {
     int total = 0;
-    for (int i=0; i < hashTableSize; i++) {
+    for (int i = 0; i < hashTableSize; i++) {
         auto head = hashTable[i];
         while (head != nullptr) {
             total += head->count;
@@ -267,7 +291,7 @@ int HashTable::getTotalNumWords() {
 unsigned int HashTable::getHash(std::string word) {
     unsigned int hash = 5381;
     int length = word.size();
-    for (int i=0; i < length; i++) {
+    for (int i = 0; i < length; i++) {
         hash = ((hash << 5) + hash) + (int) word[i];
     }
     return hash % hashTableSize;
@@ -305,6 +329,10 @@ void setupTests(HashTable &ht) {
     ht.addWord("desmond");
     ht.addWord("sarah");
     ht.addWord("paulina");
+    ht.addWord("sarah");
+    ht.addWord("sarah");
+    ht.incrementCount("nicole");
+    ht.incrementCount("nicole");
 }
 
 void isInTableTests(HashTable &ht) {
@@ -318,12 +346,7 @@ void incrementTest(HashTable &ht) {
     ht.incrementCount("paulina");
 }
 
-int main(int argc, char *argv[]) {
-//    if (argc != 5) {
-//        std::cout << "Usage: Assignment7 <number of common words> <text file> <stop words file> <size of HT>\n";
-//        return -1;
-//    }
-
+void tests() {
     HashTable ht(3);
     setupTests(ht);
     isInTableTests(ht);
@@ -332,20 +355,71 @@ int main(int argc, char *argv[]) {
     std::cout << "total words: " << ht.getTotalNumWords() << std::endl;
 
     ht.printTopN(3);
+}
 
-    if (true) {
-        return 0;
+bool readParameters(char *argv[], int &topN, std::string &textFile, std::string &stopWordsFile, int &htSize) {
+    try {
+        topN = std::stoi(argv[1]);
+    } catch (std::invalid_argument &e) {
+        std::cout << " number of most common words must be an integer. '" << argv[1] << "' is an invalid parameter"
+                  << std::endl;
+        return false;
     }
 
-    int topN = std::stoi(argv[1]);
+    textFile = std::string(argv[2]);
 
-    // open file with words to ignore file (index 3)
-    char *ignorewords_filename = argv[3];
-//    HashTable **ignoreWords[50];
-//    getStopWords(ignorewords_filename, ignoreWords);
-// TODO How do I do this with HTs?
+    stopWordsFile = std::string(argv[3]);
 
-    // open file with good words (index 2)
-    char *words_filename = argv[2];
-    std::ifstream wordsfile(words_filename);
+    try {
+        htSize = std::stoi(argv[4]);
+    } catch (std::invalid_argument &e) {
+        std::cout << " hash table size must be an integer. '" << argv[4] << "' is an invalid parameter" << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 5) {
+        std::cout << "Usage: Assignment7 <number of most common words> <text file> <stop words file> <size of HT>\n";
+        return -1;
+    }
+
+    int topN;
+    std::string textFile;
+    std::string stopWordsFile;
+    int htSize;
+
+    if (!readParameters(argv, topN, textFile, stopWordsFile, htSize)) {
+        return -1;
+    }
+
+    HashTable ht(htSize);
+    if (!loadStopWords(stopWordsFile, ht)) {
+        std::cout << "Error, could not load stop words from " << stopWordsFile << std::endl;
+        return -1;
+    }
+
+    if (!loadTextfile(textFile, ht)) {
+        std::cout << "Error, could not load textfile from " << textFile << std::endl;
+        return -1;
+
+    }
+
+    ht.printTopN(topN);
+
+    std::cout << "#" << std::endl;
+
+    std::cout << "Number of collisions: " << ht.getNumCollisions() << std::endl;
+
+    std::cout << "#" << std::endl;
+
+    std::cout << "Unique non-stop words: " << ht.getNumItems() << std::endl;
+
+    std::cout << "#" << std::endl;
+
+    std::cout << "Total non-stop words: " << ht.getTotalNumWords() << std::endl;
+
+    return 0;
 }
