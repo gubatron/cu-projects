@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include "HashTable.hpp"
 
 
@@ -61,6 +62,58 @@ bool isStopWord(std::string word, HashTable &stopWordsTable) {
     return stopWordsTable.isInTable(word);
 }
 
+void quickSort(wordItem arr[], int length, bool reverse) {
+    if (length <= 1) {
+        return;
+    }
+    const int pivot_count = arr[length / 2].count;
+    int smaller_length = 0;
+    int bigger_length = 0;
+    int equal_length = 0;
+
+    for (int i = 0; i < length; i++) {
+        if (!reverse) {
+            if (arr[i].count < pivot_count) smaller_length++;
+            if (arr[i].count > pivot_count) bigger_length++;
+        } else {
+            if (arr[i].count > pivot_count) smaller_length++;
+            if (arr[i].count < pivot_count) bigger_length++;
+        }
+        if (arr[i].count == pivot_count) equal_length++;
+    }
+
+    auto smaller = new wordItem[smaller_length];
+    auto bigger = new wordItem[bigger_length];
+    auto equal = new wordItem[equal_length];
+
+    int smaller_i = 0;
+    int bigger_i = 0;
+    int equal_i = 0;
+
+    // comparisons, this part should be pluggable to make this generic
+    for (int i = 0; i < length; i++) {
+        if (!reverse) {
+            if (arr[i].count < pivot_count) smaller[smaller_i++] = arr[i];
+            if (arr[i].count > pivot_count) bigger[bigger_i++] = arr[i];
+        } else {
+            if (arr[i].count > pivot_count) smaller[smaller_i++] = arr[i];
+            if (arr[i].count < pivot_count) bigger[bigger_i++] = arr[i];
+        }
+        if (arr[i].count == pivot_count) equal[equal_i++] = arr[i];
+    }
+
+    quickSort(smaller, smaller_length, reverse);
+    quickSort(bigger, bigger_length, reverse);
+
+    int j = 0;
+    // now overwrite the original array with:
+    // smaller + equal + bigger
+
+    for (int i = 0; i < smaller_length; i++) arr[j++] = smaller[i];
+    for (int i = 0; i < equal_length; i++) arr[j++] = equal[i];
+    for (int i = 0; i < bigger_length; i++) arr[j++] = bigger[i];
+
+}
 ////////////////////////////////////////////////////////////////////
 /*CLASS FUNCTIONS*/
 ////////////////////////////////////////////////////////////////////
@@ -170,11 +223,25 @@ void HashTable::incrementCount(std::string word) {
 
 // probability of occurrence up to 4 decimal places.
 void HashTable::printTopN(int n) {
-//    for (int i = 0; i < n; i++) {
-//    /* for each wordItem, w, in the top n most frequent words
-//        totalNumberofWords - total number of non-stop words */
-//    std::cout << (float)w->count/totalNumberofWords << " - " << w->word << std::endl;
-//    }
+    int totalCountWords = 0;
+    wordItem arr[numItems];
+
+    // copy all the words in all the lists
+    int j = 0;
+    for (int i = 0; i < hashTableSize; i++) {
+        auto headCopy = hashTable[i];
+        while (headCopy != nullptr) {
+            totalCountWords += headCopy->count;
+            arr[j].word = headCopy->word;
+            arr[j].count = headCopy->count;
+            j++;
+            headCopy = headCopy->next;
+        }
+    }
+    quickSort(arr, numItems, true);
+    for (int i = 0; i <= n; i++) {
+        std::cout << std::fixed << std::setprecision(4) << (float)arr[i].count/totalCountWords << " - " << arr[i].word << std::endl;
+    }
 }
 
 int HashTable::getNumCollisions() {
@@ -237,6 +304,7 @@ void setupTests(HashTable &ht) {
     ht.addWord("angel");
     ht.addWord("desmond");
     ht.addWord("sarah");
+    ht.addWord("paulina");
 }
 
 void isInTableTests(HashTable &ht) {
@@ -262,6 +330,8 @@ int main(int argc, char *argv[]) {
     std::cout << "total words: " << ht.getTotalNumWords() << std::endl;
     incrementTest(ht);
     std::cout << "total words: " << ht.getTotalNumWords() << std::endl;
+
+    ht.printTopN(3);
 
     if (true) {
         return 0;
