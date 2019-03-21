@@ -420,7 +420,7 @@ void MovieTree::deleteMovie(std::string title) {
     }
 
     // we found it, and it's the next one
-    current->next = next->next;
+    current->next = next->next;dx
     delete next;
 
     tryDeleteTreeNodeIfEmptyMovies(root, movieNode);

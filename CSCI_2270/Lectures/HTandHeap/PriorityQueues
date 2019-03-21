@@ -40,14 +40,20 @@ Binary Heaps
                     - for PARENT, floor((i-1)/2)
 
 
- Inserting to Min Heap
+ Inserting to Min Heap -- O(log(n))
     push
         if parent is not smaller than number im inserting, swap the two
         you do max of log(n) comparisons before you insert values in the right place
             - you do as many comparisons as the height of the tree only. No need to check all branches
- Deleting from Min Heap
+
+ Deleting from Min Heap -- O(log(n))
     pop
         remove element from element of lowest priority - @ root          [for Max heap @ leaf]
         move element at end of array to the first index and shuffle array to make sure it's a min heap
             from root, check which one L/R is the minimum and so on. Keep checking all the way down till large element
             makes it to the bottom. Take the Minimum up and the element down that side of the branch.
+
+        Take index out and replace values so that smallest number is once again at the root. Look at which of the two
+        branches have the minimum value
+
+** If you have n elements - insertion and deletion are log(n) -- the height of the tree starting from index 0 **

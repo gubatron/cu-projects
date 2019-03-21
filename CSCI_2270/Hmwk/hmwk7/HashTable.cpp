@@ -41,21 +41,20 @@ std::istream &safeGetline(std::istream &is, std::string &t) {
 
 
 /* load stopwords into the stopwords hash table */
-bool loadStopWords(std::string ignoreWordFileName, HashTable &hashTable) {
+void getStopWords(char *ignoreWordFileName, HashTable &stopWordsTable) {
     int element = 0;
     std::string tempword;
     std::ifstream input(ignoreWordFileName);
 
     if (!input.is_open()) {
         std::cout << "Failed to open " << ignoreWordFileName << std::endl;
-        return false;
+        return;
     }
-    while (safeGetline(input, tempword) && element < 50) {
-        hashTable.addWord(tempword);
+    while (safeGetline(input, tempword) && element < STOPWORD_TABLE_SIZE) {
+        stopWordsTable.addWord(tempword);
         element++;
     }
     input.close();
-    return true;
 }
 
 /* load stopwords into the stopwords hash table */
@@ -356,7 +355,7 @@ void tests() {
     ht.printTopN(3);
 }
 
-bool readParameters(char *argv[], int &topN, std::string &textFile, std::string &stopWordsFile, int &htSize) {
+bool readParameters(char *argv[], int &topN, std::string &textFile, int &htSize) {
     try {
         topN = std::stoi(argv[1]);
     } catch (std::invalid_argument &e) {
@@ -366,8 +365,6 @@ bool readParameters(char *argv[], int &topN, std::string &textFile, std::string 
     }
 
     textFile = std::string(argv[2]);
-
-    stopWordsFile = std::string(argv[3]);
 
     try {
         htSize = std::stoi(argv[4]);
@@ -390,15 +387,12 @@ int main(int argc, char *argv[]) {
     std::string stopWordsFile;
     int htSize;
 
-    if (!readParameters(argv, topN, textFile, stopWordsFile, htSize)) {
+    if (!readParameters(argv, topN, textFile, htSize)) {
         return -1;
     }
 
-    HashTable stopwords_ht(htSize);
-    if (!loadStopWords(stopWordsFile, stopwords_ht)) {
-        std::cout << "Error, could not load stop words from " << stopWordsFile << std::endl;
-        return -1;
-    }
+    HashTable stopwords_ht(STOPWORD_TABLE_SIZE);
+    getStopWords(argv[3], stopwords_ht);
 
     HashTable text_ht(htSize);
     if (!loadTextfile(textFile, text_ht, stopwords_ht)) {
