@@ -7,11 +7,7 @@ targetCompatibility = JavaVersion.VERSION_13
 sourceSets {
     main {
         java {
-            srcDir '.'
-        }
-
-        resources {
-            srcDir 'src/resources'
+            srcDir 'src/main/java'
         }
     }
 }
