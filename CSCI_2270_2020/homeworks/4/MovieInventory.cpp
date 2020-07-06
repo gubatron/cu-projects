@@ -7,6 +7,8 @@
 using namespace std;
 
 
+static const string MOVIE_NOT_FOUND = "Movie not found.";
+
 /////////////////////////////////////////////////
 ///// HELPER FUNCTIONS /////
 /////////////////////////////////////////////////
@@ -27,40 +29,59 @@ void printMovieInventoryHelper(MovieItem *m)
 }
 
 
-// MovieItem addMovieItemHelper(MovieItem *m, string t)
-// {
-//   // add a leaf
-//   if (m == NULL) {
-//     return new MovieItem(t);
-//   }
-//   // search in left sub tree
-//   // search in right sub tree
-// }
+void addMovieItemHelper(MovieItem *current, MovieItem *newMovieItem)
+{
+  if (current == NULL) {
+    return;
+  }
+
+  if (newMovieItem->title == current->title) {
+    return;
+  }
+  
+  if (newMovieItem->title > current->title) {
+    if (current->right == NULL) {
+      current->right = newMovieItem;
+    } else {
+      addMovieItemHelper(current->right, newMovieItem);
+    }
+  } else {
+    if (current->left == NULL) {
+      current->left = newMovieItem;
+    } else {
+      addMovieItemHelper(current->left, newMovieItem);
+    }
+  }  
+}
 
 
-MovieItem getMovieHelper(MovieItem *current, string title)
+void printMovieItem(MovieItem* movieItemPtr) {
+    cout << "Movie Info:" << endl;
+    cout << "==================" << endl;
+    cout << "Ranking:" << movieItemPtr->ranking << endl;
+    cout << "Title  :" << movieItemPtr->title << endl;
+    cout << "Year   :" << movieItemPtr->year << endl;
+    cout << "rating :" << movieItemPtr->rating << endl;
+}
+
+MovieItem* getMovieByTitle(MovieItem *current, string title)
 {
   if (current == NULL)
   {
-    cout << "Movie not found." << endl;
-    return *current;
+    return NULL;
   }
-  else if (current->title == title)
+  
+  if (current->title == title)
   {
-    // FOUND
-    cout << "Movie Info:" << endl;
-    cout << "==================" << endl;
-    cout << "Ranking:" << current->ranking << endl;
-    cout << "Title  :" << current->title << endl;
-    cout << "Year   :" << current->year << endl;
-    cout << "rating :" << current->rating << endl;
-    return *current;
+    return current;
   }
-  else if (current->title > title)
+  
+  if (current->title > title)
   {
-    return getMovieHelper(current->left, title);
+    return getMovieByTitle(current->left, title);
   }
-  return getMovieHelper(current->right, title);
+  
+  return getMovieByTitle(current->right, title);
 }
 
 
@@ -87,22 +108,27 @@ void MovieInventory::printMovieInventory()
   (printMovieInventoryHelper(root));
 }
 
-// void MovieInventory::addMovieItem(int ranking, string title, int year, float rating)
-// {
-//   //TODO
-//   auto *tmp = new MovieItem(ranking, title, year, rating);
-
-//   root = addMovieItemHelper(tmp, tmp->title);
-//   cout << tmp->title << " has been added" << endl;
-// }
+void MovieInventory::addMovieItem(int ranking, string title, int year, float rating)
+{
+   addMovieItemHelper(root, new MovieItem(ranking, title, year, rating));
+}
 
 
 void MovieInventory::getMovie(string title)
 {
-  //TODO
-  MovieItem movie;
-  if (movie->title == NULL)
-  getMovieHelper(root, title);  
+  if (root == NULL) {
+    cout << MOVIE_NOT_FOUND << endl;
+    return;
+  }
+
+  MovieItem *foundMovie = getMovieByTitle(root, title);
+
+  if (foundMovie == NULL) {
+    cout << MOVIE_NOT_FOUND << endl;
+    return;
+  }
+
+  printMovieItem(foundMovie);
 }
 
 void MovieInventory::searchMovies(float rating, int year)
