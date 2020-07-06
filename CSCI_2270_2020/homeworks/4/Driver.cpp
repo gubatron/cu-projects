@@ -13,7 +13,7 @@ void displayMenu() {
     cout << "3. Print the inventory" << endl;
     cout << "4. Average Rating of movies" << endl;
     cout << "5. Delete movie" << endl;
-	cout << "6. Rotate movies around" << endl;
+    cout << "6. Rotate movies around" << endl;
     cout << "7. Quit" << endl;
 }
 
@@ -50,6 +50,7 @@ int main(int argc, char** argv) {
             counter++;
         }
         tree->addMovieItem(ranking, title, year, rating);
+	cout << "Added " << title << endl;
     }
 
     displayMenu();
