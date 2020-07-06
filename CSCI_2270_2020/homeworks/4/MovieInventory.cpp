@@ -4,35 +4,23 @@
 #include <fstream>
 #include <sstream>
 
-
 using namespace std;
-
-
-static const string MOVIE_NOT_FOUND = "Movie not found.";
 
 /////////////////////////////////////////////////
 ///// HELPER FUNCTIONS /////
 /////////////////////////////////////////////////
 
-void printMovieInventoryHelper(MovieItem *root, MovieItem *m)
+void printMovieInventoryHelper(MovieItem *m)
 {
-
-  if (root == NULL)
-  {
-    cout << "Tree is Empty. Cannot print" << endl;
-    return;
-  }
-
+  // in-order traversal
   if (m->left != NULL) {
-    printMovieInventoryHelper(root, m->left);
-  } else {
+    printMovieInventoryHelper(m->left);
+  }
+  if (m != NULL) {
     cout << "Movie: " << m->title << " " << m->rating << endl;
   }
-
   if (m->right != NULL) {
-    printMovieInventoryHelper(root, m->right);
-  } else {
-    cout << "Movie: " << m->title << " " << m->rating << endl;
+    printMovieInventoryHelper(m->right);
   }
 }
 
@@ -45,24 +33,24 @@ void addMovieItemHelper(MovieItem *current, MovieItem *newMovieItem)
   }
 
   if (newMovieItem->title == current->title) {
-    cout << "addMovieItemHelper: movie " << current->title << " already exists" << endl;
+    //cout << "addMovieItemHelper: movie " << current->title << " already exists" << endl;
     return;
   }
   
   if (newMovieItem->title > current->title) {
     if (current->right == NULL) {
       current->right = newMovieItem;
-      cout << "addMovieItemHelper: added to the right of " << current->title << endl;
+      //cout << "addMovieItemHelper: added to the right of " << current->title << endl;
     } else {
-      cout << "addMovieItemHelper: diving to the right of " << current->title << endl;
+      //cout << "addMovieItemHelper: diving to the right of " << current->title << endl;
       addMovieItemHelper(current->right, newMovieItem);
     }
   } else {
     if (current->left == NULL) {
       current->left = newMovieItem;
-      cout << "addMovieItemHelper: added to the left of " << current->title << endl;      
+      //cout << "addMovieItemHelper: added to the left of " << current->title << endl;      
     } else {
-      cout << "addMovieItemHelper: diving to the left of " << current->title << endl;      
+      //cout << "addMovieItemHelper: diving to the left of " << current->title << endl;      
       addMovieItemHelper(current->left, newMovieItem);
     }
   }  
@@ -117,8 +105,12 @@ MovieInventory::~MovieInventory()
 
 void MovieInventory::printMovieInventory()
 {
-  // TODO
-  printMovieInventoryHelper(root, root);
+  if (root == NULL)
+  {
+    cout << "Tree is Empty. Cannot print" << endl;
+    return;
+  }
+  printMovieInventoryHelper(root);
 }
 
 void MovieInventory::addMovieItem(int ranking, string title, int year, float rating)
@@ -134,6 +126,7 @@ void MovieInventory::addMovieItem(int ranking, string title, int year, float rat
 
 void MovieInventory::getMovie(string title)
 {
+  static const string MOVIE_NOT_FOUND = "Movie not found.";  
   if (root == NULL) {
     cout << MOVIE_NOT_FOUND << endl;
     return;
@@ -159,9 +152,23 @@ void MovieInventory::averageRating()
   //TODO
 }
 
+void deleteMovieItemHelper(MovieItem* current, MovieItem *foundMovie) 
+{
+  // No children, just delete
+  if (foundMovie->left == NULL && foundMovie->right == NULL)
+  {
+    delete foundMovie;
+  }
+}
+
 void MovieInventory::deleteMovieItem(string title)
 {
-  //TODO
+  auto foundMovie = getMovieByTitle(root, title);
+  if (foundMovie == NULL) {
+    cout << "Movie: " << title << " not found, cannot delete." << endl;
+    return;
+  }
+  
 }
 
 void MovieInventory::leftRotate(string title)

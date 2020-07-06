@@ -17,7 +17,29 @@ void displayMenu() {
     cout << "7. Quit" << endl;
 }
 
+void testDeleteItem() {
+  MovieInventory* tree = new MovieInventory();
+  int ranking = 1;
+  string title_1 = "Charles";
+  int year = 2020;
+  float rating = 1.0;
+  tree->addMovieItem(ranking, title_1, year, rating);
+
+  string title_2 = "Alice";
+  tree->addMovieItem(ranking+1, title_2, year, rating - 0.12);
+
+  tree->printMovieInventory();
+  cout << endl << "======" << endl ;
+
+  cout << "Deleting Alice ..." << endl;
+  tree->deleteMovieItem("Alice");
+
+  cout << "Print inventory now" << endl;
+  tree->printMovieInventory();  
+}
+
 int main(int argc, char** argv) {
+     testDeleteItem();
     int input;
 
     // Tree
