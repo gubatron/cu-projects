@@ -7,6 +7,9 @@ int main()
     // test queues
     QueueLL queue;
 
+    QueueLL::Node* n = new QueueLL::Node();
+    cout << "size of Node* = " << sizeof(n) << endl;
+
     // TC1: queue empty after created?
     cout << "(1) ";
     cout << "Queue empty? ";
