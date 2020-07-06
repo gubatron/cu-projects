@@ -123,7 +123,6 @@ void MovieInventory::addMovieItem(int ranking, string title, int year, float rat
   addMovieItemHelper(root, temp);
 }
 
-
 void MovieInventory::getMovie(string title)
 {
   static const string MOVIE_NOT_FOUND = "Movie not found.";  
@@ -152,14 +151,55 @@ void MovieInventory::averageRating()
   //TODO
 }
 
-void deleteMovieItemHelper(MovieItem* current, MovieItem *foundMovie) 
-{
-  // No children, just delete
-  if (foundMovie->left == NULL && foundMovie->right == NULL)
-  {
-    delete foundMovie;
-  }
+MovieItem* getParent(MovieItem *current, MovieItem *foundMovie) {
+  
 }
+
+MovieItem* minValueNode(MovieItem *node) {
+  auto current = node; 
+  /* loop down to find the leftmost leaf */
+  while (current && current->left != NULL) {
+    current = current->left;
+  }
+  return current; 
+}
+
+MovieItem* deleteMovieItemHelper(MovieItem *current, MovieItem *foundMovie) 
+{
+  if (current == NULL) {
+    return NULL;
+  }
+  if (foundMovie->title < current->title) {
+    current->left = deleteMovieItemHelper(current->left, foundMovie);
+  } else if (foundMovie->title > current->title) {
+    current->right = deleteMovieItemHelper(current->right, foundMovie);
+  } else {
+    if (current->left == NULL) 
+    { 
+      auto temp = current->right; 
+      delete current; 
+      return temp; 
+    } 
+    else if (current->right == NULL) 
+    { 
+      auto temp = current->left; 
+      delete current; 
+      return temp; 
+    } 
+    // node with two children: Get the inorder successor (smallest 
+    // in the right subtree) 
+    auto minRightTemp = minValueNode(current->right);
+    // Copy the inorder successor's content to this node
+    current->ranking = minRightTemp->ranking;
+    current->title = minRightTemp->title;
+    current->year = minRightTemp->year;
+    current->rating = minRightTemp->rating;    
+    // Delete the inorder successor
+    current->right = deleteMovieItemHelper(current->right, minRightTemp);
+  }
+  return current; 
+}
+
 
 void MovieInventory::deleteMovieItem(string title)
 {
@@ -168,7 +208,7 @@ void MovieInventory::deleteMovieItem(string title)
     cout << "Movie: " << title << " not found, cannot delete." << endl;
     return;
   }
-  
+  deleteMovieItemHelper(root, foundMovie);
 }
 
 void MovieInventory::leftRotate(string title)
