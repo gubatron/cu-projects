@@ -106,8 +106,6 @@ void Graph::dijkstraTraverse(string start)
     // to be completed
     // must use searchVertex() for the source (see implementation above)
     vertex *vStart, *vEnd;
+
     
-    start->visited = true;
-
-
 }

@@ -100,7 +100,6 @@ void Graph::DFTraversal(vertex *n)
             DFTraversal(n->adj[x].v);
         }
     }
-
 }
 
 void Graph::DFTraversalIterative(vertex *start)
