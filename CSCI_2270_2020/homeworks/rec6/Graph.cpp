@@ -38,7 +38,8 @@ void Graph::addVertex(int n)
     {
         if (vertices[i]->key == n)
         {
-            found = true;
+	  found = true;
+	  return;
         }
     }
     if (found == false)
@@ -59,10 +60,18 @@ void Graph::printGraph()
         cout << vertices[i]->key << " --> ";
         for (int j = 0; j < vertices[i]->adj.size(); j++)
         {
-            cout << vertices[i]->adj[j].v->key << " ";
+	  cout << vertices[i]->adj[j].v->key;
+	  if (vertices[i]->adj[j].v->visited) {
+	    cout << "'";
+	  }
+	  cout  << " ";
         }
         cout << endl;
     }
+}
+
+vertex* Graph::vertexAt(int n) {
+  return vertices[n];
 }
 
 // function to go through all vertices and set them unvisited
@@ -75,32 +84,6 @@ void Graph::setAllVerticesUnvisited()
     }
 }
 
-//----------------------- DFS IMPLEMENTATION ------------------------------//
-// with stack :: NEED TO FIX THIS
-// void IterativeDFTraversal(int x, vector<vertex *> &discovered)
-// {
-//     stack<int> DFStack;
-//     DFStack.push(x); // initiate stack
-
-//     while (!DFStack.empty())
-//     {
-//         x = DFStack.top(); 
-//         DFStack.pop();     // pop the top and check it's children
-
-//         if (discovered[x]->visited) continue;
-
-//         discovered[x]-> = true;
-
-//         // look trough adj vertices of popped vetex
-//         for (int i = x; i != adj.size(); i++)
-//         {
-//             if (!vertices[x]->visited)
-//             {
-//                 DFStack.push(x); // push vertices if items are not visited
-//             }
-//         }
-//     }
-// }
 
 // TODO: Complete this function, so that it can be used in the isBridge function
 void Graph::DFTraversal(vertex *n)
@@ -109,12 +92,48 @@ void Graph::DFTraversal(vertex *n)
 
     for (int x = 0; x < n->adj.size(); x++) // for vertex x in adjacency list of n
     {
-        // TODO
         if (!vertices[x]->visited)
         {
             DFTraversal(vertices[x]);
         }
     }
+
+}
+
+void Graph::DFTraversalIterative(vertex *start)
+{
+  cout << "DFTTraversalIterative called for " << start->key << endl;
+  stack<vertex*> searchStack;
+  searchStack.push(start);
+
+
+  cout << "Size of searchStack: " << searchStack.size() << endl;
+  
+  while (searchStack.size() > 0) {
+    vertex* x = searchStack.top();
+    searchStack.pop();
+
+    if (!x->visited) {
+      // mark current element visited and put it on the visited vector
+      cout << "Visited " << x->key << endl;
+      x->visited = true;
+      // let's now add all the adjacent vertices to the search stack
+      for (auto &adjacentVertex : x->adj) {
+	// be smart, only add those not visited already to the search stack
+	if (!adjacentVertex.v->visited) {
+	  searchStack.push(adjacentVertex.v);
+	}
+      }
+    } else {
+      cout << x->key << " was already in visited vector" << endl;
+    }
+    //printGraph();
+  }
+   
+  //v->key (int)
+  //v->visited (bool)
+  //v->distance (int)
+  //v->adj std::vector<adjVertex>
 }
 
 // function to remove an edge connecting vertices with keys key1 and key2
@@ -143,15 +162,23 @@ void Graph::removeEdge(int key1, int key2)
     // you can use myvector.erase(myvector.begin()+i)
 
     // Remove v2 from adjacency list of v1
-    for (int i = 0; i < v1->adj.size(); i++)
-    {
-        v2->adj.erase(v2->adj.begin() + i);
+    for (int i=0; i < v1->adj.size(); i++) {
+      if (v1->adj[i].v == v2) {
+	// remove v2 from this adjacency vector.
+	v1->adj.erase(v1->adj.begin() + i);
+      }
     }
+
     // Remove v1 from adjacency list of v2
-    for (int i = 0; i < v2->adj.size(); i++)
-    {
-        v1->adj.erase(v1->adj.begin() + i);
+    int i=0;
+    for (auto adjacent : v2->adj) { // testing C++11 friendlier for loop syntax
+      if (adjacent.v == v1) {
+	// remove v1 from this adjacency vector.
+	v2->adj.erase(v2->adj.begin() + i);
+      }
+      i++;
     }
+
 }
 
 // Check if an edge connecting vertices with keys: key1 and key2 is a bridge of the graph, returns true if it is indeed a bridge otherwise false
@@ -171,9 +198,9 @@ bool Graph::isBridge(int key1, int key2)
     for (int i = 0; i < vertices.size(); i++)
     {
         if (!vertices[i]->visited)
-        {
-            DFTraversal(vertices[i]); 
-            initial_components++;
+        { 
+           DFTraversal(vertices[i]); 
+           initial_components++;
         }
     }
     cout << "num. of connected components before removal: " << initial_components << endl;

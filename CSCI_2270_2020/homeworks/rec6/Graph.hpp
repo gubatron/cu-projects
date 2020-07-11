@@ -24,9 +24,10 @@ class Graph
         bool isBridge(int key1, int key2);
         void removeEdge(int key1, int key2);
         void DFTraversal(vertex *n);
+        void DFTraversalIterative(vertex *start);
         void setAllVerticesUnvisited();
         void printGraph();
-
+        vertex* vertexAt(int i);
 
     private:
         std::vector<vertex*> vertices;

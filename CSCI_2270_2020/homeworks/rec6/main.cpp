@@ -25,6 +25,9 @@ int main()
     g.addEdge(3, 5);
     g.addEdge(4, 5);
 
+    vertex* startVertex = g.vertexAt(0);
+    g.DFTraversal(startVertex);
+
     // TODO SILVER: Complete the function isbridge() in Graph.cpp,
     // this function takes an edge (key1, key2) where key1 and key2 are keys of the two end points of the edge and finds if it is a bridge.
     // A bridge is an edge of a graph whose deletion increases its number of connected components.
