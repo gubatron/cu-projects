@@ -93,11 +93,6 @@ void Graph::setAllVerticesUnvisited()
 void Graph::DFTraversal(vertex *n)
 {
     n->visited = true;
-    cout << "=========" << endl;
-    cout << "DFTTraversal @ " << n->key << endl;
-    printGraph();
-    cout << "=========" << endl;    
-    cout << endl;
     for (int x = 0; x < n->adj.size(); x++) // for vertex x in adjacency list of n
     {
         if (!n->adj[x].v->visited)
