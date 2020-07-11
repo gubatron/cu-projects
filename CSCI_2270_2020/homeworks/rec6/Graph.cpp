@@ -57,7 +57,11 @@ void Graph::printGraph()
     //loop through all vertices and adjacent vertices
     for (int i = 0; i < vertices.size(); i++)
     {
-        cout << vertices[i]->key << " --> ";
+      cout << vertices[i]->key ;
+      if (vertices[i]->visited) {
+	cout << "'";
+      }
+      cout << " --> ";
         for (int j = 0; j < vertices[i]->adj.size(); j++)
         {
 	  cout << vertices[i]->adj[j].v->key;
@@ -89,12 +93,16 @@ void Graph::setAllVerticesUnvisited()
 void Graph::DFTraversal(vertex *n)
 {
     n->visited = true;
-
+    cout << "=========" << endl;
+    cout << "DFTTraversal @ " << n->key << endl;
+    printGraph();
+    cout << "=========" << endl;    
+    cout << endl;
     for (int x = 0; x < n->adj.size(); x++) // for vertex x in adjacency list of n
     {
-        if (!vertices[x]->visited)
+        if (!n->adj[x].v->visited)
         {
-            DFTraversal(vertices[x]);
+            DFTraversal(n->adj[x].v);
         }
     }
 
