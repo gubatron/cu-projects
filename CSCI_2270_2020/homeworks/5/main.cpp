@@ -22,7 +22,6 @@ int main() {
 
     cout << "Displaying edges along with their distances:" << endl;
     g1.displayEdges();
-
     g1._grader_setAllVerticesUnvisited();
     g1.dijkstraTraverse("Amsterdam");
     cout << "Dijkstra's Shortest distance from Amsterdam: " << endl;
@@ -30,7 +29,7 @@ int main() {
     g1._grader_print_shortest_distance("Calcutta");
     g1._grader_print_shortest_distance("Dallas");
     g1._grader_print_shortest_distance("Fabens");
-
+    
     g1._grader_setAllVerticesUnvisited();
     g1.dijkstraTraverse("Broomfield");
     cout << endl << "Dijkstra's Shortest distance from Broomfield: " << endl;
