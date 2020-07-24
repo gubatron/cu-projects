@@ -72,9 +72,9 @@ void drive(ifstream &dataSetFile, ofstream &dataResultsInsertFile, ofstream &dat
             // SEARCH
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            // We've inserted +100 elements, now we perform 100 searches on the total set so far.
+            // We've inserted +100 elements, now we perform total_inserted_items searches on the total set so far.
             int search_index = 0;
-            while (search_index < total_inserted_items)
+            while (search_index < 100)
             {
                 if (num_searched_items == 0)
                 {
