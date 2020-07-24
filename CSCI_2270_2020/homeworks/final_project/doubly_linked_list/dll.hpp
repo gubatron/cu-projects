@@ -14,11 +14,13 @@ class PatientNetwork
 {
 public:
     PatientNetwork();
+    ~PatientNetwork();
     bool isEmpty();
-    void insertPatientID(int new_id); // required method
+    void insertPatientID(int new_id);    // required method
     Patient *traverseNetwork();
-    Patient *searchPatientID(int id); // required method
-    void displayPatientIDs();   // required method
+    Patient *searchPatientID(int id);    // required method
+    void displayPatientIDs();            // required method
+    void destroyDLL();
 
 private:
     Patient *head;

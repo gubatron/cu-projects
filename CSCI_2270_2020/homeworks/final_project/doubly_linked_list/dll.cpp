@@ -8,17 +8,25 @@ using namespace std;
 
 PatientNetwork::PatientNetwork()
 {
-    head == NULL;
-    tail == NULL;
+    head = NULL;
+    tail = NULL;
+}
+
+PatientNetwork::~PatientNetwork()
+{
+    Patient *current = head;
+
+    while (current)
+    {
+        Patient *next = current->next;
+        current = next;
+        delete current;
+    }
 }
 
 bool PatientNetwork::isEmpty()
 {
-    if (head == NULL && tail == NULL)
-    {
-        return true;
-    }
-    return false;
+    return head == NULL && tail == NULL;
 }
 
 /* 
@@ -37,27 +45,16 @@ void PatientNetwork::insertPatientID(int new_id)
     // if is empty, add 1st node
     if (isEmpty())
     {
-        cout << "adding: " << new_id << " (HEAD) " << endl;
+        // cout << "it's empty: adding  " << new_id << " (HEAD) " << endl;
         head = newPatient;
         tail = newPatient;
+        return;
     }
-
-    // if I have at least 1 node, insert after the head and reasign the tail
-    if (head != NULL) {
-        // if there is only one node
-        if (head == tail) {
-            head->next = newPatient;
-            newPatient->prev = head;
-            tail = newPatient;
-        }
-        // if there are two or more nodes, insert at the tail
-        else if (tail) // CHECK
-        {   
-            cout << "adding: " << new_id << " (prev: " << newPatient->prev->id << ")" << endl;
-            tail->next = newPatient;
-            tail = newPatient;
-        }
-    }
+    // Add at the tail. Always.
+    // cout << "adding  " << new_id << endl;
+    tail->next = newPatient;
+    newPatient->prev = tail;
+    tail = newPatient;
 }
 
 /*
@@ -76,18 +73,49 @@ Patient *PatientNetwork::searchPatientID(int id)
     return 0;
 }
 
-
 /*
 Traverse and print patient IDs
-*/ 
+*/
 void PatientNetwork::displayPatientIDs()
 {
     Patient *current;
     std::cout << "head->";
 
-    for (current = head; current != NULL; current = current->next) {
+    for (current = head; current != NULL; current = current->next)
+    {
         std::cout << current->id << "->";
     }
 
     std::cout << "tail" << std::endl;
+}
+
+/*
+Destroy DLL from front to back and back to front. Cut time in 1/2
+*/
+void PatientNetwork::destroyDLL()
+{
+    Patient *head_tmp;
+    Patient *tail_tmp;
+    while (!isEmpty())
+    {
+
+        // delete from head
+        head_tmp = head;
+        head = head->next;
+        head->prev = NULL;
+        head_tmp->next = NULL;
+        delete head_tmp; // deleting the content, not the pointer. No need to re-declare in loop
+
+        // delete from tail
+        tail_tmp = tail;
+        tail = tail->prev;
+        tail->next = NULL;
+        tail_tmp->prev = NULL;
+        delete tail_tmp; // deleting the content, not the pointer. No need to re-declare in loop
+
+        if (head == tail && head->next == NULL && tail->prev == NULL)
+        {
+            delete head;
+        }
+    }
 }
