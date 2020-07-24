@@ -33,8 +33,8 @@ void drive(ifstream &dataSetFile, ofstream &dataResultsInsertFile, ofstream &dat
         if (dataSetFile.peek() == ',') {
             dataSetFile.ignore();
         }
-        cout << "read testData[i=" << (i - 1) << "] = " << testData[i - 1] << endl;
     }
+    dataSetFile.close();
 
     auto start = chrono::steady_clock::now();
     auto start_search = chrono::steady_clock::now();

@@ -37,6 +37,7 @@ void drive(ifstream &dataSetFile, ofstream &dataResultsInsertFile, ofstream &dat
             dataSetFile.ignore();
         }
     }
+    dataSetFile.close();
 
     auto start = chrono::steady_clock::now();
     auto start_search = chrono::steady_clock::now();
