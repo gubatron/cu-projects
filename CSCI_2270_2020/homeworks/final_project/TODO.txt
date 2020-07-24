@@ -1,0 +1,31 @@
+[ ] Doubly Linked List Graphs
+  [x] Code ready
+  [ ] Data A ready
+  [ ] Data B ready
+  [ ] Dataset A insert & search time graph
+  [ ] Dataset B insert & search time graph
+
+
+[ ] HT Chaining Graphs
+  [ ] Code ready
+  [ ] Data A ready
+  [ ] Data B ready
+ 
+  [ ] Dataset A insert & search time graph
+  [ ] Dataset B insert & search time graph
+
+
+[ ] HT Linear Probing Graphs
+  [x] Code ready
+  [ ] Data A ready
+  [ ] Data B ready 
+  [ ] Dataset A insert & search time graph
+  [ ] Dataset B insert & search time graph
+
+
+[ ] HT Quadratic Probing Graphs
+  [x] Code ready
+  [ ] Data A ready
+  [ ] Data B ready 
+  [ ] Dataset A insert & search time graph
+  [ ] Dataset B insert & search time graph
