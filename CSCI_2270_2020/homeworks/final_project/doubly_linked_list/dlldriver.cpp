@@ -13,28 +13,16 @@ int randomTo(int n)
     return rand() % n + 1;
 }
 
-// Command Line Example: ./medTracker dll.cpp dlldriver.cpp dataSetA.csv
-int main(int argc, char *argv[])
-{
+void drive(ifstream &dataSetFile, ofstream &dataResultsInsertFile, ofstream &dataResultsSearchFile) {
+    string tempID;
     PatientNetwork patientNet;
-
     int testData[10000]; // we'll first read all the data from the csv and put it in memory, to not interrupt operations with disk I/O later
     int insertData[100]; // we'll measure 100 times, how long it takes to copy 100 elements here.
     float insert_avg_times[100];
     float search_avg_times[100];
-
-    ifstream dataSetFile("dataSetA.csv");
-    // ifstream dataSetFile("dataSetB.csv");
-    string tempID;
-
-    ofstream dataResultsInsertFile("dll_insert_avg.csv");
-    ofstream dataResultsSearchFile("dll_search_avg.csv");
-
     int total_inserted_items = 0;
-
     int num_read_items = 0;
     int insert_index = 0;
-
     int num_searched_items = 0;
 
     // read file and insert into testData[]
@@ -75,7 +63,7 @@ int main(int argc, char *argv[])
             float avg = duration / 100.0;         // average insert time
             insert_avg_times[insert_index] = avg; // put the average in insert[]
 
-            cout << "insert [ " << insert_index << " ] Duration [ " << duration << " ] Avg [" << avg << "]" << endl;
+            //cout << "insert [ " << insert_index << " ] Duration [ " << duration << " ] Avg [" << avg << "]" << endl;
 
             insert_index++;      // go to the next index in my insert array for next time
             num_read_items = -1; // reset item counter so we can start the clock again
@@ -107,7 +95,7 @@ int main(int argc, char *argv[])
                     float avg = duration / 100.0;
                     search_avg_times[search_index] = avg;
 
-                    cout << "search [ " << search_index << " ] Duration [ " << duration << " ] Avg [" << avg << "]" << endl;
+                    //cout << "search [ " << search_index << " ] Duration [ " << duration << " ] Avg [" << avg << "]" << endl;
 
                     num_searched_items = -1;
                     search_index++;
@@ -116,8 +104,12 @@ int main(int argc, char *argv[])
             }
         }
         num_read_items++; // brings it back to 0 to continue reading (be able to enter the if statement above)
+        if (i % 1000 == 0) {
+            cout << ".";
+        }
         i++;
     }
+    cout << endl;
     // Now write averages insert times to file
     for (auto average : insert_avg_times)
     {
@@ -131,4 +123,19 @@ int main(int argc, char *argv[])
         dataResultsSearchFile << average << endl;
     }
     dataResultsSearchFile.close();
+}
+
+// Command Line Example: ./medTracker dll.cpp dlldriver.cpp dataSetA.csv
+int main(int argc, char *argv[])
+{
+    ifstream dataSetFileA("dataSetA.csv");
+    ofstream dataResultsInsertFileA("dll_insert_avg_a.csv");
+    ofstream dataResultsSearchFileA("dll_search_avg_a.csv");
+    
+    ifstream dataSetFileB("dataSetB.csv");
+    ofstream dataResultsInsertFileB("dll_insert_avg_b.csv");
+    ofstream dataResultsSearchFileB("dll_search_avg_b.csv");
+    
+    drive(dataSetFileA, dataResultsInsertFileA, dataResultsSearchFileA);
+    drive(dataSetFileB, dataResultsInsertFileB, dataResultsSearchFileB);    
 }
