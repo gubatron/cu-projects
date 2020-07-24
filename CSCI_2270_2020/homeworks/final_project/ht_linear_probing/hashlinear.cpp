@@ -108,8 +108,8 @@ HashNode *HashTable::searchItem(int key)
             {
                 return table[i];
             }
+            n++;
         }
-        n++;
     }
     return 0;
 }
