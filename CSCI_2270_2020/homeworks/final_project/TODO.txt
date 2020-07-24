@@ -1,11 +1,11 @@
-[ ] Doubly Linked List Graphs
+[x] Doubly Linked List Graphs
   [x] Code ready
-  [ ] Data A ready
-  [ ] Data B ready
-  [ ] Dataset A insert & search time graph
-  [ ] Dataset B insert & search time graph
+  [x] Data A ready
+  [x] Data B ready
+  [x] Dataset A insert & search time graph
+  [x] Dataset B insert & search time graph
 
-[X] HT Chaining Graphs
+[x] HT Chaining Graphs
   [X] Code ready
   [X] Data A ready
   [X] Data B ready
@@ -19,7 +19,14 @@
   [x] Dataset A insert & search time graph
   [x] Dataset B insert & search time graph
 
-[X] HT Quadratic Probing Graphs
+[x] HT Quadratic Probing Graphs
+  [x] Code ready
+  [x] Data A ready
+  [x] Data B ready
+  [x] Dataset A insert & search time graph
+  [x] Dataset B insert & search time graph
+
+[x] std_map (red-black trees) Graphs
   [x] Code ready
   [x] Data A ready
   [x] Data B ready

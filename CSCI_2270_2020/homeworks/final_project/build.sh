@@ -6,11 +6,10 @@ build_task() {
     cd ..
 }
 
-echo "Building doubly_linked_list..."
 build_task doubly_linked_list
 build_task ht_chaining
 build_task ht_linear_probing
 build_task ht_quadratic_probing
-
+build_task std_map
 
 
