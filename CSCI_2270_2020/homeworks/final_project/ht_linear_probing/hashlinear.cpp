@@ -14,11 +14,6 @@ HashTable::HashTable(int tsize)
         table[i] = NULL;
 }
 
-HashNode *HashTable::getNext()
-{
-    return next;
-}
-
 // inserts a key into hash table using linear-probing
 // if there is no space left, print a warning
 bool HashTable::insertItem(int key)
