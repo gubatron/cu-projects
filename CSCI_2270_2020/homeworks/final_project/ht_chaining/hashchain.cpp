@@ -27,24 +27,25 @@ bool HashTable::insertItem(int key)
     if (table[hash] == NULL) // if the spot is empty
     {
         table[hash] = node; // add it
-        cout << "adding node: [" << node << "]" <<  endl;
+        //cout << "adding node: [" << node->key << " BOO!]" <<  endl;
         return true;
     }
     // COLLISION
     // chaining - linked
     numOfcolision++;
     HashNode *temp = table[hash];
+    // add at the end of this bucket's list
     while (temp->next != NULL)
     {
+        if (temp->key == key)
+        {
+          //cout << "key " << key << " already exists." << endl;
+          return false;
+        }
         temp = temp->next;
-        return true;
     }
-    if (temp->key == key)
-    {
-        cout << "key " << key << " already exists." << endl;
-    }
-    return false;
-    cout << "Hash table overflow" << endl;
+    temp->next = node;
+    return true;
 }
 
 // hash function to map values to key
@@ -82,19 +83,17 @@ HashNode *HashTable::searchItem(int key)
     if (table[hash] != NULL)
     {
         HashNode *temp = table[hash];
-        while (temp != NULL && temp->key != key)
+
+        while (temp->next != NULL)
         {
-            temp = temp->next;
+          if (temp->key == key) {
+            return temp;
+          }
+          temp = temp->next;
         }
-        if (temp == NULL)
-        {
-            cout << "[temp == NULL] -- Node not found in hash table" << endl;
-            return 0;
-        }
-        else
-            return hash[table];
+        return 0;
     }
     // else, it's not there
-    cout << "Node not found in hash table" << endl;
+    //cout << "Node not found in hash table" << endl;
     return 0;
 }
