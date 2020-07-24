@@ -18,7 +18,7 @@ HashTable::HashTable(int tsize)
 // if there is no space left, print a warning
 bool HashTable::insertItem(int key)
 {
-    int hash = hashFunction(key);
+    unsigned int hash = hashFunction(key);
 
     HashNode *node = new HashNode();
     node->key = key;
