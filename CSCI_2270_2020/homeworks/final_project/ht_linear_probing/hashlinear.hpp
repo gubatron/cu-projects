@@ -8,13 +8,13 @@ using namespace std;
 struct HashNode
 {
     int key;
-    // struct HashNode *next;
+    struct HashNode *next;
 };
 
 class HashTable
 {
 public:
-    HashTable(int tableSize);               // Constructor
+    HashTable(unsigned int tableSize);               // Constructor
     ~HashTable() { delete[] table; }
     bool insertItem(int key);               // inserts a key into hash table
     unsigned int hashFunction(int key);  // hash function to map values to key
@@ -23,7 +23,7 @@ public:
     HashNode *searchItem(int key);
 
 private:
-    int tableSize; // No. of buckets (linked lists)
+    unsigned int tableSize; // No. of buckets (linked lists)
 
     HashNode **table; // Pointer to an array containing buckets
     int numOfcolision = 0;

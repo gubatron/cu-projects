@@ -6,7 +6,7 @@
 
 using namespace std;
 
-HashTable::HashTable(int tsize)
+HashTable::HashTable(unsigned int tsize)
 {
     tableSize = tsize;
     table = new HashNode *[tableSize];
@@ -18,7 +18,7 @@ HashTable::HashTable(int tsize)
 // if there is no space left, print a warning
 bool HashTable::insertItem(int key)
 {
-    int hash = hashFunction(key);
+    unsigned int hash = hashFunction(key);
 
     HashNode *node = new HashNode();
     node->key = key;
@@ -32,6 +32,7 @@ bool HashTable::insertItem(int key)
     // for loop takes care of looping (index * %tableSize)
     numOfcolision++;
     int n = 1;
+    int tries = 0;
     for (int i = (hash + n) % tableSize; i != hash; i = (hash + n) % tableSize)
     {
         if (table[i] == NULL) // in case we missed it
@@ -45,8 +46,8 @@ bool HashTable::insertItem(int key)
         }
         n++;
     }
-    return false;
     cout << "Hash table overflow" << endl;
+    return false;
 }
 
 // hash function to map values to key
@@ -95,8 +96,8 @@ HashNode *HashTable::searchItem(int key)
             {
                 return table[i];
             }
+            n++;
         }
-        n++;
     }
     else
     {
