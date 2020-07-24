@@ -6,12 +6,12 @@
   [ ] Dataset B insert & search time graph
 
 
-[ ] HT Chaining Graphs
-  [ ] Code ready
+[X] HT Chaining Graphs
+  [X] Code ready
   [X] Data A ready
-  [ ] Data B ready
+  [X] Data B ready
   [X] Dataset A insert & search time graph
-  [ ] Dataset B insert & search time graph
+  [X] Dataset B insert & search time graph
 
 
 [ ] HT Linear Probing Graphs
