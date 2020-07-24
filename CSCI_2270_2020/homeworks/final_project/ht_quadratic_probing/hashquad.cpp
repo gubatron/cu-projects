@@ -6,7 +6,7 @@
 
 using namespace std;
 
-HashTable::HashTable(int tsize)
+HashTable::HashTable(unsigned int tsize)
 {
     tableSize = tsize;
     table = new HashNode *[tableSize];
@@ -18,7 +18,7 @@ HashTable::HashTable(int tsize)
 // if there is no space left, print a warning
 bool HashTable::insertItem(int key)
 {
-    int hash = hashFunction(key);
+    unsigned int hash = hashFunction(key);
 
     HashNode *node = new HashNode();
     node->key = key;
@@ -41,12 +41,12 @@ bool HashTable::insertItem(int key)
         }
         else if (table[i]->key == key)
         { // key matches another key inside
-            cout << "key " << key << " already exists." << endl;
+            //cout << "key " << key << " already exists." << endl;
         }
         n++;
     }
+    //cout << "Hash table overflow" << endl;
     return false;
-    cout << "Hash table overflow" << endl;
 }
 
 // hash function to map values to key
@@ -78,7 +78,7 @@ int HashTable::getNumOfCollision()
 // return pointer to the node if key is inside hash table
 HashNode *HashTable::searchItem(int key)
 {
-    int hash = hashFunction(key);
+    unsigned int hash = hashFunction(key);
 
     // if not null then it is there
     if (table[hash] != NULL)
@@ -95,8 +95,8 @@ HashNode *HashTable::searchItem(int key)
             {
                 return table[i];
             }
+            n++;
         }
-        n++;
     }
     else
     {
@@ -107,8 +107,8 @@ HashNode *HashTable::searchItem(int key)
             {
                 return table[i];
             }
+            n++;
         }
-        n++;
     }
     return 0;
 }

@@ -15,20 +15,13 @@ int randomTo(int n) {
     return rand() % n + 1;
 }
 
-int main(int argc, char *argv[]) {
+void drive(ifstream &dataSetFile, ofstream &dataResultsInsertFile, ofstream &dataResultsSearchFile) {
     HashTable patientHT(40009);
 
     int testData[10000]; // we'll first read all the data from the csv and put it in memory, to not interrupt operations with disk I/O later
     int insertData[100]; // we'll measure 100 times, how long it takes to copy 100 elements here.
     float insert_avg_times[100];
     float search_avg_times[100];
-
-    ifstream dataSetFile("dataSetA.csv");
-    // ifstream dataSetFile("dataSetB.csv");
-    string tempID;
-
-    ofstream dataResultsInsertFile("ht_quad_insert_avg.csv");
-    ofstream dataResultsSearchFile("ht_quad_search_avg.csv");
 
     int total_inserted_items = 0;
 
@@ -39,11 +32,14 @@ int main(int argc, char *argv[]) {
 
     // read file and insert into testData[]
     int i = 0;
-    while (!dataSetFile.eof() && getline(dataSetFile, tempID, ',')) {
-        testData[i++] = stoi(tempID); // populate testData[1000] 100 numbers at a time
+    unsigned int tempID;
+    while (dataSetFile >> tempID) {
+        testData[i++] = tempID;
+        if (dataSetFile.peek() == ',') {
+            dataSetFile.ignore();
+        }
     }
-    dataSetFile.close(); // close file, no more disk I/O
-
+    dataSetFile.close();
     auto start = chrono::steady_clock::now();
     auto start_search = chrono::steady_clock::now();
 
@@ -112,6 +108,10 @@ int main(int argc, char *argv[]) {
         }
         num_read_items++; // brings it back to 0 to continue reading (be able to enter the if statement above)
         i++;
+        if (i % 500 == 0) {
+            float completed_percentage = (i / 10000.0) * 100.0;
+            cout << completed_percentage << "% i=" << i << endl;
+        }
     }
     // Now write averages insert times to file
     for (auto average : insert_avg_times) {
@@ -124,4 +124,22 @@ int main(int argc, char *argv[]) {
         dataResultsSearchFile << average << endl;
     }
     dataResultsSearchFile.close();
+}
+
+int main(int argc, char *argv[]) {
+    ifstream dataSetFileA("dataSetA.csv");
+    ofstream dataResultsInsertFileA("ht_quad_insert_avg_a.csv");
+    ofstream dataResultsSearchFileA("ht_quad_search_avg_a.csv");
+
+    ifstream dataSetFileB("dataSetB.csv");
+    ofstream dataResultsInsertFileB("ht_quad_insert_avg_b.csv");
+    ofstream dataResultsSearchFileB("ht_quad_search_avg_b.csv");
+
+    cout << "Processing dataset A..." << endl;
+    drive(dataSetFileA, dataResultsInsertFileA, dataResultsSearchFileA);
+    cout << "Processing dataset B..." << endl;
+    drive(dataSetFileB, dataResultsInsertFileB, dataResultsSearchFileB);
+
+    cout << endl << "ht_quad.exe finished." << endl;
+    return 0;
 }
