@@ -28,7 +28,7 @@ void drive(ifstream &dataSetFile, ofstream &dataResultsInsertFile, ofstream &dat
     // read file and insert into testData[]
     int i = 0;
     while (!dataSetFile.eof() && getline(dataSetFile, tempID, ','))
-    {   
+    {
         testData[i++] = stoi(tempID); // populate testData[1000] 100 numbers at a time
     }
     dataSetFile.close(); // close file, no more disk I/O
@@ -104,8 +104,9 @@ void drive(ifstream &dataSetFile, ofstream &dataResultsInsertFile, ofstream &dat
             }
         }
         num_read_items++; // brings it back to 0 to continue reading (be able to enter the if statement above)
-        if (i % 1000 == 0) {
-            cout << ".";
+        if (i % 250 == 0) {
+          float completed_percentage = (i / 10000.0)*100.0;
+          cout << completed_percentage << "%" << endl;
         }
         i++;
     }
@@ -131,11 +132,15 @@ int main(int argc, char *argv[])
     ifstream dataSetFileA("dataSetA.csv");
     ofstream dataResultsInsertFileA("dll_insert_avg_a.csv");
     ofstream dataResultsSearchFileA("dll_search_avg_a.csv");
-    
+
     ifstream dataSetFileB("dataSetB.csv");
     ofstream dataResultsInsertFileB("dll_insert_avg_b.csv");
     ofstream dataResultsSearchFileB("dll_search_avg_b.csv");
-    
+
+    cout << "Processing dataset A..." << endl;
     drive(dataSetFileA, dataResultsInsertFileA, dataResultsSearchFileA);
-    drive(dataSetFileB, dataResultsInsertFileB, dataResultsSearchFileB);    
+    cout << "Processing dataset B..." << endl;
+    drive(dataSetFileB, dataResultsInsertFileB, dataResultsSearchFileB);
+
+    cout << endl << "doubly_linked_list.exe finished." << endl;
 }

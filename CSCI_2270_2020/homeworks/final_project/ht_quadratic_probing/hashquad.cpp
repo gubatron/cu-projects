@@ -32,7 +32,7 @@ bool HashTable::insertItem(int key)
     // for loop takes care of looping (index * %tableSize)
     numOfcolision++;
     int n = 1;
-    for (int i = (hash + n ^ 2) % tableSize; i != i; i = (hash + n ^ 2) % tableSize)
+    for (int i = (hash + n ^ 2) % tableSize; i != hash; i = (hash + n ^ 2) % tableSize)
     {
         if (table[i] == NULL) // in case we missed it
         {
@@ -89,7 +89,7 @@ HashNode *HashTable::searchItem(int key)
         }
         // go through table with linear probe
         int n = 1;
-        for (int i = (hash + n ^ 2) % tableSize; i != i; i = (hash + n ^ 2) % tableSize)
+        for (int i = (hash + n ^ 2) % tableSize; i != hash; i = (hash + n ^ 2) % tableSize)
         {
             if (table[i] != NULL && table[i]->key == key)
             {
@@ -101,7 +101,7 @@ HashNode *HashTable::searchItem(int key)
     else
     {
         int n = 1;
-        for (int i = (hash + n ^ 2) % tableSize; i != i; i = (hash + n ^ 2) % tableSize)
+        for (int i = (hash + n ^ 2) % tableSize; i != hash; i = (hash + n ^ 2) % tableSize)
         {
             if (table[i] != NULL && table[i]->key == key)
             {
