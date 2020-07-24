@@ -5,14 +5,12 @@
   [ ] Dataset A insert & search time graph
   [ ] Dataset B insert & search time graph
 
-
 [X] HT Chaining Graphs
   [X] Code ready
   [X] Data A ready
   [X] Data B ready
   [X] Dataset A insert & search time graph
   [X] Dataset B insert & search time graph
-
 
 [x] HT Linear Probing Graphs
   [x] Code ready
@@ -21,10 +19,9 @@
   [x] Dataset A insert & search time graph
   [x] Dataset B insert & search time graph
 
-
-[ ] HT Quadratic Probing Graphs
+[X] HT Quadratic Probing Graphs
   [x] Code ready
-  [ ] Data A ready
-  [ ] Data B ready
-  [ ] Dataset A insert & search time graph
-  [ ] Dataset B insert & search time graph
+  [x] Data A ready
+  [x] Data B ready
+  [x] Dataset A insert & search time graph
+  [x] Dataset B insert & search time graph
